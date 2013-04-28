@@ -27,14 +27,18 @@ def test_read_input_file():
 def test_write_output_file():
     pass
 
-def test_plot_square():
-    # Square piece
-    pieces = [TetrisPiece(2)]
+def test_plot_shapes():
 
-    # Game with only one piece
-    game = TetrisGame(pieces)
+    # Plot each shape number
+    for shape_num in range(1, 8):
 
-    plot_game(game, 'test_square.png')
+        # Square piece
+        pieces = [TetrisPiece(shape_num)]
+
+        # Game with only one piece
+        game = TetrisGame(pieces)
+
+        plot_game(game, 'test_shape_{}'.format(shape_num))
 
 def test_plot_two_shapes():
     # Square piece
@@ -43,7 +47,7 @@ def test_plot_two_shapes():
     # Game with only one piece
     game = TetrisGame(pieces)
 
-    plot_game(game, 'test_two_shapes.png')
+    plot_game(game, 'test_two_shapes')
 
 if __name__ == '__main__':
     nose.main(argv=[

@@ -20,6 +20,7 @@ shape_alpha = 0.8
 def plot_game(game, filename=None):
 
     # Create figure and axis
+    pyplot.clf()
     fig = pyplot.figure(1, figsize=figure_size, dpi=90)
     ax = fig.add_subplot(111)
 
