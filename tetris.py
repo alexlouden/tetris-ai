@@ -9,29 +9,39 @@
 # Licence:
 #-------------------------------------------------------------------------------
 
-def read_input_file(filename):
+from fileops import read_input_file, write_output_file
 
-    # An empty list to contain our input numbers
-    numbers = []
+class TetrisGame():
+    def __init__(self, pieces, width=11):
+        self.width = width
+        self.height = 0
 
-    # Open input file in read only mode
-    with open(filename, 'r') as f:
-        # Iterate through each line in the file
-        for line in f:
-            # Use list comprehension to filter only character digits
-            # Then convert each character to an integer
-            digitsonly = [int(char) for char in line if char.isdigit()]
+    def solve(self):
+        self.output = ""
 
-            # Strip out zeros
-            nozeros = [i for i in digitsonly if i > 0]
-
-            # And add these numbers to the list
-            numbers.extend(nozeros)
-
-    return numbers
+class TetrisPiece():
+    def __init__(self, num):
+        self.num = num
+        self.rotation = 0
+        self.left = 0
 
 def main():
-    print read_input_file('exampleinput.txt')
+    # Parse input file
+    piece_numbers = read_input_file('exampleinput.txt')
+
+    # Convert numbers to Tetris piece objects
+    pieces = [TetrisPiece(n) for n in piece_numbers]
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces)
+
+    # Solve game
+    game.solve()
+
+    print game.height
+
+    # Write output of game moves
+    write_output_file('output.txt', game.output)
 
 if __name__ == '__main__':
     main()
