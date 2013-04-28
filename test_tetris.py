@@ -42,10 +42,10 @@ def test_plot_shapes():
         plot_game(game, 'test_shape_{}'.format(shape_num))
 
 def test_plot_all_shapes():
-    pieces = [TetrisPiece(i) for i in range(1, 8)]
+    pieces = [TetrisPiece(i, i) for i in range(1, 8)]
 
-    # Game with only one piece
-    game = TetrisGame(pieces)
+    # Game with only one piece (width of 13 fits all 7 standard shapes)
+    game = TetrisGame(pieces, 13)
     game.pieces = pieces
 
     left = 0
