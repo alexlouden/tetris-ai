@@ -14,6 +14,13 @@
 from fileops import read_input_file, write_output_file
 from shapeops import get_shape_polygon, get_piece_colour
 
+# Global piece ID
+piece_id = 0
+def next_id():
+    global piece_id
+    piece_id += 1
+    return piece_id
+
 class TetrisGame():
     def __init__(self, pieces, width=11, bufsize=1):
         """Initialise the game board"""
@@ -38,10 +45,30 @@ class TetrisGame():
     def solve(self):
         self.output = ""
 
+    def calculate_height(self):
+        """Returns the max number of blocks from the bottom"""
+        raise NotImplementedError()
+
+    def is_valid():
+        """Whether piece positions are valid"""
+        raise NotImplementedError()
+
+    def drop(piece, left):
+        """ Drops piece into position x pixels from left.
+        Ensure piece has been removed from input_queue first
+        """
+        # start at piece.top = self.height
+        # drop down until one before intersection
+
+        # Then put piece into game.pieces:
+        # self.pieces.append(piece)
+        raise NotImplementedError()
+
 class TetrisPiece():
     def __init__(self, num):
         """Initialise a piece"""
         self.num = num
+        self.id = next_id()
 
         # Rotation - 0, 1=90, 2=180, 3=270
         self.rotation = 0
@@ -53,6 +80,12 @@ class TetrisPiece():
         # Piece shape and colour
         self.polygon = get_shape_polygon(self.num)
         self.colour = get_piece_colour(self.num)
+
+    def rotate(self, num=0):
+        """Rotate piece into rotation position 0,1,2,3"""
+        # self.rotation = ??
+        # self.polygon = ??
+        raise NotImplementedError()
 
 def main():
     # Parse input file
