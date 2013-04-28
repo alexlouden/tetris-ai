@@ -37,6 +37,7 @@ def test_plot_shapes():
 
         # Game with only one piece
         game = TetrisGame(pieces)
+        game.pieces = pieces
 
         plot_game(game, 'test_shape_{}'.format(shape_num))
 
@@ -46,6 +47,7 @@ def test_plot_two_shapes():
 
     # Game with only one piece
     game = TetrisGame(pieces)
+    game.pieces = pieces
 
     plot_game(game, 'test_two_shapes')
 
