@@ -36,20 +36,45 @@ def test_plot_shapes():
         pieces = [TetrisPiece(shape_num, shape_num)]
 
         # Game with only one piece
-        game = TetrisGame(pieces)
+        game = TetrisGame(pieces, 4)
         game.pieces = pieces
 
         plot_game(game, 'test_shape_{}'.format(shape_num))
 
-def test_plot_two_shapes():
-    # Square piece
-    pieces = [TetrisPiece(1, 'one'), TetrisPiece(2, 'two')]
+def test_plot_all_shapes():
+    pieces = [TetrisPiece(i) for i in range(1, 8)]
 
     # Game with only one piece
     game = TetrisGame(pieces)
     game.pieces = pieces
 
-    plot_game(game, 'test_two_shapes')
+    left = 0
+    for piece in game.pieces:
+        piece.left = left
+        left += piece.width
+
+    plot_game(game, 'test_all_shapes')
+
+def test_shape_width_and_heights():
+
+    # Shapes 2-7 have width of 2
+    expected_widths = {i: 2 for i in range(2,8)}
+    # Shape 1 has 1 width
+    expected_widths[1] = 1
+
+    # Shapes 3-7 have height of 3
+    expected_heights = {i: 3 for i in range(3,8)}
+    # Shape 1 has 4 height
+    expected_heights[1] = 4
+    # Shape 2 has 2 height
+    expected_heights[2] = 2
+
+##    print expected_widths, expected_heights
+
+    pieces = [TetrisPiece(i) for i in range(1, 8)]
+    for piece in pieces:
+        assert_equals(piece.width, expected_widths[piece.num])
+        assert_equals(piece.height, expected_heights[piece.num])
 
 if __name__ == '__main__':
     nose.main(argv=[

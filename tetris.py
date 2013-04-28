@@ -89,6 +89,20 @@ class TetrisPiece():
         # self.polygon = ??
         raise NotImplementedError()
 
+    def calculate_useful_rotations():
+        """The number of useful rotations"""
+        raise NotImplementedError()
+
+    @property
+    def width(self):
+        x_min, y_min, x_max, y_max = self.polygon.bounds
+        return int(x_max - x_min)
+
+    @property
+    def height(self):
+        x_min, y_min, x_max, y_max = self.polygon.bounds
+        return int(y_max - y_min)
+
 def main():
     # Parse input file
     piece_numbers = read_input_file('exampleinput.txt')
