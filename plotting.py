@@ -13,21 +13,34 @@ from matplotlib import pyplot
 from shapely.geometry import Polygon
 from descartes.patch import PolygonPatch
 
-SIZE = (8, 10)
+figure_size = (8, 10)
 shape_edge_colour = '#000000'
+shape_alpha = 0.8
 
-def plot_game(game):
+def plot_game(game, filename=None):
 
-    fig = pyplot.figure(1, figsize=SIZE, dpi=90)
+    # Create figure and axis
+    fig = pyplot.figure(1, figsize=figure_size, dpi=90)
     ax = fig.add_subplot(111)
 
+    # Plot the board and pieces
     plot_board(ax, game)
     for piece in game.pieces:
         plot_piece(ax, piece)
 
+    # Add the game title
     ax.set_title(game.status)
 
-    pyplot.show()
+
+    if filename is None:
+        # Show the plot
+        pyplot.show()
+    else:
+        # Otherwise, save as PNG
+        if not filename.lower().endswith('.png'):
+            filename += '.png'
+
+        pyplot.savefig(filename)
 
 def plot_board(ax, game):
     """Plots the game board"""
@@ -51,21 +64,9 @@ def plot_piece(ax, piece):
     colour = piece.colour
     polygon = piece.polygon
 
-    patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=0.5, zorder=2)
+    patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
     ax.add_patch(patch)
 
-
-def main():
-    from tetris import TetrisGame, TetrisPiece
-    from plotting import plot_game
-
-    # Square piece
-    pieces = [TetrisPiece(2)]
-
-    # Game with only one piece
-    game = TetrisGame(pieces)
-
-    plot_game(game)
 
 if __name__ == "__main__":
     main()

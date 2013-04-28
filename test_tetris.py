@@ -14,32 +14,36 @@
 import nose
 from nose.tools import timed, raises, assert_equals
 
+from tetris import TetrisGame, TetrisPiece
+from plotting import plot_game
+from fileops import read_input_file
+
 def test_read_input_file():
-
-    from fileops import read_input_file
-
     actual = read_input_file('exampleinput.txt')
     expected = [1, 2, 3, 4, 5, 2, 7, 1, 6, 1, 8, 9, 4, 3, 2, 1, 5]
 
     assert_equals(actual, expected)
 
-
 def test_write_output_file():
     pass
 
-
-def test_plot_simple():
-
-    from tetris import TetrisGame, TetrisPiece
-    from plotting import plot_game
-
+def test_plot_square():
     # Square piece
     pieces = [TetrisPiece(2)]
 
     # Game with only one piece
     game = TetrisGame(pieces)
 
-    plot_game(game)
+    plot_game(game, 'test_square.png')
+
+def test_plot_two_shapes():
+    # Square piece
+    pieces = [TetrisPiece(1), TetrisPiece(2)]
+
+    # Game with only one piece
+    game = TetrisGame(pieces)
+
+    plot_game(game, 'test_two_shapes.png')
 
 if __name__ == '__main__':
     nose.main(argv=[
