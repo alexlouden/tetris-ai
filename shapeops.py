@@ -22,9 +22,10 @@ piece_shapes = {
     7: [(0,0), (0,2), (1,2), (1,3), (2,3), (2,1), (1,1), (1,0), (0,0)],
 }
 
-def get_shape_polygon(number):
-    return Polygon(piece_shapes[number])
+def get_shape_polygon(num):
+    return Polygon(piece_shapes[num])
 
+# Hex colours for plotting
 piece_colours = {
     1: '#ff0000',
     2: '#de60cc',
@@ -35,8 +36,10 @@ piece_colours = {
     7: '#4f81bd'
 }
 
-def get_piece_colour(number):
-    return piece_colours[number]
+def get_piece_colour(num):
+    return piece_colours[num]
 
+# Whether shape ID is valid - has both colour and shape
+# Used in parsing input file
 def valid_shape_id(num):
     return num in piece_colours and num in piece_shapes
