@@ -20,6 +20,7 @@ class TetrisGame():
 
         # List of TetrisPieces
         self.input_queue = pieces
+        self.input_queue.reverse()
         self.pieces = []
 
         # Game width
@@ -36,13 +37,26 @@ class TetrisGame():
         self.status = "Tetris"
 
     def solve(self):
+        """Attempt to solve the game.
 
-        # step() ...
-        raise NotImplementedError()
+        Will move pieces from input_queue to pieces one by one.
+        """
+        try:
+            while True:
+                piece = self.input_queue.pop()
+                self.step(piece)
+        except IndexError as e:
+            pass
 
-    def step(self):
+    def step(self, piece):
         """Perform one game step"""
-        raise NotImplementedError()
+        print 'step', piece.id, piece.num
+        # self.height = ?
+        # self.buffer ?
+        # piece.left = ?
+        # piece.bottom = ?
+        # self.pieces.append(piece)
+##        raise NotImplementedError()
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
@@ -95,11 +109,13 @@ class TetrisPiece():
 
     @property
     def width(self):
+        """Calculate polygon width"""
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(x_max - x_min)
 
     @property
     def height(self):
+        """Calculate polygon height"""
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(y_max - y_min)
 
@@ -114,7 +130,7 @@ def main():
     game = TetrisGame(pieces)
 
     # Solve game
-##    game.solve()
+    game.solve()
 ##
 ##    print game.height
 ##
