@@ -14,6 +14,8 @@
 from fileops import read_input_file, write_output_file
 from shapeops import get_shape_polygon, get_piece_colour
 
+from plotting import plot_game
+
 class TetrisGame():
     def __init__(self, pieces, width=11, bufsize=1):
         """Initialise the game board"""
@@ -41,12 +43,14 @@ class TetrisGame():
 
         Will move pieces from input_queue to pieces one by one.
         """
-        try:
-            while True:
-                piece = self.input_queue.pop()
-                self.step(piece)
-        except IndexError as e:
-            pass
+        print 'Starting to solve'
+        print 'Number of pieces in input_queue:', len(self.input_queue)
+
+        for index, _ in enumerate(self.input_queue):
+            piece = self.input_queue.pop()
+            self.step(piece)
+
+            plot_game(self, 'game_step_{}'.format(index))
 
     def step(self, piece):
         """Perform one game step"""
