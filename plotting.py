@@ -20,6 +20,10 @@ shape_alpha = 0.8
 id_font_size = 10
 
 def plot_game(game, filename=None):
+    """Plots the tetris game.
+
+    Plot to file if a filename is given, otherwise plot to the screen.
+    """
 
     # Create figure and axis
     pyplot.clf()
@@ -46,7 +50,7 @@ def plot_game(game, filename=None):
         pyplot.savefig(filename)
 
 def plot_board(ax, game):
-    """Plots the game board"""
+    """Helper - Plots the game board"""
 
     ax.grid(color='k', linestyle=':', linewidth=1)
 
@@ -62,16 +66,13 @@ def plot_board(ax, game):
     ax.set_aspect(1)
 
 def plot_piece(ax, piece):
-    """Plots a single game piece"""
+    """Helper - Plots a single game piece"""
 
     colour = piece.colour
     polygon = piece.polygon
 
     # Move polygon to left/bottom pos
     polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
-
-    print 'id', piece.id
-    print 'left',piece.left
 
     patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
     ax.add_patch(patch)
