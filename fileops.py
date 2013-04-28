@@ -1,12 +1,14 @@
 #-------------------------------------------------------------------------------
 # Name:        Tetris File Operations
-# Purpose:
+# Purpose:     Functions to read and write to disk
 #
-# Author:      Alex
+# Version:     Python 2.7
+#
+# Author:      Alex Louden
 #
 # Created:     28/04/2013
-# Copyright:   (c) Alex 2013
-# Licence:     <your licence>
+# Copyright:   (c) Alex Louden 2013
+# Licence:     MIT
 #-------------------------------------------------------------------------------
 
 def read_input_file(filename):
