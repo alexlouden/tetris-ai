@@ -38,6 +38,6 @@ def write_output_file(filename, output):
 
     # Open output file in write mode
     with open(filename, 'w') as f:
-        pass
+        f.write(output)
 
 

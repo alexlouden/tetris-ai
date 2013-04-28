@@ -36,9 +36,9 @@ class TetrisGame():
         self.status = "Tetris"
 
     def solve(self):
-        self.output = ""
 
         # step() ...
+        raise NotImplementedError()
 
     def step(self):
         """Perform one game step"""
@@ -63,13 +63,16 @@ class TetrisGame():
         # self.pieces.append(piece)
         raise NotImplementedError()
 
+    def get_output(self):
+        return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
+
 class TetrisPiece():
     def __init__(self, num, id=None):
         """Initialise a piece"""
         self.num = num
         self.id = id
 
-        # Rotation - 0, 1=90, 2=180, 3=270
+        # Rotation - 0=0, 1=90, 2=180, 3=270
         self.rotation = 0
 
         # Position of piece, relative to bottom left corner of board
@@ -97,12 +100,12 @@ def main():
     game = TetrisGame(pieces)
 
     # Solve game
-    game.solve()
-
-    print game.height
-
-    # Write output of game moves
-##    write_output_file('output.txt', game.output)
+##    game.solve()
+##
+##    print game.height
+##
+##    # Write output of game moves
+##    write_output_file('output.txt', game.get_output())
 
 if __name__ == '__main__':
     main()
