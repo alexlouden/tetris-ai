@@ -15,5 +15,4 @@ def get_shape_polygon(number):
     return Polygon([(0,0), (2,0), (2,2), (0,2), (0,0)])
 
 def get_piece_colour(number):
-
-    return '#FF000'
+    return '#FF0000'
