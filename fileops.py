@@ -11,6 +11,8 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
+from shapeops import valid_shape_id
+
 def read_input_file(filename):
 
     # An empty list to contain our input numbers
@@ -25,7 +27,7 @@ def read_input_file(filename):
             digitsonly = [int(char) for char in line if char.isdigit()]
 
             # Strip out zeros
-            nozeros = [i for i in digitsonly if i > 0]
+            nozeros = [i for i in digitsonly if valid_shape_id(i)]
 
             # And add these numbers to the list
             numbers.extend(nozeros)

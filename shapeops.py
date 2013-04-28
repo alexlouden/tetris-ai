@@ -37,3 +37,6 @@ piece_colours = {
 
 def get_piece_colour(number):
     return piece_colours[number]
+
+def valid_shape_id(num):
+    return num in piece_colours and num in piece_shapes

@@ -14,13 +14,6 @@
 from fileops import read_input_file, write_output_file
 from shapeops import get_shape_polygon, get_piece_colour
 
-# Global piece ID
-piece_id = 0
-def next_id():
-    global piece_id
-    piece_id += 1
-    return piece_id
-
 class TetrisGame():
     def __init__(self, pieces, width=11, bufsize=1):
         """Initialise the game board"""
@@ -45,6 +38,12 @@ class TetrisGame():
     def solve(self):
         self.output = ""
 
+        # step() ...
+
+    def step(self):
+        """Perform one game step"""
+        raise NotImplementedError()
+
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
         raise NotImplementedError()
@@ -65,10 +64,10 @@ class TetrisGame():
         raise NotImplementedError()
 
 class TetrisPiece():
-    def __init__(self, num):
+    def __init__(self, num, id=None):
         """Initialise a piece"""
         self.num = num
-        self.id = next_id()
+        self.id = id
 
         # Rotation - 0, 1=90, 2=180, 3=270
         self.rotation = 0
@@ -92,7 +91,7 @@ def main():
     piece_numbers = read_input_file('exampleinput.txt')
 
     # Convert numbers to Tetris piece objects
-    pieces = [TetrisPiece(n) for n in piece_numbers]
+    pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces)
@@ -103,7 +102,7 @@ def main():
     print game.height
 
     # Write output of game moves
-    write_output_file('output.txt', game.output)
+##    write_output_file('output.txt', game.output)
 
 if __name__ == '__main__':
     main()

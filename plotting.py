@@ -16,6 +16,7 @@ from descartes.patch import PolygonPatch
 figure_size = (8, 10)
 shape_edge_colour = '#000000'
 shape_alpha = 0.8
+id_font_size = 10
 
 def plot_game(game, filename=None):
 
@@ -32,7 +33,7 @@ def plot_game(game, filename=None):
     # Add the game title
     ax.set_title(game.status)
 
-
+    # Plot to file or screen
     if filename is None:
         # Show the plot
         pyplot.show()
@@ -68,6 +69,14 @@ def plot_piece(ax, piece):
     patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
     ax.add_patch(patch)
 
+    if piece.id is not None:
+        # Show piece ID
+        centroid = piece.polygon.centroid
+        s = str(piece.id)
+        ax.text(centroid.x, centroid.y, s,
+            horizontalalignment='center',
+            verticalalignment='center',
+            size=id_font_size)
 
 if __name__ == "__main__":
     main()

@@ -20,7 +20,7 @@ from fileops import read_input_file
 
 def test_read_input_file():
     actual = read_input_file('exampleinput.txt')
-    expected = [1, 2, 3, 4, 5, 2, 7, 1, 6, 1, 8, 9, 4, 3, 2, 1, 5]
+    expected = [1, 2, 3, 4, 5, 2, 7, 1, 6, 1, 4, 3, 2, 1, 5]
 
     assert_equals(actual, expected)
 
@@ -33,7 +33,7 @@ def test_plot_shapes():
     for shape_num in range(1, 8):
 
         # Square piece
-        pieces = [TetrisPiece(shape_num)]
+        pieces = [TetrisPiece(shape_num, shape_num)]
 
         # Game with only one piece
         game = TetrisGame(pieces)
@@ -43,7 +43,7 @@ def test_plot_shapes():
 
 def test_plot_two_shapes():
     # Square piece
-    pieces = [TetrisPiece(1), TetrisPiece(2)]
+    pieces = [TetrisPiece(1, 'one'), TetrisPiece(2, 'two')]
 
     # Game with only one piece
     game = TetrisGame(pieces)
@@ -55,5 +55,5 @@ if __name__ == '__main__':
     nose.main(argv=[
         '--failed',
         '--verbosity=2',
-##        '--nocapture'
+        '--nocapture'
         ])
