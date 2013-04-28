@@ -29,7 +29,9 @@ class TetrisPiece():
     def __init__(self, num):
         self.num = num
         self.rotation = 0
+
         self.left = 0
+        self.height = 0
 
         self.polygon = get_shape_polygon(self.num)
         self.colour = get_piece_colour(self.num)

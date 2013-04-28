@@ -13,7 +13,7 @@ from matplotlib import pyplot
 from shapely.geometry import Polygon
 from descartes.patch import PolygonPatch
 
-SIZE = (8, 4)
+SIZE = (8, 10)
 shape_edge_colour = '#000000'
 
 def plot_game(game):
@@ -23,7 +23,7 @@ def plot_game(game):
 
     plot_board(ax, game)
     for piece in game.pieces:
-        plot_piece(game, piece)
+        plot_piece(ax, piece)
 
     ax.set_title(game.status)
 
@@ -32,7 +32,7 @@ def plot_game(game):
 def plot_board(ax, game):
     """Plots the game board"""
 
-    ax.grid(color='b', linestyle='-', linewidth=1)
+    ax.grid(color='k', linestyle=':', linewidth=1)
 
     height = max(game.height + 5, 10)
 
@@ -53,3 +53,19 @@ def plot_piece(ax, piece):
 
     patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=0.5, zorder=2)
     ax.add_patch(patch)
+
+
+def main():
+    from tetris import TetrisGame, TetrisPiece
+    from plotting import plot_game
+
+    # Square piece
+    pieces = [TetrisPiece(2)]
+
+    # Game with only one piece
+    game = TetrisGame(pieces)
+
+    plot_game(game)
+
+if __name__ == "__main__":
+    main()
