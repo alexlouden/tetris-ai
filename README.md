@@ -1,8 +1,6 @@
 tetris-ai
 =========
 
-Written by Alex Louden - 20255851
-
 <table>
   <tr>
     <th>Name</th><th>Student Number</th>
@@ -37,3 +35,7 @@ The program is structured into a number of Python files:
  * plotting.py - Plotting functionality
  * fileops.py - File operations
  * shapeops.py - Shape operations
+
+### Tetris.py
+
+Discussion here
