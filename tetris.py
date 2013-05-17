@@ -12,16 +12,16 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
-from shapeops import get_shape_polygon, get_piece_colour
+from shapeops import get_shape_polygon, get_piece_colour, merge_pieces
 
 from plotting import plot_game
 
-class TetrisGame():
-    def __init__(self, pieces, width=11, bufsize=1):
+class TetrisGame(object):
+    def __init__(self, pieces=None, width=11, max_buffer_size=1):
         """Initialise the game board"""
 
         # List of TetrisPieces
-        self.input_queue = pieces
+        self.input_queue = pieces if pieces is not None else []
         self.input_queue.reverse()
         self.pieces = []
 
@@ -29,7 +29,7 @@ class TetrisGame():
         self.width = width
 
         # Number of buffer positions
-        self.bufsize = bufsize
+        self.max_buffer_size = max_buffer_size
         self.buffer = []
 
         # Active game height (aim is to minimise this)
@@ -37,6 +37,8 @@ class TetrisGame():
 
         # Game status for plot title
         self.status = "Tetris"
+
+        self.pieces_blob = merge_pieces(self.pieces)
 
     def solve(self):
         """Attempt to solve the game.
@@ -46,11 +48,12 @@ class TetrisGame():
         print 'Starting to solve'
         print 'Number of pieces in input_queue:', len(self.input_queue)
 
-        for index, _ in enumerate(self.input_queue):
+        while self.input_queue:
+
             piece = self.input_queue.pop()
             self.step(piece)
 
-            plot_game(self, 'game_step_{}'.format(index))
+##            plot_game(self, 'game_step_{}'.format(index))
 
     def step(self, piece):
         """Perform one game step"""
@@ -90,7 +93,7 @@ class TetrisGame():
         raise NotImplementedError()
 
 
-class TetrisPiece():
+class TetrisPiece(object):
     def __init__(self, num, id=None):
         """Initialise a piece"""
         self.num = num
@@ -114,6 +117,11 @@ class TetrisPiece():
 ##        self.polygon = rotate()
         raise NotImplementedError()
 
+    def move_to(self, left, bottom):
+        polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
+        self.left = left
+        self.bottom = bottom
+
     @property
     def width(self):
         """Calculate polygon width"""
@@ -128,10 +136,12 @@ class TetrisPiece():
 
 def main():
     # Parse input file
-    piece_numbers = read_input_file('exampleinput.txt')
+##    piece_numbers = read_input_file('exampleinput.txt')
 
     # Convert numbers to Tetris piece objects
-    pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
+##    pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
+
+    pieces = [TetrisPiece(3, 'T'), TetrisPiece(4, 'Steve')]
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces)

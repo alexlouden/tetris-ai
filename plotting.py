@@ -72,7 +72,7 @@ def plot_piece(ax, piece):
     polygon = piece.polygon
 
     # Move polygon to left/bottom pos
-    polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
+    # polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
 
     patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
     ax.add_patch(patch)

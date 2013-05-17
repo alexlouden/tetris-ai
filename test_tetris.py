@@ -95,15 +95,17 @@ def test_num_useful_rotations():
 
 def test_scenarios():
 
-    piece_t = TetrisPiece(3, 'T')
-    piece_steve = TetrisPiece(4, 'Steve')
+    piece_l = TetrisPiece(4, 'L')
+    piece_j = TetrisPiece(5, 'J')
+    piece_o = TetrisPiece(2, 'O')
 
-    piece_steve.bottom = 5
+    piece_j.left = 2
+    piece_o.left = 1
 
-    pieces = [piece_t, piece_steve]
+    pieces = [piece_l, piece_j, piece_o]
 
     # Initialise game with list of pieces
-    game = TetrisGame()
+    game = TetrisGame(width=4)
     game.pieces = pieces
     game.status = "Scenario 1"
 
