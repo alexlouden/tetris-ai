@@ -93,6 +93,24 @@ def test_num_useful_rotations():
         assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
 
 
+def test_scenarios():
+
+    piece_t = TetrisPiece(3, 'T')
+    piece_steve = TetrisPiece(4, 'Steve')
+
+    piece_steve.bottom = 5
+
+    pieces = [piece_t, piece_steve]
+
+    # Initialise game with list of pieces
+    game = TetrisGame()
+    game.pieces = pieces
+    game.status = "Scenario 1"
+
+##    game.calculate_height()
+
+    plot_game(game, 'test_scenario')
+
 if __name__ == '__main__':
     nose.main(argv=[
         '--failed',
