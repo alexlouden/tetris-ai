@@ -66,7 +66,7 @@ class TetrisGame():
         """Returns the max number of blocks from the bottom"""
         raise NotImplementedError()
 
-    def is_valid():
+    def is_valid(self):
         """Whether piece positions are valid"""
         raise NotImplementedError()
 
@@ -83,6 +83,12 @@ class TetrisGame():
 
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
+
+    def is_bottom_row_full(self):
+        """Checks if bottom row is full of pieces"""
+
+        raise NotImplementedError()
+
 
 class TetrisPiece():
     def __init__(self, num, id=None):
@@ -105,10 +111,7 @@ class TetrisPiece():
         """Rotate piece into rotation position 0,1,2,3"""
         # self.rotation = ??
         # self.polygon = ??
-        raise NotImplementedError()
-
-    def calculate_useful_rotations():
-        """The number of useful rotations"""
+##        self.polygon = rotate()
         raise NotImplementedError()
 
     @property

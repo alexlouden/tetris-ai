@@ -17,6 +17,7 @@ from nose.tools import timed, raises, assert_equals
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from fileops import read_input_file
+from shapeops import num_useful_rotations
 
 def test_read_input_file():
     actual = read_input_file('exampleinput.txt')
@@ -75,6 +76,22 @@ def test_shape_width_and_heights():
     for piece in pieces:
         assert_equals(piece.width, expected_widths[piece.num])
         assert_equals(piece.height, expected_heights[piece.num])
+
+def test_num_useful_rotations():
+
+    expected_useful_rotations = {
+        1: [0, 1],
+        2: [0],
+        3: [0, 1, 2, 3],
+        4: [0, 1, 2, 3],
+        5: [0, 1, 2, 3],
+        6: [0, 1],
+        7: [0, 1]
+    }
+
+    for i in range(1, 8):
+        assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
+
 
 if __name__ == '__main__':
     nose.main(argv=[

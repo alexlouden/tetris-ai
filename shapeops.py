@@ -9,7 +9,8 @@
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 
-from shapely.geometry import Polygon
+from shapely.geometry import Polygon, Point
+from shapely.affinity import rotate
 
 # List of shape coordinates - (x,y)
 piece_shapes = {
@@ -43,3 +44,33 @@ def get_piece_colour(num):
 # Used in parsing input file
 def valid_shape_id(num):
     return num in piece_colours and num in piece_shapes
+
+def num_useful_rotations(num):
+    """ Determine which rotation states are unique
+
+    i.e.
+        piece 1 (line)   = [0, 90]
+        piece 2 (square) = [0]
+        piece 3          = [0, 90, 180, 270]
+    """
+
+    shape = get_shape_polygon(num)
+
+    unique_rotation_states = [0]
+    unique_rotation_shapes = [shape]
+
+    for rotation_id in range(1,5):
+        # Angle of rotation in degrees
+        angle = rotation_id * 90
+
+        rotated_piece = rotate(shape, angle, origin='centroid')
+
+        # Make sure rotated piece isn't same as an existing unique shape
+        if not any(rotated_piece.equals(shape) for shape in unique_rotation_shapes):
+            unique_rotation_states.append(rotation_id)
+            unique_rotation_shapes.append(rotated_piece)
+
+    return unique_rotation_states
+
+
+
