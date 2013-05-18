@@ -14,7 +14,6 @@ from shapely.geometry import Polygon
 from shapely.affinity import translate
 from descartes.patch import PolygonPatch
 
-figure_size = (8, 10)
 shape_edge_colour = '#000000'
 shape_alpha = 0.8
 id_font_size = 10
@@ -25,13 +24,17 @@ def plot_game(game, filename=None):
     Plot to file if a filename is given, otherwise plot to the screen.
     """
 
-    # Create figure and axis
+    board_height = int(max(game.height + 2, 8))
+
+    # Create figure and resize
     pyplot.clf()
-    fig = pyplot.figure(1, figsize=figure_size, dpi=90)
+    fig = pyplot.gcf()
+    fig.set_size_inches(8, board_height*0.5+1)
+
     ax = fig.add_subplot(111)
 
     # Plot the board and pieces
-    plot_board(ax, game)
+    plot_board(ax, game, board_height)
     for piece in game.pieces:
         plot_piece(ax, piece)
 
@@ -47,14 +50,12 @@ def plot_game(game, filename=None):
         if not filename.lower().endswith('.png'):
             filename += '.png'
 
-        pyplot.savefig(filename)
+        pyplot.savefig(filename, dpi=120)
 
-def plot_board(ax, game):
+def plot_board(ax, game, height):
     """Helper - Plots the game board"""
 
     ax.grid(color='k', linestyle=':', linewidth=1)
-
-    height = int(max(game.height + 2, 8))
 
     xrange = [0, game.width]
     yrange = [0, height]
