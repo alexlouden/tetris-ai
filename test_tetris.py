@@ -249,9 +249,9 @@ def test_is_row_full():
 
     g = TetrisGame(width=5)
 
-    g.drop(TetrisPiece(4, rotation=2), 3)
-    g.drop(TetrisPiece(6, rotation=1), 1)
-    g.drop(TetrisPiece(2), 0)
+    g.drop(TetrisPiece(4, 'L', rotation=2), 3)
+    g.drop(TetrisPiece(6, 'Z', rotation=1), 1)
+    g.drop(TetrisPiece(2, 'square'), 0)
 
     # Rows 0 and 2 are not full
     assert_false(g.is_row_full(0))
@@ -260,9 +260,16 @@ def test_is_row_full():
     # Row 1 is full
     assert_true(g.is_row_full(1))
 
+
+
 ##    print g.check_full_rows()
 
-    plot_game(g, 'test_full_row')
+    plot_game(g, 'test_full_row_before')
+
+    g.check_full_rows()
+
+    plot_game(g, 'test_full_row_after')
+
 
 
 if __name__ == '__main__':
@@ -272,5 +279,5 @@ if __name__ == '__main__':
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
         '-a !plots', # Ignore tests with 'plots' attribute
-        __name__
+
         ])

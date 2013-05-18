@@ -70,7 +70,8 @@ class TetrisGame(object):
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
         x_min, y_min, x_max, y_max = self.merged_pieces.bounds
-        return y_max
+        # Assume height is integer
+        return int(y_max)
 
     def drop(self, piece, left):
         """ Drops piece into position x pixels from left.
@@ -101,21 +102,37 @@ class TetrisGame(object):
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
 
+    def update_merged_pieces(self):
+        self.merged_pieces = merge(self.pieces)
+
     def check_full_rows(self):
         """Checks if any rows are full of pieces"""
 
-        for height in range(0, self.height):
-            print self.is_row_full(height)
+        full_rows = []
 
-        raise NotImplementedError()
+        # Go through each row, add to list of full rows
+        for height in range(0, self.height):
+            if self.is_row_full(height):
+                full_rows.append(height)
+
+        # Go through each full row
+        for row_id in full_rows:
+            self.remove_full_row(row_id)
 
     def is_row_full(self, height):
         """ Returns whether a row is completely full of pieces """
-        box = get_box(self.width, height)
-        return box.intersection(self.merged_pieces).area == box.area
+        row = get_box(self.width, height)
+        return row.intersection(self.merged_pieces).area == row.area
 
-    def update_merged_pieces(self):
-        self.merged_pieces = merge(self.pieces)
+    def remove_full_row(self, row_id):
+        # Find out which shapes intersect this row and split them
+        row = get_box(self.width, row_id)
+
+        for piece in self.pieces:
+            if piece.intersects(row):
+                split_pieces = piece.split(row)
+
+        pass
 
 
 class TetrisPiece(object):
@@ -220,6 +237,25 @@ class TetrisPiece(object):
     def intersects(self, other):
         """ Returns whether this piece intersects the other """
         return self.polygon.intersection(other).area != 0
+
+    def split(self, row):
+        """ Split shape by row polygon """
+
+        shape = self.polygon.difference(row)
+        print shape
+        print shape.type
+
+        if shape.type == 'MultiPolygon':
+            # Multiple geoms
+            # TODO: split into two shapes?
+            return list(shape.geoms)
+
+        elif shape.type == 'Polygon':
+            self.polygon = shape
+
+
+        pass
+
 
 def main():
     # Parse input file
