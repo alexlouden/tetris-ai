@@ -13,8 +13,8 @@
 
 from fileops import read_input_file, write_output_file
 from shapeops import get_shape_polygon, get_piece_colour, merge, move, rotate
-
 from plotting import plot_game
+
 
 class TetrisGame(object):
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
@@ -49,43 +49,48 @@ class TetrisGame(object):
         print 'Starting to solve'
         print 'Number of pieces in input_queue:', len(self.input_queue)
 
+        index = 0
+
         while self.input_queue:
 
             piece = self.input_queue.pop()
             self.step(piece)
 
-##            plot_game(self, 'game_step_{}'.format(index))
+            plot_game(self, 'game_step_{}'.format(index))
+            index += 1
 
     def step(self, piece):
         """Perform one game step"""
         print 'step', piece.id, piece.num
-        # self.height = ?
+
+        self.drop(piece, left=0)
+
         # self.buffer ?
-        # piece.left = ?
-        # piece.bottom = ?
-        # self.pieces.append(piece)
+
         self.update_merged_pieces()
-##        raise NotImplementedError()
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
         x_min, y_min, x_max, y_max = self.merged_pieces.bounds
         return y_max
 
-    def is_valid(self):
-        """Whether piece positions are valid"""
-        raise NotImplementedError()
-
-    def drop(piece, left):
+    def drop(self, piece, left):
         """ Drops piece into position x pixels from left.
         Ensure piece has been removed from input_queue first
         """
-        # start at piece.top = self.height
-        # drop down until one before intersection
 
-        # Then put piece into game.pieces:
-        # self.pieces.append(piece)
-        raise NotImplementedError()
+        piece.left = left
+        piece.bottom = self.height
+
+        # Drop down until piece touches other pieces
+        while not piece.edge_touches(self.merged_pieces) and piece.bottom > 0:
+            piece.bottom -= 1
+
+        self.pieces.append(piece)
+
+        self.update_merged_pieces()
+        self.height = self.calculate_height()
+
 
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
@@ -202,14 +207,22 @@ class TetrisPiece(object):
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(y_max - y_min)
 
+    def edge_touches(self, other):
+        """ Returns whether an edge of this piece touches the edge of a polygon """
+
+##        print self.polygon.intersection(other).area
+
+
+        return self.polygon.touches(other)
+
 def main():
     # Parse input file
-##    piece_numbers = read_input_file('exampleinput.txt')
+    piece_numbers = read_input_file('exampleinput.txt')
 
     # Convert numbers to Tetris piece objects
-##    pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
+    pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
 
-    pieces = [TetrisPiece(3, 'T'), TetrisPiece(4, 'Steve')]
+##    pieces = [TetrisPiece(3, 'T'), TetrisPiece(4, 'Steve')]
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces)

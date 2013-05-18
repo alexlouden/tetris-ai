@@ -193,6 +193,18 @@ def test_calculate_height():
 
     plot_game(g, 'test_game_height')
 
+
+def test_drop():
+
+    g = TetrisGame(width=5)
+    g.drop(TetrisPiece(7), 0)
+    g.drop(TetrisPiece(1), 0)
+
+    plot_game(g, 'test_drop')
+
+    assert_equals(g.height, 6)
+
+
 def test_scenarios():
 
     piece_l = TetrisPiece(4, 'L')
