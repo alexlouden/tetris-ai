@@ -12,7 +12,8 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
-from shapeops import get_shape_polygon, get_piece_colour, merge, move, rotate, get_box
+from shapeops import get_shape_polygon, get_piece_colour
+from shapeops import merge, move, rotate, get_box, combine_split
 from plotting import plot_game
 
 class TetrisGame(object):
@@ -119,6 +120,9 @@ class TetrisGame(object):
         for row_id in full_rows:
             self.remove_full_row(row_id)
 
+        self.update_merged_pieces()
+        self.height = self.calculate_height()
+
     def is_row_full(self, height):
         """ Returns whether a row is completely full of pieces """
         row = get_box(self.width, height)
@@ -129,10 +133,13 @@ class TetrisGame(object):
         row = get_box(self.width, row_id)
 
         for piece in self.pieces:
+            # Split piece if it intersects row
             if piece.intersects(row):
-                split_pieces = piece.split(row)
+                piece.split(row)
 
-        pass
+            # Shift pieces above row down by one
+            elif piece.polygon.centroid.y > row_id:
+                piece.bottom -= 1
 
 
 class TetrisPiece(object):
@@ -239,23 +246,31 @@ class TetrisPiece(object):
         return self.polygon.intersection(other).area != 0
 
     def split(self, row):
-        """ Split shape by row polygon """
+        """ Split shape by row polygon
 
+        When shapes intersect the row, they are merged down.
+
+        E.g.
+              [ ]
+        [x][x][x]  -->        [ ]
+        [ ]             [ ]
+
+        """
         shape = self.polygon.difference(row)
-        print shape
-        print shape.type
 
         if shape.type == 'MultiPolygon':
-            # Multiple geoms
-            # TODO: split into two shapes?
-            return list(shape.geoms)
-
+            # Combine multiple geoms into one
+            shape = combine_split(shape)
         elif shape.type == 'Polygon':
-            self.polygon = shape
+            # If remaining polygon is above row
+            if shape.centroid.y >= row.centroid.y:
+                shape = move(shape, 0, -1)
 
+        self.polygon = shape
 
-        pass
-
+        # Update left/bottom attributes
+        self._left = self.polygon.bounds[0]
+        self._bottom = self.polygon.bounds[1]
 
 def main():
     # Parse input file

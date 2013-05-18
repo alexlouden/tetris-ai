@@ -88,3 +88,15 @@ def rotate(polygon, angle):
 
 def get_box(width, bottom):
     return box(0, bottom, width, bottom + 1)
+
+def combine_split(shape):
+    """Combine a MultiPolygon into a single shape"""
+    shape1, shape2 = shape.geoms
+
+    # Drop the higher shape down by 1 row
+    if shape1.centroid.y > shape2.centroid.y:
+        shape1 = translate(shape1, yoff=-1)
+    else:
+        shape2 = translate(shape2, yoff=-1)
+
+    return shape1.union(shape2)
