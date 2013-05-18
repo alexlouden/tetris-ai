@@ -166,6 +166,33 @@ def test_merge_pieces():
     assert_true(merged.intersects(p2.polygon))
     assert_true(p1.polygon.touches(p2.polygon))
 
+def test_calculate_height():
+
+    # Create game with an I and a square with one gap
+    p1 = TetrisPiece(2)
+    p2 = TetrisPiece(1)
+    p2.left = 3
+
+    g = TetrisGame()
+    g.pieces = [p1, p2]
+    g.update_merged_pieces()
+
+    # Height should be 4
+    assert_equals(g.calculate_height(), 4)
+
+    # Add two more squares on top of piece 2
+    p3 = TetrisPiece(2)
+    p3.bottom = 2
+    p4 = TetrisPiece(2)
+    p4.bottom = 4
+
+    g.pieces = [p1, p2, p3, p4]
+    g.update_merged_pieces()
+
+    assert_equals(g.calculate_height(), 6)
+
+    plot_game(g, 'test_game_height')
+
 def test_scenarios():
 
     piece_l = TetrisPiece(4, 'L')

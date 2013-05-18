@@ -39,7 +39,7 @@ class TetrisGame(object):
         self.status = "Tetris"
 
         # Merge all pieces together into one polygon
-        self.merged_pieces = merge(self.pieces)
+        self.update_merged_pieces()
 
     def solve(self):
         """Attempt to solve the game.
@@ -64,11 +64,13 @@ class TetrisGame(object):
         # piece.left = ?
         # piece.bottom = ?
         # self.pieces.append(piece)
+        self.update_merged_pieces()
 ##        raise NotImplementedError()
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
-        raise NotImplementedError()
+        x_min, y_min, x_max, y_max = self.merged_pieces.bounds
+        return y_max
 
     def is_valid(self):
         """Whether piece positions are valid"""
@@ -88,10 +90,13 @@ class TetrisGame(object):
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
 
-    def is_bottom_row_full(self):
-        """Checks if bottom row is full of pieces"""
+    def check_row_full(self):
+        """Checks if any row is full of pieces"""
 
         raise NotImplementedError()
+
+    def update_merged_pieces(self):
+        self.merged_pieces = merge(self.pieces)
 
 
 class TetrisPiece(object):
