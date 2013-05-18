@@ -54,7 +54,7 @@ def plot_board(ax, game):
 
     ax.grid(color='k', linestyle=':', linewidth=1)
 
-    height = max(game.height + 5, 10)
+    height = int(max(game.height + 5, 10))
 
     xrange = [0, game.width]
     yrange = [0, height]
@@ -83,5 +83,3 @@ def plot_piece(ax, piece):
             verticalalignment='center',
             size=id_font_size)
 
-if __name__ == "__main__":
-    main()
