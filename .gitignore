@@ -37,3 +37,9 @@ nosetests.xml
 # Pictures
 *.png
 .noseids
+
+*.xml
+
+.idea/tetris-ai.iml
+
+.idea/.name
