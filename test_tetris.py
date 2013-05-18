@@ -12,12 +12,12 @@
 #-------------------------------------------------------------------------------
 
 import nose
-from nose.tools import timed, raises, assert_equals
+from nose.tools import timed, raises, assert_equals, assert_true
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from fileops import read_input_file
-from shapeops import num_useful_rotations
+from shapeops import num_useful_rotations, merge_pieces
 
 def test_read_input_file():
     actual = read_input_file('exampleinput.txt')
@@ -46,7 +46,7 @@ def test_plot_all_shapes():
     pieces = [TetrisPiece(i, i) for i in range(1, 8)]
 
     # Game with only one piece (width of 13 fits all 7 standard shapes)
-    game = TetrisGame(pieces, 13)
+    game = TetrisGame(width=13)
     game.pieces = pieces
 
     left = 0
@@ -119,6 +119,23 @@ def test_num_useful_rotations():
 
     for i in range(1, 8):
         assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
+
+def test_merge_pieces():
+
+    # Two I shapes next to each other
+    p1 = TetrisPiece(1)
+    p2 = TetrisPiece(1)
+    p2.left = 1
+
+    # Merge pieces into one 2x4 rectangle
+    merged = merge_pieces([p1, p2])
+
+    assert_equals(merged.bounds, (0, 0, 2, 4))
+
+    # Test geometry relationships
+    assert_true(merged.intersects(p1.polygon))
+    assert_true(merged.intersects(p2.polygon))
+    assert_true(p1.polygon.touches(p2.polygon))
 
 def test_scenarios():
 

@@ -73,7 +73,6 @@ def num_useful_rotations(num):
 
     return unique_rotation_states
 
-
 def merge_pieces(pieces):
     if not pieces:
         return Polygon()

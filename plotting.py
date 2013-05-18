@@ -71,9 +71,6 @@ def plot_piece(ax, piece):
     colour = piece.colour
     polygon = piece.polygon
 
-    # Move polygon to left/bottom pos
-    # polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
-
     patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
     ax.add_patch(patch)
 
@@ -81,7 +78,7 @@ def plot_piece(ax, piece):
         # Show piece ID
         centroid = piece.polygon.centroid
         s = str(piece.id)
-        ax.text(centroid.x+piece.left, centroid.y+piece.bottom, s,
+        ax.text(centroid.x, centroid.y, s,
             horizontalalignment='center',
             verticalalignment='center',
             size=id_font_size)
