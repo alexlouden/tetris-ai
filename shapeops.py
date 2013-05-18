@@ -9,7 +9,7 @@
 # Licence:     <your licence>
 #-------------------------------------------------------------------------------
 
-from shapely.geometry import Polygon, Point
+from shapely.geometry import Polygon, Point, box
 from shapely.affinity import translate, rotate as polygon_rotate
 from shapely.ops import cascaded_union
 
@@ -85,3 +85,6 @@ def move(polygon, x, y):
 def rotate(polygon, angle):
     centre_of_rotation = (0, 0)
     return polygon_rotate(polygon, angle, origin=centre_of_rotation)
+
+def get_box(width, bottom):
+    return box(0, bottom, width, bottom + 1)

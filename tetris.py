@@ -12,9 +12,8 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
-from shapeops import get_shape_polygon, get_piece_colour, merge, move, rotate
+from shapeops import get_shape_polygon, get_piece_colour, merge, move, rotate, get_box
 from plotting import plot_game
-
 
 class TetrisGame(object):
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
@@ -64,11 +63,9 @@ class TetrisGame(object):
         print 'step', piece.id, piece.num
 
         # TODO - step simply drops piece on leftmost side of board
+        # self.buffer ?
         self.drop(piece, left=0)
 
-        # self.buffer ?
-
-        self.update_merged_pieces()
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
@@ -104,10 +101,18 @@ class TetrisGame(object):
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
 
-    def check_row_full(self):
-        """Checks if any row is full of pieces"""
+    def check_full_rows(self):
+        """Checks if any rows are full of pieces"""
+
+        for height in range(0, self.height):
+            print self.is_row_full(height)
 
         raise NotImplementedError()
+
+    def is_row_full(self, height):
+        """ Returns whether a row is completely full of pieces """
+        box = get_box(self.width, height)
+        return box.intersection(self.merged_pieces).area == box.area
 
     def update_merged_pieces(self):
         self.merged_pieces = merge(self.pieces)
@@ -223,13 +228,11 @@ def main():
     # Convert numbers to Tetris piece objects
     pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
 
-##    pieces = [TetrisPiece(3, 'T'), TetrisPiece(4, 'Steve')]
-
     # Initialise game with list of pieces
     game = TetrisGame(pieces)
 
     # Solve game
-    game.solve()
+##    game.solve()
 ##
 ##    print game.height
 ##

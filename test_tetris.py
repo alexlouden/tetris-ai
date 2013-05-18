@@ -14,7 +14,7 @@
 from random import randint
 
 import nose
-from nose.tools import timed, raises, assert_equals, assert_true
+from nose.tools import timed, raises, assert_equals, assert_true, assert_false
 from nose.plugins.attrib import attr
 
 from tetris import TetrisGame, TetrisPiece
@@ -245,7 +245,7 @@ def test_random_drop():
 
     plot_game(g, 'test_random_drop')
 
-def test_full_row():
+def test_is_row_full():
 
     g = TetrisGame(width=5)
 
@@ -253,10 +253,16 @@ def test_full_row():
     g.drop(TetrisPiece(6, rotation=1), 1)
     g.drop(TetrisPiece(2), 0)
 
-    g.check_row_full()
+    # Rows 0 and 2 are not full
+    assert_false(g.is_row_full(0))
+    assert_false(g.is_row_full(2))
+
+    # Row 1 is full
+    assert_true(g.is_row_full(1))
+
+##    print g.check_full_rows()
 
     plot_game(g, 'test_full_row')
-
 
 
 if __name__ == '__main__':
