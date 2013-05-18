@@ -227,7 +227,7 @@ def test_drop_out_of_bounds():
     g.drop(p, 0)
 
 
-##@attr('plots')
+@attr('plots')
 def test_random_drop():
     # Just for fun
 
@@ -268,6 +268,25 @@ def test_is_row_full():
     assert_equals(g.height, 4)
 
     plot_game(g, 'test_full_row_1_after')
+
+
+def test_check_full_rows():
+
+    g = TetrisGame(width=4)
+    g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
+    g.check_full_rows()
+
+    assert_equals(g.height, 0)
+
+def test_check_full_rows_multiple():
+
+    g = TetrisGame(width=4)
+    g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
+    g.drop(TetrisPiece(1, 'I2', rotation=1), 0)
+
+    g.check_full_rows()
+
+    assert_equals(g.height, 0)
 
 
 if __name__ == '__main__':

@@ -70,6 +70,9 @@ class TetrisGame(object):
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
+        if self.merged_pieces.is_empty:
+            return 0
+
         x_min, y_min, x_max, y_max = self.merged_pieces.bounds
         # Assume height is integer
         return int(y_max)
@@ -116,8 +119,8 @@ class TetrisGame(object):
             if self.is_row_full(height):
                 full_rows.append(height)
 
-        # Go through each full row
-        for row_id in full_rows:
+        # Go through each full row (top down)
+        for row_id in full_rows[::-1]:
             self.remove_full_row(row_id)
 
         self.update_merged_pieces()
@@ -132,14 +135,23 @@ class TetrisGame(object):
         # Find out which shapes intersect this row and split them
         row = get_box(self.width, row_id)
 
-        for piece in self.pieces:
+        pieces_to_remove = []
+
+        for index, piece in enumerate(self.pieces):
             # Split piece if it intersects row
             if piece.intersects(row):
-                piece.split(row)
+                split_status = piece.split(row)
+
+                if split_status == 'remove':
+                    pieces_to_remove.append(piece)
 
             # Shift pieces above row down by one
             elif piece.polygon.centroid.y > row_id:
                 piece.bottom -= 1
+
+        # Remove all empty pieces
+        for piece in pieces_to_remove:
+            self.pieces.remove(piece)
 
 
 class TetrisPiece(object):
@@ -267,6 +279,10 @@ class TetrisPiece(object):
                 shape = move(shape, 0, -1)
 
         self.polygon = shape
+
+        if self.polygon.is_empty:
+            # Polygon is gone!
+            return 'remove'
 
         # Update left/bottom attributes
         self._left = self.polygon.bounds[0]
