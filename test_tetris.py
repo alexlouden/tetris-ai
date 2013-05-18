@@ -11,8 +11,11 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
+from random import randint
+
 import nose
 from nose.tools import timed, raises, assert_equals, assert_true
+from nose.plugins.attrib import attr
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
@@ -28,6 +31,7 @@ def test_read_input_file():
 def test_write_output_file():
     pass
 
+@attr('plots')
 def test_plot_shapes():
 
     # Plot each shape number
@@ -42,6 +46,7 @@ def test_plot_shapes():
 
         plot_game(game, 'test_shape_{}'.format(shape_num))
 
+@attr('plots')
 def test_plot_all_shapes():
     pieces = [TetrisPiece(i, i) for i in range(1, 8)]
 
@@ -211,8 +216,46 @@ def test_drop():
 
     plot_game(g, 'test_drop_2')
 
-    assert_equals(g.height, 4)
+    assert_equals(g.height, 6)
 
+@raises(ValueError)
+def test_drop_out_of_bounds():
+
+    g = TetrisGame(width=3)
+    p = TetrisPiece(1)
+    p.rotate(1)
+    g.drop(p, 0)
+
+
+def test_full_row():
+
+    g = TetrisGame(width=5)
+
+    g.drop(TetrisPiece(4, rotation=2), 3)
+    g.drop(TetrisPiece(6, rotation=1), 1)
+    g.drop(TetrisPiece(2), 0)
+
+    g.check_row_full()
+
+    plot_game(g, 'test_full_row')
+
+@attr('plots')
+def test_random_drop():
+    # Just for fun
+
+    g = TetrisGame(width=10)
+
+    while g.height < 30:
+        piece_id = randint(1, 7)
+        left = randint(0, 9)
+        rotation = randint(0, 3)
+        try:
+            g.drop(TetrisPiece(piece_id, rotation=rotation), left)
+        except ValueError:
+            # Ignore pieces off edge
+            pass
+
+    plot_game(g, 'test_random_drop')
 
 def test_scenarios():
 
@@ -238,5 +281,6 @@ if __name__ == '__main__':
     nose.main(argv=[
         '--failed',
         '--verbosity=2',
-        '--nocapture'
+        '--nocapture',
+        '-a !plots'
         ])

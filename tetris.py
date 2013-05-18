@@ -63,6 +63,7 @@ class TetrisGame(object):
         """Perform one game step"""
         print 'step', piece.id, piece.num
 
+        # TODO - step simply drops piece on leftmost side of board
         self.drop(piece, left=0)
 
         # self.buffer ?
@@ -79,18 +80,26 @@ class TetrisGame(object):
         Ensure piece has been removed from input_queue first
         """
 
+        # Validate whether piece will fit into game
+        if piece.width + left > self.width:
+            raise ValueError("Piece {0.id} is out of bounds".format(piece))
+
         piece.left = left
         piece.bottom = self.height
 
-        # Drop down until piece touches other pieces
-        while not piece.edge_touches(self.merged_pieces) and piece.bottom > 0:
+        # Drop down from top, one step at a time
+        while piece.bottom > 0:
             piece.bottom -= 1
+
+            # If piece intersects merged pieces, go back up one square
+            if piece.intersects(self.merged_pieces):
+                piece.bottom += 1
+                break
 
         self.pieces.append(piece)
 
         self.update_merged_pieces()
         self.height = self.calculate_height()
-
 
     def get_output(self):
         return "\n".join(["{0.num} {0.rotation} {0.left}".format(p) for p in self.pieces])
@@ -105,13 +114,10 @@ class TetrisGame(object):
 
 
 class TetrisPiece(object):
-    def __init__(self, num, id=None):
+    def __init__(self, num, id=None, rotation=0):
         """Initialise a piece"""
         self.num = num
         self.id = id
-
-        # Rotation - 0=0, 1=90, 2=180, 3=270
-        self._rotation = 0
 
         # Position of piece, relative to bottom left corner of board
         self._left = 0
@@ -121,12 +127,9 @@ class TetrisPiece(object):
         self.polygon = get_shape_polygon(self.num)
         self.colour = get_piece_colour(self.num)
 
-    def rotate(self, num=0):
-        """Rotate piece into rotation position 0,1,2,3"""
-        # self.rotation = ??
-        # self.polygon = ??
-##        self.polygon = rotate()
-        raise NotImplementedError()
+        # Rotation - 0=0, 1=90, 2=180, 3=270
+        self._rotation = 0
+        self.rotation = rotation
 
     # Piece translation
     def move_to(self, left=None, bottom=None):
@@ -164,6 +167,8 @@ class TetrisPiece(object):
 
     # Piece rotation
     def rotate(self, angle_id):
+        """Rotate piece into rotation position 0,1,2,3"""
+
         # Check angle_id is valid
         if angle_id not in range(0, 4):
             raise ValueError("Invalid angle id, must be one of 0, 1, 2 or 3")
@@ -207,16 +212,9 @@ class TetrisPiece(object):
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(y_max - y_min)
 
-    def edge_touches(self, other):
-        """ Returns whether an edge of this piece touches the edge of a polygon """
-        if other.is_empty:
-            return False
-
-        # Intersect exterior with other exterior
-        intersection_type = other.exterior.intersection(self.polygon.exterior).type
-
-        # Return True if intersection is not at just a single point
-        return intersection_type != 'Point'
+    def intersects(self, other):
+        """ Returns whether this piece intersects the other """
+        return self.polygon.intersection(other).area != 0
 
 def main():
     # Parse input file
