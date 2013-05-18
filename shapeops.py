@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 
 from shapely.geometry import Polygon, Point
-from shapely.affinity import rotate, translate
+from shapely.affinity import translate, rotate as polygon_rotate
 from shapely.ops import cascaded_union
 
 # List of shape coordinates - (x,y)
@@ -64,7 +64,7 @@ def num_useful_rotations(num):
         # Angle of rotation in degrees
         angle = rotation_id * 90
 
-        rotated_piece = rotate(shape, angle, origin='centroid')
+        rotated_piece = polygon_rotate(shape, angle, origin='centroid')
 
         # Make sure rotated piece isn't same as an existing unique shape
         if not any(rotated_piece.equals(shape) for shape in unique_rotation_shapes):
@@ -73,7 +73,7 @@ def num_useful_rotations(num):
 
     return unique_rotation_states
 
-def merge_pieces(pieces):
+def merge(pieces):
     if not pieces:
         return Polygon()
 
@@ -81,3 +81,8 @@ def merge_pieces(pieces):
 
 def move(polygon, x, y):
     return translate(polygon, x, y)
+
+def rotate(polygon, angle):
+    # TODO - which origin position?
+    centre_of_rotation = (0, 0)
+    return polygon_rotate(polygon, angle, origin=centre_of_rotation)

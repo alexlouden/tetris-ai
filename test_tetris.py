@@ -17,7 +17,7 @@ from nose.tools import timed, raises, assert_equals, assert_true
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from fileops import read_input_file
-from shapeops import num_useful_rotations, merge_pieces
+from shapeops import num_useful_rotations, merge
 
 def test_read_input_file():
     actual = read_input_file('exampleinput.txt')
@@ -77,7 +77,7 @@ def test_shape_width_and_heights():
         assert_equals(piece.width, expected_widths[piece.num])
         assert_equals(piece.height, expected_heights[piece.num])
 
-def test_move_piece():
+def test_move():
 
     p = TetrisPiece(1)
 
@@ -91,19 +91,48 @@ def test_move_piece():
     # Check polygon
     assert_equals(p.polygon.bounds, (1, 2, 2, 6)) # min_x, min_y, max_x, max_y
 
-    # Move piece from 1,2 to 5,6
+    # Move piece from 1,2 to 4,5
     p.move_to(4, 5)
     assert_equals(p.left, 4)
     assert_equals(p.bottom, 5)
     assert_equals(p.polygon.bounds, (4, 5, 5, 9))
 
-    # Move piece with attribute
+    # Move piece with attribute from 4,5 to 4,2
     p.left = 4
     p.bottom = 2
 
     assert_equals(p.left, 4)
     assert_equals(p.bottom, 2)
     assert_equals(p.polygon.bounds, (4, 2, 5, 6))
+
+def test_rotate():
+
+    # Create a I piece, rotate it 4 times and check bounds
+    p = TetrisPiece(1)
+    assert_equals(p.rotation, 0)
+    assert_equals(p.polygon.bounds, (0, 0, 1, 4))
+
+    p.rotation = 1
+    assert_equals(p.rotation, 1)
+    assert_equals(p.polygon.bounds, (0, 0, 4, 1))
+
+    p.rotation = 2
+    assert_equals(p.rotation, 2)
+    assert_equals(p.polygon.bounds, (0, 0, 1, 4))
+
+    p.rotation = 3
+    assert_equals(p.rotation, 3)
+    assert_equals(p.polygon.bounds, (0, 0, 4, 1))
+
+    p.rotate(0)
+    assert_equals(p.rotation, 0)
+    assert_equals(p.polygon.bounds, (0, 0, 1, 4))
+
+@raises(ValueError)
+def test_invalid_rotation():
+    # Try to rotate 90 degrees (but rotate only accepts 0,1,2,3)
+    p = TetrisPiece(1)
+    p.rotate(90)
 
 def test_num_useful_rotations():
 
@@ -128,7 +157,7 @@ def test_merge_pieces():
     p2.left = 1
 
     # Merge pieces into one 2x4 rectangle
-    merged = merge_pieces([p1, p2])
+    merged = merge([p1, p2])
 
     assert_equals(merged.bounds, (0, 0, 2, 4))
 

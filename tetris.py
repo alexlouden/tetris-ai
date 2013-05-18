@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
-from shapeops import get_shape_polygon, get_piece_colour, merge_pieces, move
+from shapeops import get_shape_polygon, get_piece_colour, merge, move, rotate
 
 from plotting import plot_game
 
@@ -39,7 +39,7 @@ class TetrisGame(object):
         self.status = "Tetris"
 
         # Merge all pieces together into one polygon
-        self.merged_pieces = merge_pieces(self.pieces)
+        self.merged_pieces = merge(self.pieces)
 
     def solve(self):
         """Attempt to solve the game.
@@ -101,7 +101,7 @@ class TetrisPiece(object):
         self.id = id
 
         # Rotation - 0=0, 1=90, 2=180, 3=270
-        self.rotation = 0
+        self._rotation = 0
 
         # Position of piece, relative to bottom left corner of board
         self._left = 0
@@ -118,6 +118,7 @@ class TetrisPiece(object):
 ##        self.polygon = rotate()
         raise NotImplementedError()
 
+    # Piece translation
     def move_to(self, left=None, bottom=None):
 
         # If attributes are None
@@ -150,6 +151,39 @@ class TetrisPiece(object):
     @bottom.setter
     def bottom(self, value):
         self.move_to(bottom=value)
+
+    # Piece rotation
+    def rotate(self, angle_id):
+        # Check angle_id is valid
+        if angle_id not in range(0, 4):
+            raise ValueError("Invalid angle id, must be one of 0, 1, 2 or 3")
+
+        # Difference in angle
+        angle_diff = angle_id*90 - self._rotation*90
+
+        # Rotate polygon
+        self.polygon = rotate(self.polygon, angle_diff)
+
+        # Set rotation attribute
+        self._rotation = angle_id
+
+        previous_left = self.left
+        previous_bottom = self.bottom
+
+        # Update left/bottom
+        self._left = self.polygon.bounds[0]
+        self._bottom = self.polygon.bounds[1]
+
+        # Move bottom left corner to where shape was before rotation
+        self.move_to(previous_left, previous_bottom)
+
+    @property
+    def rotation(self):
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, value):
+        self.rotate(value)
 
     @property
     def width(self):
