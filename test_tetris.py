@@ -204,6 +204,15 @@ def test_drop():
 
     assert_equals(g.height, 6)
 
+    g = TetrisGame(width=5)
+    g.drop(TetrisPiece(2), 0)
+    g.drop(TetrisPiece(1), 0)
+    g.drop(TetrisPiece(1), 1)
+
+    plot_game(g, 'test_drop_2')
+
+    assert_equals(g.height, 4)
+
 
 def test_scenarios():
 

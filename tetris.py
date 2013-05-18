@@ -209,11 +209,14 @@ class TetrisPiece(object):
 
     def edge_touches(self, other):
         """ Returns whether an edge of this piece touches the edge of a polygon """
+        if other.is_empty:
+            return False
 
-##        print self.polygon.intersection(other).area
+        # Intersect exterior with other exterior
+        intersection_type = other.exterior.intersection(self.polygon.exterior).type
 
-
-        return self.polygon.touches(other)
+        # Return True if intersection is not at just a single point
+        return intersection_type != 'Point'
 
 def main():
     # Parse input file
