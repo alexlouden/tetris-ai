@@ -12,13 +12,10 @@
 #-------------------------------------------------------------------------------
 
 import nose
-from nose.tools import timed, raises, assert_equals, assert_true
-from nose.plugins.attrib import attr
+from nose.tools import assert_equals, assert_true
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
-from fileops import read_input_file
-from shapeops import num_useful_rotations, merge
 
 def test_scenario_1():
     piece_l = TetrisPiece(4, 'L')
