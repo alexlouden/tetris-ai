@@ -83,6 +83,5 @@ def move(polygon, x, y):
     return translate(polygon, x, y)
 
 def rotate(polygon, angle):
-    # TODO - which origin position?
     centre_of_rotation = (0, 0)
     return polygon_rotate(polygon, angle, origin=centre_of_rotation)
