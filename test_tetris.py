@@ -77,6 +77,34 @@ def test_shape_width_and_heights():
         assert_equals(piece.width, expected_widths[piece.num])
         assert_equals(piece.height, expected_heights[piece.num])
 
+def test_move_piece():
+
+    p = TetrisPiece(1)
+
+    # Move piece from 0,0 to 1,2
+    p.move_to(1, 2)
+
+    # Check properties
+    assert_equals(p.left, 1)
+    assert_equals(p.bottom, 2)
+
+    # Check polygon
+    assert_equals(p.polygon.bounds, (1, 2, 2, 6)) # min_x, min_y, max_x, max_y
+
+    # Move piece from 1,2 to 5,6
+    p.move_to(4, 5)
+    assert_equals(p.left, 4)
+    assert_equals(p.bottom, 5)
+    assert_equals(p.polygon.bounds, (4, 5, 5, 9))
+
+    # Move piece with attribute
+    p.left = 4
+    p.bottom = 2
+
+    assert_equals(p.left, 4)
+    assert_equals(p.bottom, 2)
+    assert_equals(p.polygon.bounds, (4, 2, 5, 6))
+
 def test_num_useful_rotations():
 
     expected_useful_rotations = {
@@ -91,7 +119,6 @@ def test_num_useful_rotations():
 
     for i in range(1, 8):
         assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
-
 
 def test_scenarios():
 

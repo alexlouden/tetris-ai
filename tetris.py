@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
-from shapeops import get_shape_polygon, get_piece_colour, merge_pieces
+from shapeops import get_shape_polygon, get_piece_colour, merge_pieces, move
 
 from plotting import plot_game
 
@@ -38,7 +38,8 @@ class TetrisGame(object):
         # Game status for plot title
         self.status = "Tetris"
 
-        self.pieces_blob = merge_pieces(self.pieces)
+        # Merge all pieces together into one polygon
+        self.merged_pieces = merge_pieces(self.pieces)
 
     def solve(self):
         """Attempt to solve the game.
@@ -103,8 +104,8 @@ class TetrisPiece(object):
         self.rotation = 0
 
         # Position of piece, relative to bottom left corner of board
-        self.left = 0
-        self.bottom = 0
+        self._left = 0
+        self._bottom = 0
 
         # Piece shape and colour
         self.polygon = get_shape_polygon(self.num)
@@ -117,10 +118,38 @@ class TetrisPiece(object):
 ##        self.polygon = rotate()
         raise NotImplementedError()
 
-    def move_to(self, left, bottom):
-        polygon = translate(polygon, xoff=piece.left, yoff=piece.bottom)
-        self.left = left
-        self.bottom = bottom
+    def move_to(self, left=None, bottom=None):
+
+        # If attributes are None
+        left = self.left if left is None else left
+        bottom = self.bottom if bottom is None else bottom
+
+        # Difference in position
+        x_diff = left - self.left
+        y_diff = bottom - self.bottom
+
+        # Move polygon
+        self.polygon = move(self.polygon, x_diff, y_diff)
+
+        # Set position attributes
+        self._left = left
+        self._bottom = bottom
+
+    @property
+    def left(self):
+        return self._left
+
+    @left.setter
+    def left(self, value):
+        self.move_to(left=value)
+
+    @property
+    def bottom(self):
+        return self._bottom
+
+    @bottom.setter
+    def bottom(self, value):
+        self.move_to(bottom=value)
 
     @property
     def width(self):

@@ -10,7 +10,7 @@
 #-------------------------------------------------------------------------------
 
 from shapely.geometry import Polygon, Point
-from shapely.affinity import rotate
+from shapely.affinity import rotate, translate
 from shapely.ops import cascaded_union
 
 # List of shape coordinates - (x,y)
@@ -74,9 +74,11 @@ def num_useful_rotations(num):
     return unique_rotation_states
 
 
-
 def merge_pieces(pieces):
     if not pieces:
         return Polygon()
 
     return cascaded_union([p.polygon for p in pieces])
+
+def move(polygon, x, y):
+    return translate(polygon, x, y)
