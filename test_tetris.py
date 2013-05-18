@@ -239,7 +239,7 @@ def test_full_row():
 
     plot_game(g, 'test_full_row')
 
-@attr('plots')
+##@attr('plots')
 def test_random_drop():
     # Just for fun
 
@@ -279,8 +279,9 @@ def test_scenarios():
 
 if __name__ == '__main__':
     nose.main(argv=[
-        '--failed',
+        '--with-id',
+        '--failed', # Repeat only previously failed tests
         '--verbosity=2',
-        '--nocapture',
-        '-a !plots'
+        '--nocapture', # Don't capture stdout
+        '-a !plots', # Ignore tests with 'plots' attribute
         ])
