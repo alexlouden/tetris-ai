@@ -257,25 +257,7 @@ def test_random_drop():
 
     plot_game(g, 'test_random_drop')
 
-def test_scenarios():
 
-    piece_l = TetrisPiece(4, 'L')
-    piece_j = TetrisPiece(5, 'J')
-    piece_o = TetrisPiece(2, 'O')
-
-    piece_j.left = 2
-    piece_o.left = 1
-
-    pieces = [piece_l, piece_j, piece_o]
-
-    # Initialise game with list of pieces
-    game = TetrisGame(width=4)
-    game.pieces = pieces
-    game.status = "Scenario 1"
-
-##    game.calculate_height()
-
-    plot_game(game, 'test_scenario')
 
 if __name__ == '__main__':
     nose.main(argv=[
@@ -284,4 +266,5 @@ if __name__ == '__main__':
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
         '-a !plots', # Ignore tests with 'plots' attribute
+        __name__
         ])
