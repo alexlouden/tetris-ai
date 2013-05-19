@@ -14,6 +14,7 @@
 from copy import deepcopy
 from pprint import pprint
 from shapeops import num_useful_rotations
+from plotting import plot_game
 
 max_iteration_cost = 5
 """ The maximum cost that we'll explore subsequent moves for """
@@ -65,8 +66,14 @@ class Move(object):
         num_gaps = self.game.count_gaps()
         height = self.game.height
 
+        name = 'game_move_{0.piece.id}_{0.left}_{0.piece.rotation}'.format(self)
+        self.game.status = name
+        plot_game(self.game, name)
+
         # Remove piece
         self.game.pieces.pop()
+        self.game.update_merged_pieces()
+        self.game.height = self.game.calculate_height()
 
         # Store stats
         self.stats.rows_removed = rows_removed
@@ -97,8 +104,6 @@ def get_best_moves(game):
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
     useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
-
-    pprint(useful_rotations)
 
     # Try default cost weightings
     weights = Weightings
