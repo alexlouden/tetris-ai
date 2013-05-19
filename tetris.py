@@ -174,13 +174,20 @@ class TetrisGame(object):
                 box = get_single_box(left, bottom)
 
                 # If the square contains a piece
-                if box.intersection(self.merged_pieces).area != 0:
+                area_of_intersection = box.intersection(self.merged_pieces).area
+
+                # print area_of_intersection, left, bottom, intersected
+
+                if area_of_intersection != 0:
                     intersected = True
                 else:
+                    # If this isn't the first intersection we've seen
+                    # (therefore we're underneath a piece)
                     if intersected:
-                        gap_count += 1
+                        gap_count += 1 - area_of_intersection
 
         return gap_count
+
 
 
 class TetrisPiece(object):

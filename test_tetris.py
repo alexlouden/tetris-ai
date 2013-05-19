@@ -11,7 +11,7 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
-from random import randint
+from random import randint, choice
 
 import nose
 from nose.tools import timed, raises, assert_equals, assert_true, assert_false
@@ -346,8 +346,63 @@ def test_count_gaps():
     assert_equals(num_gaps, 2)
 
 def test_count_gaps_2():
-    pass
 
+    g = TetrisGame(width=5)
+
+    num_gaps = g.count_gaps()
+    assert_equals(num_gaps, 0)
+
+    # Drop a T with no rotation in the middle
+    g.drop(TetrisPiece(3, 'T1'), 2)
+    num_gaps = g.count_gaps()
+    assert_equals(num_gaps, 1)
+
+    plot_game(g, 'test_count_gaps_2_1')
+
+    # Drop a T on it's side
+    g.drop(TetrisPiece(3, 'T2', 3), 1)
+    plot_game(g, 'test_count_gaps_2_2')
+
+    num_gaps = g.count_gaps()
+    assert_equals(num_gaps, 7)
+
+
+def test_random_drop_gap_count():
+    # Just for fun
+
+    g = TetrisGame(width=10)
+
+    num_useful = {i: num_useful_rotations(i) for i in range(1, 8)}
+
+    print num_useful
+
+    count = 0
+    count_tried = 0
+
+    while g.height < 30:
+        piece_id = randint(2, 7)
+        left = randint(0, 9)
+        rotation = choice(num_useful[piece_id])
+
+        try:
+            g.drop(TetrisPiece(piece_id, rotation=rotation), left)
+        except ValueError:
+            # Ignore pieces off edge
+            pass
+
+        num_gaps = g.count_gaps()
+
+        print piece_id, left, rotation, num_gaps, count
+
+        count_tried += 1
+
+        if num_gaps > 0:
+            g.pieces.pop()
+        else:
+            count += 1
+
+    print count_tried, count
+    plot_game(g, 'test_random_drop_nogaps')
 
 
 if __name__ == '__main__':
