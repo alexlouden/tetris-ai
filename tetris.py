@@ -51,22 +51,17 @@ class TetrisGame(object):
 
         index = 0
 
-        while self.input_queue:
+        # Run the main artificial intelligence function
+        moves = get_best_moves(self)
 
-            piece = self.input_queue.pop()
-            self.step(piece)
+        for move in moves:
+            piece = move.piece
+            piece.rotate(move.rotation)
+
+            self.drop(piece, left=move.left)
 
             plot_game(self, 'game_step_{}'.format(index))
             index += 1
-
-    def step(self, piece):
-        """Perform one game step"""
-        print 'step', piece.id, piece.num
-
-        # TODO - step simply drops piece on leftmost side of board
-        # self.buffer ?
-        self.drop(piece, left=0)
-
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
