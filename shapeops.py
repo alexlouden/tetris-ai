@@ -86,8 +86,11 @@ def rotate(polygon, angle):
     centre_of_rotation = (0, 0)
     return polygon_rotate(polygon, angle, origin=centre_of_rotation)
 
-def get_box(width, bottom):
+def get_row_box(width, bottom):
     return box(0, bottom, width, bottom + 1)
+
+def get_single_box(left, bottom):
+    return box(left, bottom, left + 1, bottom + 1)
 
 def combine_split(shape):
     """Combine a MultiPolygon into a single shape"""

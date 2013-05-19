@@ -13,8 +13,9 @@
 
 from fileops import read_input_file, write_output_file
 from shapeops import get_shape_polygon, get_piece_colour
-from shapeops import merge, move, rotate, get_box, combine_split
+from shapeops import merge, move, rotate, get_row_box, combine_split, get_single_box
 from plotting import plot_game
+from ai import get_best_moves
 
 class TetrisGame(object):
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
@@ -121,14 +122,17 @@ class TetrisGame(object):
         self.update_merged_pieces()
         self.height = self.calculate_height()
 
+        # Return number of rows removed
+        return len(full_rows)
+
     def is_row_full(self, height):
         """ Returns whether a row is completely full of pieces """
-        row = get_box(self.width, height)
+        row = get_row_box(self.width, height)
         return row.intersection(self.merged_pieces).area == row.area
 
     def remove_full_row(self, row_id):
         # Find out which shapes intersect this row and split them
-        row = get_box(self.width, row_id)
+        row = get_row_box(self.width, row_id)
 
         pieces_to_remove = []
 
@@ -147,6 +151,36 @@ class TetrisGame(object):
         # Remove all empty pieces
         for piece in pieces_to_remove:
             self.pieces.remove(piece)
+
+    def count_gaps(self):
+        # Count the gaps which cannot be filled by dropping a piece
+
+        self.update_merged_pieces()
+
+        # If no blocks yet
+        if self.merged_pieces.is_empty:
+            return 0
+
+        x_min, y_min, x_max, y_max = self.merged_pieces.bounds
+
+        gap_count = 0
+
+        # Left to right
+        for left in xrange(int(x_min), int(x_max)):
+            intersected = False
+
+            # Top to bottom
+            for bottom in xrange(int(y_max)-1, int(y_min)-1, -1):
+                box = get_single_box(left, bottom)
+
+                # If the square contains a piece
+                if box.intersection(self.merged_pieces).area != 0:
+                    intersected = True
+                else:
+                    if intersected:
+                        gap_count += 1
+
+        return gap_count
 
 
 class TetrisPiece(object):
@@ -296,7 +330,9 @@ def main():
     # Solve game
 ##    game.solve()
 ##
-##    print game.height
+    print 'Game height:', game.height
+
+    print game.get_output()
 ##
 ##    # Write output of game moves
 ##    write_output_file('output.txt', game.get_output())
