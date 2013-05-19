@@ -12,8 +12,11 @@
 #-------------------------------------------------------------------------------
 
 from fileops import read_input_file, write_output_file
+
 from shapeops import get_shape_polygon, get_piece_colour
-from shapeops import merge, move, rotate, get_row_box, combine_split, get_single_box
+from shapeops import merge, move, rotate, combine_split
+from shapeops import get_row_box, get_single_box, get_height_box
+
 from plotting import plot_game
 from ai import get_best_moves
 
@@ -189,6 +192,32 @@ class TetrisGame(object):
         return gap_count
 
 
+    def calculate_blocks_above_height(self, height):
+        """ Returns a tuple of centroid, and area of blocks above height """
+
+        # If no blocks yet
+        if self.merged_pieces.is_empty:
+            return 0, 0
+
+        # If height is zero, all of merged_pieces are above line
+        if height == 0:
+            shape_above_height = self.merged_pieces
+
+        else:
+            # Get a polygon from 0 to height
+            height_box = get_height_box(self.width, height)
+
+            # Subtract merged pieces from height
+            shape_above_height = self.merged_pieces.difference(height_box)
+
+        if shape_above_height.is_empty:
+            return 0, 0
+
+        centroid = shape_above_height.centroid.y - height
+        area = shape_above_height.area
+
+        return centroid, area
+
 
 class TetrisPiece(object):
     def __init__(self, num, id=None, rotation=0):
@@ -324,6 +353,12 @@ class TetrisPiece(object):
         self._left = self.polygon.bounds[0]
         self._bottom = self.polygon.bounds[1]
 
+    def __str__(self):
+        return "<Piece {0.id}>".format(self)
+
+    def __repr__(self):
+        return str(self)
+
 def main():
     # Parse input file
     piece_numbers = read_input_file('exampleinput.txt')
@@ -335,7 +370,7 @@ def main():
     game = TetrisGame(pieces)
 
     # Solve game
-##    game.solve()
+    game.solve()
 ##
     print 'Game height:', game.height
 

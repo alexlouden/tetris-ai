@@ -367,6 +367,7 @@ def test_count_gaps_2():
     assert_equals(num_gaps, 7)
 
 
+@attr('plots')
 def test_random_drop_gap_count():
     # Just for fun
 
@@ -379,8 +380,8 @@ def test_random_drop_gap_count():
     count = 0
     count_tried = 0
 
-    while g.height < 30:
-        piece_id = randint(2, 7)
+    while g.height < 20:
+        piece_id = randint(1, 7)
         left = randint(0, 9)
         rotation = choice(num_useful[piece_id])
 
@@ -392,7 +393,7 @@ def test_random_drop_gap_count():
 
         num_gaps = g.count_gaps()
 
-        print piece_id, left, rotation, num_gaps, count
+        print piece_id, left, rotation, num_gaps, count, g.height
 
         count_tried += 1
 
@@ -401,8 +402,70 @@ def test_random_drop_gap_count():
         else:
             count += 1
 
+        g.update_merged_pieces()
+        g.height = g.calculate_height()
+
     print count_tried, count
     plot_game(g, 'test_random_drop_nogaps')
+
+
+def test_count_blocks_above_height():
+
+    g = TetrisGame(width=5)
+    g.drop(TetrisPiece(2, 'O'), 1)
+    g.drop(TetrisPiece(3, 'T'), 3)
+
+    assert_equals(g.height, 3)
+    centroid, area = g.calculate_blocks_above_height(3)
+    assert_equals(centroid, 0)
+    assert_equals(area, 0)
+
+    # Drop an 1, now one block is above height 3
+    g.drop(TetrisPiece(1, 'I'), 0)
+
+    assert_equals(g.height, 4)
+
+    centroid, area = g.calculate_blocks_above_height(3)
+    assert_equals(centroid, 0.5)
+    assert_equals(area, 1)
+
+
+def test_count_blocks_above_height_2():
+
+    # L on it's bottom
+    g = TetrisGame(width=7)
+
+    stats = g.calculate_blocks_above_height(0)
+    assert_equals(stats, (0,0))
+
+    g.drop(TetrisPiece(5, 'L', 2), 1)
+
+    centroid, area = g.calculate_blocks_above_height(0)
+    assert_equals(centroid, 1.25)
+    assert_equals(area, 4)
+
+    centroid, area = g.calculate_blocks_above_height(1)
+    assert_equals(centroid, 1)
+    assert_equals(area, 2)
+
+    plot_game(g, 'test_count_blocks_above_height_2')
+
+
+def test_count_blocks_above_height_3():
+
+    # L on it's face
+    g = TetrisGame(width=7)
+    g.drop(TetrisPiece(5, 'L', 1), 1)
+
+    centroid, area = g.calculate_blocks_above_height(0)
+    assert_equals(centroid, 1.25)
+    assert_equals(area, 4)
+
+    centroid, area = g.calculate_blocks_above_height(1)
+    assert_equals(centroid, 0.5)
+    assert_equals(area, 3)
+
+    plot_game(g, 'test_count_blocks_above_height_3')
 
 
 if __name__ == '__main__':

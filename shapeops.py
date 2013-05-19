@@ -92,6 +92,9 @@ def get_row_box(width, bottom):
 def get_single_box(left, bottom):
     return box(left, bottom, left + 1, bottom + 1)
 
+def get_height_box(width, height):
+    return box(0, 0, width, height)
+
 def combine_split(shape):
     """Combine a MultiPolygon into a single shape"""
     shape1, shape2 = shape.geoms
