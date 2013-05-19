@@ -284,9 +284,12 @@ def test_check_full_rows_multiple():
     g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
     g.drop(TetrisPiece(1, 'I2', rotation=1), 0)
 
+    plot_game(g, 'test_check_full_rows_multiple_0_before')
     g.check_full_rows()
+    plot_game(g, 'test_check_full_rows_multiple_1_after')
 
     assert_equals(g.height, 0)
+
 
 def test_check_full_rows_multiple_2():
 
@@ -295,9 +298,29 @@ def test_check_full_rows_multiple_2():
     g.drop(TetrisPiece(2, 'O'), 1)
     g.drop(TetrisPiece(3, 'T'), 3)
 
+    plot_game(g, 'test_check_full_rows_multiple_2_0_before')
     g.check_full_rows()
+    plot_game(g, 'test_check_full_rows_multiple_2_1_after')
 
     assert_equals(g.height, 3)
+
+def test_check_full_rows_multiple_3():
+
+    g = TetrisGame(width=4)
+    g.drop(TetrisPiece(2), 0)
+    g.drop(TetrisPiece(2), 2)
+
+    plot_game(g, 'test_check_full_rows_multiple_3_0_before')
+    g.check_full_rows()
+    plot_game(g, 'test_check_full_rows_multiple_3_1_after')
+
+    assert_equals(g.height, 0)
+
+    # Check that calling it again doesn't cause problems
+    g.check_full_rows()
+
+
+
 
 if __name__ == '__main__':
     nose.main(argv=[

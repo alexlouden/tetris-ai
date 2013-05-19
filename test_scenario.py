@@ -37,9 +37,6 @@ def test_scenario_1():
     plot_game(game, 'test_scenario_1')
 
 
-# Checks
-#def test_scenario_2():
-
 
 
 
