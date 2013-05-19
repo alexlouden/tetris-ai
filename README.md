@@ -39,3 +39,41 @@ The program is structured into a number of Python files:
 ### Tetris.py
 
 Discussion here
+
+Problem Definition
+------------------
+Tetris-AI aims to provide an AI solution to the classic game of Tetris where by tetriminoes are dropped into a grid and
+the user aims to move and tessellate them such that the overall game height is kept below the line where the tetriminoes are first dropped.
+The CITS4211 implementation of the game allows for a semi-infinite rectangular game space of w units wide and no upper limit.
+Thus the only end state of this game is when all tetriminoes stored in the queue have been placed and the only goal is to
+minimise the height of the tetriminoes at the end state.
+
+The CITS4211 implementation also allows for a 'hold' or buffer where a single tetrimino is allowed to be stored and used at
+a later stage in the game.
+
+There are seven unique tetriminoes and each has a certain number of unique rotations it can perform based on its geometry
+and the fact that rotation can only be in discrete multiples of 90 degrees.
+
+Each time a row becomes completely filled with tetriminoes, the row is removed and all pieces above it are moved down by
+one unit.
+
+Program Input
+-------------
+Is in the form of a text file containing the valid characters [1,7] to define the starting tetrimino queue.
+Fileops.py reads the input text file while ignoring any invalid characters and all characters following an invalid character on the same line.
+
+Program Solution
+----------------
+The current version of Tetris-AI makes the following assumptions:
+- Tetriminoes cannot be horizontally translated after their initial left-point is set.
+- The tetrimino queue does not have to contain randomised 'bags' of tetriminoes, it instead can be completely random.
+
+Tetris-AI employs the 2D spatial analysis package 'Shapely' for game play rather than a grid based system, one advantage
+of this being that tetriminoes are not restricted to being composed of squares in order to correctly function.
+
+
+
+
+Program Output
+--------------
+

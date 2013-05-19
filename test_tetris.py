@@ -288,6 +288,16 @@ def test_check_full_rows_multiple():
 
     assert_equals(g.height, 0)
 
+def test_check_full_rows_multiple_2():
+
+    g = TetrisGame(width=5)
+    g.drop(TetrisPiece(1, 'I'), 0)
+    g.drop(TetrisPiece(2, 'O'), 1)
+    g.drop(TetrisPiece(3, 'T'), 3)
+
+    g.check_full_rows()
+
+    assert_equals(g.height, 3)
 
 if __name__ == '__main__':
     nose.main(argv=[
