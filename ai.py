@@ -22,6 +22,7 @@ max_iteration_cost = 10
 """ The maximum cost that we'll explore subsequent moves for """
 
 class Weightings(object):
+    """Hold weights associated with each aspect of the cost function."""
     area = 1
     centroid = 1
     rows_removed = -5
@@ -32,6 +33,15 @@ class Stats(object):
     pass
 
 class Move(object):
+    """Hold a possible move to be made.
+
+    Keyword arguments:
+    game -- the game in which the piece will be placed
+    piece -- the piece the move will place
+    rotation -- rotation id of piece
+    left -- where to drop the piece
+
+    """
     def __init__(self, game, piece, rotation, left):
         self.game = game
 
@@ -59,6 +69,8 @@ class Move(object):
         return str(self)
 
     def try_dropping(self):
+        """Drop piece into game, record change in game variables such as the number of gaps and the game height. Record how many rows were removed as a
+        result of the drop and the position of the centroid of the dropped piece its area above the previous maximum game height."""
         previous_height = self.game.height
         previous_num_gaps = self.game.count_gaps()
 
@@ -91,6 +103,12 @@ class Move(object):
 
 
     def calculate_cost(self, weighting):
+        """ Return cost of move given move stats and weightings
+
+        Keyword arguments:
+        weighting -- weights associated with each aspect of the cost function
+
+        """
         cost = 0
 
         cost += weighting.area         * self.stats.area
@@ -146,6 +164,14 @@ def get_best_moves(game):
     return moves
 
 def get_possible_moves(game, piece, rotations):
+    """ Return all possible moves given the game state and piece.
+
+    Keyword arguments:
+    game -- game to base possible moves upon
+    piece -- piece to search possible moves for
+    rotations -- unique rotations the piece can have
+
+    """
     possible_moves = []
 
     # For each rotation
@@ -161,6 +187,7 @@ def get_possible_moves(game, piece, rotations):
     return possible_moves
 
 def get_moves_and_weights(game, piece, weights, useful_rotations):
+    """Return possible moves for given game, piece and weight structure, ordered by lowest cost first"""
 
     rotations = useful_rotations[piece.num]
     possible_moves = get_possible_moves(game, piece, rotations)
