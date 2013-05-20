@@ -8,6 +8,9 @@ tetris-ai
   <tr>
     <td>Alex Louden</td><td>20255851</td>
   </tr>
+  <tr>
+    <td>Ruvan Muthu-Krishna</td><td>20507884</td>
+  </tr>
 </table>
 
 Dependencies
@@ -30,20 +33,48 @@ Structure
 
 The program is structured into a number of Python files:
 
- * tetris.py - The main script
- * test_tetris.py - Testing and calculations
- * plotting.py - Plotting functionality
+ * ai.py - AI player
  * fileops.py - File operations
+ * plotting.py - Plotting functionality
  * shapeops.py - Shape operations
+ * test_scenario.py - Game scenario testing and calculations
+ * test_tetris.py - Testing and calculations
+ * tetris.py - The main script
+
+### Ai.py
+
+Mimics a Tetris player by using search algorithms to find the optimal set of moves. Manipulates a TetrisGame object.
+
+### Fileops.py
+
+Reads input file and populates a list of recognised pieces. Outputs an ordered optimal set of moves as determined by ai.py.
+
+### Plotting.py
+
+Plots Tetris game, either to the screen or to disk, including board and pieces placed.
+
+### Shapops.py
+
+Define valid TetrisPiece colour and starting geometry. Provide functions for moving, rotating, splitting and merging TetrisPieces.
+Calculate the number of unique rotations of each TetrisPiece so that search trees can be minimised.
+
+### Test_scenario.py
+
+Game scenario tests to verify correct execution of program modules.
+
+### Test_tetris.py
+
+Unit tests to verify correct execution of program functions.
 
 ### Tetris.py
 
-Discussion here
+Holds TetrisGame and TetrisPiece classes which are used to build a Tetris game. TetrisGame stores Tetris game variables and functions needed to play a Tetris game.
+
 
 Problem Definition
 ------------------
-Tetris-AI aims to provide an AI solution to the classic game of Tetris where by tetriminoes are dropped into a grid and
-the user aims to move and tessellate them such that the overall game height is kept below the line where the tetriminoes are first dropped.
+Tetris-AI aims to provide an AI solution to the classic game of Tetris. During play tetriminoes are dropped into a grid,
+the user aims to move and tessellate them such that the overall game height is kept below a pre-defined line.
 The CITS4211 implementation of the game allows for a semi-infinite rectangular game space of w units wide and no upper limit.
 Thus the only end state of this game is when all tetriminoes stored in the queue have been placed and the only goal is to
 minimise the height of the tetriminoes at the end state.

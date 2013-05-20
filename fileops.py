@@ -14,6 +14,7 @@
 from shapeops import valid_shape_id
 
 def read_input_file(filename):
+    """Read input file and populate a list of recognised pieces."""
 
     # An empty list to contain our input numbers
     numbers = []

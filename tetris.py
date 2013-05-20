@@ -19,8 +19,17 @@ from shapeops import get_row_box, get_single_box, get_height_box
 
 from plotting import plot_game
 from ai import get_best_moves
-
+"""Holds TetrisGame and TetrisPiece classes which are used to build a Tetris game."""
 class TetrisGame(object):
+    """Store Tetris game variables and functions needed to play a Tetris game.
+    Once game is setup, invoke ai.py to play the game.
+
+    Keyword arguments:
+    pieces -- a list of TetrisPieces (Tetriminoes)
+    width -- the game width
+    max_buffer_size -- maximum number of TetrisPieces able to be held in a temporary buffer
+
+    """
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
         """Initialise the game board"""
 
@@ -220,6 +229,14 @@ class TetrisGame(object):
 
 
 class TetrisPiece(object):
+    """Hold rotation, position and geometrical structure of a TetrisPiece. Provide functions to rotate, move, split and verify intersection of TetrisPiece.
+
+    Keyword arguments:
+    num -- defines the type of tetrimino TetrisPiece represents
+    id -- position of TetrisPiece in queue as read from input file
+    rotation -- rotational position
+
+    """
     def __init__(self, num, id=None, rotation=0):
         """Initialise a piece"""
         self.num = num
@@ -239,6 +256,13 @@ class TetrisPiece(object):
 
     # Piece translation
     def move_to(self, left=None, bottom=None):
+        """Move piece to a position.
+
+        Keyword arguments:
+        left -- the horizontal distance between the left game border and the left most position on the piece
+        bottom -- the vertical distance between the bottom game border and the bottom most position of the piece
+
+        """
 
         # If attributes are None
         left = self.left if left is None else left

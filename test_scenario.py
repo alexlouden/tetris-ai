@@ -37,7 +37,7 @@ from plotting import plot_game
 ##
 ##    plot_game(game, 'test_scenario_1')
 
-
+"""Game scenario tests to verify correct execution of program modules."""
 def test_scenario_2():
 
     pieces = [
