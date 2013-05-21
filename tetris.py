@@ -228,6 +228,7 @@ class TetrisGame(object):
         return centroid, area
 
 
+
 class TetrisPiece(object):
     """Hold rotation, position and geometrical structure of a TetrisPiece. Provide functions to rotate, move, split and verify intersection of TetrisPiece.
 

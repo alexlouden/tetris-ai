@@ -14,6 +14,8 @@
 from copy import deepcopy
 from pprint import pprint
 from operator import attrgetter
+import sys
+
 
 from shapeops import num_useful_rotations
 from plotting import plot_game
@@ -100,7 +102,6 @@ class Move(object):
 
 ##        print str(self)
 ##        print self.stats.__dict__
-
 
     def calculate_cost(self, weighting):
         """ Return cost of move given move stats and weightings
@@ -200,3 +201,48 @@ def get_moves_and_weights(game, piece, weights, useful_rotations):
     best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
 
     return best_by_cost
+
+def get_best_moves_greedy(game):
+    """Perform a greedy search with no look ahead"""
+
+    # Hold the best moves found
+    moves = []
+
+    # Pre-calculate which rotations are useful for each piece number (1-7)
+    useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
+
+    # Try default cost weightings
+    weights = Weightings
+
+    while game.input_queue or game.buffer:
+        # Fill buffer if empty
+        if not game.buffer and game.input_queue:
+            game.buffer = game.input_queue.pop()
+
+        # Find lowest cost of placing next piece in input_queue if it exists
+        if game.input_queue:
+            best_from_queue = get_moves_and_weights(game, game.pieces[0], weights, useful_rotations)[0]
+        else:
+            best_from_queue = sys.maxint
+
+        # Find lowest cost of placing piece from buffer
+        best_from_buffer = get_moves_and_weights(game, game.buffer[0], weights, useful_rotations)[0]
+
+        # Drop the minimum cost piece
+        if best_from_queue.cost < best_from_buffer.cost:
+            game.input_queue.pop()
+            moves.append(best_from_queue)
+            game.drop(best_from_queue.piece, best_from_queue.left)
+        else:
+            buffer.pop()
+            moves.append(best_from_buffer)
+            game.drop(best_from_buffer.piece, best_from_buffer.left)
+
+    print moves
+
+    return moves
+
+
+
+
+
