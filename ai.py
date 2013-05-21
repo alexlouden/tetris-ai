@@ -203,7 +203,7 @@ def get_moves_and_weights(game, piece, weights, useful_rotations):
     return best_by_cost
 
 def get_best_moves_greedy(game):
-    """Perform a greedy search with no look ahead"""
+    """Return best moves after performing a greedy search using the buffer with no look ahead"""
 
     # Hold the best moves found
     moves = []
