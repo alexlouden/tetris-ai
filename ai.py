@@ -20,13 +20,10 @@ import sys
 from shapeops import num_useful_rotations
 from plotting import plot_game
 
-max_iteration_cost = 10
-""" The maximum cost that we'll explore subsequent moves for """
-
 useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
-best_cost_at_depth = defaultdict(float)
+best_cost_at_depth = {}
 """ The best cost encountered at any tree depth """
 
 class Weightings(object):
@@ -38,6 +35,7 @@ class Weightings(object):
     gaps = 10
 
     starting_score = 20 # Ensure no negative scores
+    max_iteration_cost = 30
 
 class Stats(object):
     pass
@@ -166,19 +164,25 @@ class Step(object):
         for move in best_by_cost:
 
             # Only make some moves
-            if move.cost > max_iteration_cost:
-##                print 'Skipping due to max_iteration_cost'
+            if move.cost > Weightings.max_iteration_cost:
+                print 'Skipping due to max_iteration_cost', move.cost
                 continue
 
             # Check best_score_at_depth
-            best_cost = best_cost_at_depth[depth]
-            if best_cost <= move.cost:
+            global best_cost_at_depth
+            best_cost = best_cost_at_depth.get(depth)
+            if best_cost is None:
+                best_cost_at_depth[depth] = move.cost
+                print 'First best_cost created', move.cost
+
+            elif best_cost <= move.cost:
                 print 'Skipping, best encountered previously'
                 continue
             else:
                 # Set new best cost
-                global best_cost_at_depth
+                print 'New best', move.cost
                 best_cost_at_depth[depth] = move.cost
+
 
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
