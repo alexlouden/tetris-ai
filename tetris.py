@@ -1,6 +1,7 @@
 #-------------------------------------------------------------------------------
 # Name:        Tetris AI
-# Purpose:     Solve tetris using AI
+# Purpose:     Holds TetrisGame and TetrisPiece classes
+#              which are used to build a Tetris game
 #
 # Version:     Python 2.7
 #
@@ -11,6 +12,8 @@
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
+from copy import deepcopy
+
 from fileops import read_input_file, write_output_file
 
 from shapeops import get_shape_polygon, get_piece_colour
@@ -19,7 +22,8 @@ from shapeops import get_row_box, get_single_box, get_height_box
 
 from plotting import plot_game
 from ai import get_best_moves
-"""Holds TetrisGame and TetrisPiece classes which are used to build a Tetris game."""
+
+
 class TetrisGame(object):
     """Store Tetris game variables and functions needed to play a Tetris game.
     Once game is setup, invoke ai.py to play the game.
@@ -64,12 +68,15 @@ class TetrisGame(object):
 
         index = 0
 
+        # Make a copy of the empty game state
+        gamecopy = deepcopy(self)
+
         # Run the main artificial intelligence function
-        moves = get_best_moves(self)
+        moves = get_best_moves(gamecopy)
 
         for move in moves:
             piece = move.piece
-            piece.rotate(move.rotation)
+            piece.rotate(move.piece.rotation)
 
             self.drop(piece, left=move.left)
 
@@ -163,6 +170,8 @@ class TetrisGame(object):
         # Remove all empty pieces
         for piece in pieces_to_remove:
             self.pieces.remove(piece)
+            print 'Piece removed:', piece
+
 
     def count_gaps(self):
         # Count the gaps which cannot be filled by dropping a piece
@@ -299,6 +308,9 @@ class TetrisPiece(object):
     # Piece rotation
     def rotate(self, angle_id):
         """Rotate piece into rotation position 0,1,2,3"""
+
+        if self.polygon.is_empty:
+            raise ValueError("Polygon is empty")
 
         # Check angle_id is valid
         if angle_id not in range(0, 4):

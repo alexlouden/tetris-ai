@@ -44,7 +44,8 @@ def test_scenario_2():
         TetrisPiece(1, 'I'),
         TetrisPiece(3, 'T'),
         TetrisPiece(6, 'S'),
-        TetrisPiece(7, 'Z')
+        TetrisPiece(7, 'Z'),
+        TetrisPiece(1, 'I2')
     ]
 
     # Initialise game with list of pieces

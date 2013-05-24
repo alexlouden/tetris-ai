@@ -138,29 +138,12 @@ def get_best_moves(game):
         best_by_cost = get_moves_and_weights(game, piece, weights, useful_rotations)
 
         print 'Possible moves for piece {}:'.format(piece.id)
-##        pprint (best_by_cost)
 
+        move = best_by_cost[0]
+        moves.append(move)
+        game.drop(move.piece, move.left)
 
-        # TODO fix loops and remove repeated code
-
-        piece = game.input_queue.pop()
-
-        for move in best_by_cost:
-            game.drop(move.piece, move.left)
-
-            # Do next level
-            move.next_moves = get_moves_and_weights(game, piece, weights, useful_rotations)
-
-            game.pieces.pop()
-
-
-
-        pprint (best_by_cost)
-
-
-##        moves.append(Move(p, rotation, left))
-
-    print moves
+    pprint(moves)
 
     return moves
 
@@ -201,46 +184,6 @@ def get_moves_and_weights(game, piece, weights, useful_rotations):
     best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
 
     return best_by_cost
-
-def get_best_moves_greedy(game):
-    """Return best moves after performing a greedy search using the buffer with no look ahead"""
-
-    # Hold the best moves found
-    moves = []
-
-    # Pre-calculate which rotations are useful for each piece number (1-7)
-    useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
-
-    # Try default cost weightings
-    weights = Weightings
-
-    while game.input_queue or game.buffer:
-        # Fill buffer if empty
-        if not game.buffer and game.input_queue:
-            game.buffer = game.input_queue.pop()
-
-        # Find lowest cost of placing next piece in input_queue if it exists
-        if game.input_queue:
-            best_from_queue = get_moves_and_weights(game, game.pieces[0], weights, useful_rotations)[0]
-        else:
-            best_from_queue = sys.maxint
-
-        # Find lowest cost of placing piece from buffer
-        best_from_buffer = get_moves_and_weights(game, game.buffer[0], weights, useful_rotations)[0]
-
-        # Drop the minimum cost piece
-        if best_from_queue.cost < best_from_buffer.cost:
-            game.input_queue.pop()
-            moves.append(best_from_queue)
-            game.drop(best_from_queue.piece, best_from_queue.left)
-        else:
-            buffer.pop()
-            moves.append(best_from_buffer)
-            game.drop(best_from_buffer.piece, best_from_buffer.left)
-
-    print moves
-
-    return moves
 
 
 
