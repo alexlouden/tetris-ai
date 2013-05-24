@@ -24,18 +24,17 @@ useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
 class Weightings(object):
-
     def __init__(self):
         """Hold weights associated with each aspect of the cost function."""
-        self.area = 1
-        self.centroid = 1
-        self.rows_removed = -5
-        self.height = 0
+        self.area = 1       # Area of piece above previous game height
+        self.centroid = 1   # Height of centroid above previous game height
+        self.height = 5     # Change in game height
+        self.rows_removed = -10
         self.gaps = 2
         self.centroidy = 0.5
 
-        self.starting_score = 20 # Ensure no negative scores
-        self.max_iteration_cost = 30
+        self.starting_score = self.rows_removed * -4 # Ensure no negative scores
+        self.max_iteration_cost = 65 # TODO fix - use median/minimum etc?
 
         self.best_cost_at_depth = {}
         """ The best cost encountered at any tree depth """
