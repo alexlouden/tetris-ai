@@ -71,16 +71,32 @@ class TetrisGame(object):
         # Make a copy of the empty game state
         gamecopy = deepcopy(self)
 
+        # Dictionary of pieces by ID
+        pieces = {p.id:p for p in self.input_queue}
+
         # Run the main artificial intelligence function
         moves = get_best_moves(gamecopy)
 
         for move in moves:
-            piece = move.piece
-            piece.rotate(move.piece.rotation)
+            piece_id = move.piece.id
+            piece_rotation = move.piece.rotation
+            piece_left = move.left
 
-            self.drop(piece, left=move.left)
+            # Get piece by it's ID
+            piece = pieces.get(piece_id)
 
-            plot_game(self, 'game_step_{}'.format(index))
+            # Rotate then drop it
+            piece.rotate(piece_rotation)
+            self.drop(piece, left=piece_left)
+
+            # Plot before removing rows
+            plot_game(self, 'game/{}_step_{}'.format(self.status, index))
+
+            # Plot after removing rows (if needed)
+            rows_removed = self.check_full_rows()
+            if rows_removed > 0:
+                plot_game(self, 'game/{}_step_{}b'.format(self.status, index))
+
             index += 1
 
     def calculate_height(self):

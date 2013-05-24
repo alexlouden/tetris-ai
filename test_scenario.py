@@ -17,27 +17,25 @@ from nose.tools import assert_equals, assert_true
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 
-
-##def test_scenario_1():
-##
-##    pieces = [
-##        TetrisPiece(5, 'J'),
-##        TetrisPiece(4, 'L'),
-##        TetrisPiece(2, 'O')
-##    ]
-##
-##    # Initialise game with list of pieces
-##    game = TetrisGame(pieces, width=6)
-##    game.solve()
-##    game.status = "Scenario 1"
-##    print 'height:', game.height
-##
-####    # Check game height is 3
-####    assert_equals(game.height, 3)
-##
-##    plot_game(game, 'test_scenario_1')
-
 """Game scenario tests to verify correct execution of program modules."""
+
+def test_scenario_1():
+
+    pieces = [
+        TetrisPiece(5, 'J'),
+        TetrisPiece(4, 'L'),
+        TetrisPiece(2, 'O')
+    ]
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces, width=6)
+    game.status = "test_scenario_1"
+    game.solve()
+    print 'height:', game.height
+
+##    # Check game height is 3
+##    assert_equals(game.height, 3)
+
 def test_scenario_2():
 
     pieces = [
@@ -50,14 +48,12 @@ def test_scenario_2():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
+    game.status = "test_scenario_2"
     game.solve()
-    game.status = "Scenario 2"
     print 'height:', game.height
 
 ##    # Check game height is 3
 ##    assert_equals(game.height, 3)
-
-    plot_game(game, 'test_scenario_2')
 
 
 if __name__ == '__main__':

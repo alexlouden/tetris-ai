@@ -71,8 +71,13 @@ class Move(object):
         return str(self)
 
     def try_dropping(self):
-        """Drop piece into game, record change in game variables such as the number of gaps and the game height. Record how many rows were removed as a
-        result of the drop and the position of the centroid of the dropped piece its area above the previous maximum game height."""
+        """Drop piece into game, record change in game variables such as the
+        number of gaps and the game height.
+
+        Record how many rows were removed as a result of the drop and the
+        position of the centroid of the dropped piece its area above the
+        previous maximum game height."""
+
         previous_height = self.game.height
         previous_num_gaps = self.game.count_gaps()
 
@@ -147,6 +152,25 @@ def get_best_moves(game):
 
     return moves
 
+
+def get_moves_and_weights(game, piece, weights, useful_rotations):
+    """Return possible moves for given game, piece and weight structure,
+    ordered by lowest cost first"""
+
+    rotations = useful_rotations[piece.num]
+    possible_moves = get_possible_moves(game, piece, rotations)
+
+    for pm in possible_moves:
+        pm.try_dropping()
+        pm.calculate_cost(weights)
+
+    # Sort possible moves by cost (best first)
+    best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
+
+    return best_by_cost
+
+
+
 def get_possible_moves(game, piece, rotations):
     """ Return all possible moves given the game state and piece.
 
@@ -169,21 +193,6 @@ def get_possible_moves(game, piece, rotations):
             possible_moves.append(m)
 
     return possible_moves
-
-def get_moves_and_weights(game, piece, weights, useful_rotations):
-    """Return possible moves for given game, piece and weight structure, ordered by lowest cost first"""
-
-    rotations = useful_rotations[piece.num]
-    possible_moves = get_possible_moves(game, piece, rotations)
-
-    for pm in possible_moves:
-        pm.try_dropping()
-        pm.calculate_cost(weights)
-
-    # Sort possible moves by cost (best first)
-    best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
-
-    return best_by_cost
 
 
 
