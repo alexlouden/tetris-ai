@@ -37,6 +37,9 @@ class TetrisGame(object):
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
         """Initialise the game board"""
 
+        # Check piece ids are unique
+        self.validate_pieces(pieces)
+
         # List of TetrisPieces
         self.input_queue = pieces if pieces is not None else []
         self.input_queue.reverse()
@@ -77,6 +80,9 @@ class TetrisGame(object):
         # Run the main artificial intelligence function
         moves = get_best_moves(gamecopy)
 
+        # Store moves
+        self.moves = moves
+
         for move in moves:
             piece_id = move.piece.id
             piece_rotation = move.piece.rotation
@@ -98,6 +104,9 @@ class TetrisGame(object):
                 plot_game(self, 'game/{}_step_{}b'.format(self.status, index))
 
             index += 1
+
+        self.update_merged_pieces()
+        self.height = self.calculate_height()
 
     def calculate_height(self):
         """Returns the max number of blocks from the bottom"""
@@ -250,6 +259,10 @@ class TetrisGame(object):
 
         return centroid, area
 
+    def validate_pieces(self, pieces):
+        s = {p.id for p in pieces}
+        if len(s) != len(pieces):
+            raise ValueError("Piece IDs are not unique")
 
 
 class TetrisPiece(object):

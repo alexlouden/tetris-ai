@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 import nose
-from nose.tools import assert_equals, assert_true
+from nose.tools import assert_equals, assert_true, assert_less
 from nose.plugins.attrib import attr
 
 from tetris import TetrisGame, TetrisPiece
@@ -20,7 +20,6 @@ from plotting import plot_game
 
 """Game scenario tests to verify correct execution of program modules."""
 
-@attr('skip')
 def test_scenario_1():
 
     pieces = [
@@ -33,13 +32,18 @@ def test_scenario_1():
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
     game.status = "test_scenario_1"
+
+    print '-'*80
+    print game.status
+
     game.solve()
-    print 'height:', game.height
 
-##    # Check game height is 3
-##    assert_equals(game.height, 3)
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
 
-@attr('skip')
+    # Check game height is less than 3
+    assert_less(game.height, 3)
+
 def test_scenario_2():
 
     pieces = [
@@ -53,32 +57,55 @@ def test_scenario_2():
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
     game.status = "test_scenario_2"
-    game.solve()
-    print 'height:', game.height
 
-##    # Check game height is 3
-##    assert_equals(game.height, 3)
+    print '-'*80
+    print game.status
+
+    game.solve()
+
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
+
+    # Check game height is less than 3
+    assert_less(game.height, 3)
 
 
 def test_scenario_3():
 
     pieces = [
-        TetrisPiece(3, 'T'),
+        TetrisPiece(3, 'T1'),
         TetrisPiece(6, 'S1'),
         TetrisPiece(7, 'Z1'),
         TetrisPiece(6, 'S2'),
         TetrisPiece(7, 'Z2'),
-    ]
 
-    print pieces
+        TetrisPiece(3, 'T2'),
+        TetrisPiece(6, 'S3'),
+        TetrisPiece(7, 'Z3'),
+        TetrisPiece(6, 'S4'),
+        TetrisPiece(7, 'Z4'),
+
+        TetrisPiece(3, 'T3'),
+        TetrisPiece(6, 'S5'),
+        TetrisPiece(7, 'Z5'),
+        TetrisPiece(6, 'S6'),
+        TetrisPiece(7, 'Z7'),
+    ]
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=10)
     game.status = "test_scenario_3"
+
+    print '-'*80
+    print game.status
+
     game.solve()
-    print 'height:', game.height
 
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
 
+    # Check game height is less than 20
+##    assert_less(game.height, 20)
 
 if __name__ == '__main__':
     nose.main(argv=[

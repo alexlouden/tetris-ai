@@ -23,19 +23,22 @@ from plotting import plot_game
 useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
-best_cost_at_depth = {}
-""" The best cost encountered at any tree depth """
-
 class Weightings(object):
-    """Hold weights associated with each aspect of the cost function."""
-    area = 1
-    centroid = 1
-    rows_removed = -5
-    height = 0
-    gaps = 10
 
-    starting_score = 20 # Ensure no negative scores
-    max_iteration_cost = 30
+    def __init__(self):
+        """Hold weights associated with each aspect of the cost function."""
+        self.area = 1
+        self.centroid = 1
+        self.rows_removed = -5
+        self.height = 0
+        self.gaps = 2
+        self.centroidy = 0.5
+
+        self.starting_score = 20 # Ensure no negative scores
+        self.max_iteration_cost = 30
+
+        self.best_cost_at_depth = {}
+        """ The best cost encountered at any tree depth """
 
 class Stats(object):
     pass
@@ -103,6 +106,7 @@ class Move(object):
         self.stats.area         = area
         self.stats.gaps         = num_gaps - previous_num_gaps
         self.stats.height       = height - previous_height
+        self.stats.centroidy    = self.piece.polygon.centroid.y
 
         # Remove piece (TODO: tidy up)
         self.game.pieces.pop()
@@ -112,17 +116,18 @@ class Move(object):
 ##        print str(self)
 ##        print self.stats.__dict__
 
-    def calculate_cost(self):
+    def calculate_cost(self, weights):
         """ Return cost of move given move stats and weightings """
         cost = 0
 
-        cost += Weightings.area         * self.stats.area
-        cost += Weightings.centroid     * self.stats.centroid
-        cost += Weightings.rows_removed * self.stats.rows_removed
-        cost += Weightings.gaps         * self.stats.gaps
-        cost += Weightings.height       * self.stats.height
+        cost += weights.area         * self.stats.area
+        cost += weights.centroid     * self.stats.centroid
+        cost += weights.rows_removed * self.stats.rows_removed
+        cost += weights.gaps         * self.stats.gaps
+        cost += weights.height       * self.stats.height
+        cost += weights.centroidy    * self.stats.centroidy
 
-        cost += Weightings.starting_score
+        cost += weights.starting_score
 
         self.cost = cost
 
@@ -130,7 +135,7 @@ class Move(object):
 
 class Step(object):
 
-    def __init__(self, game, depth=0, cost=0, move=None):
+    def __init__(self, game, depth=0, cost=0, move=None, weights=None):
 
         self.game = game
         self.children = []
@@ -155,7 +160,7 @@ class Step(object):
         # Get move weightings
         for pm in possible_moves:
             pm.try_dropping()
-            pm.calculate_cost()
+            pm.calculate_cost(weights)
 
         # Sort possible moves by cost (best first)
         best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
@@ -164,25 +169,12 @@ class Step(object):
         for move in best_by_cost:
 
             # Only make some moves
-            if move.cost > Weightings.max_iteration_cost:
+            if move.cost > weights.max_iteration_cost:
                 print 'Skipping due to max_iteration_cost', move.cost
                 continue
 
-            # Check best_score_at_depth
-            global best_cost_at_depth
-            best_cost = best_cost_at_depth.get(depth)
-            if best_cost is None:
-                best_cost_at_depth[depth] = move.cost
-                print 'First best_cost created', move.cost
-
-            elif best_cost <= move.cost:
-                print 'Skipping, best encountered previously'
+            if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
                 continue
-            else:
-                # Set new best cost
-                print 'New best', move.cost
-                best_cost_at_depth[depth] = move.cost
-
 
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
@@ -191,7 +183,7 @@ class Step(object):
             child = Step(new_game,
                 self.depth + 1,
                 self.cumulative_cost + move.cost,
-                move)
+                move, weights=weights)
             self.children.append(child)
 
     def __str__(self):
@@ -222,7 +214,29 @@ class Step(object):
 
         return possible_moves
 
+    def is_best_cost(self, depth, cost, weights):
 
+        # Check best_score_at_depth
+        best_cost = weights.best_cost_at_depth.get(depth)
+
+        if best_cost is None:
+            # New best cost for this depth
+
+            weights.best_cost_at_depth[depth] = cost
+            print 'First best_cost created', cost, depth
+            return True
+
+        elif cost > best_cost:
+            # Skip - return False
+
+            print 'Skipping, best encountered previously', cost, depth
+            return False
+
+        else:
+            # Set new best cost
+            print 'New best', cost, depth
+            weights.best_cost_at_depth[depth] = cost
+            return True
 
 
 def get_best_moves(game):
@@ -232,8 +246,10 @@ def get_best_moves(game):
     global useful_rotations # Global to have shared amongst all Steps
     useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
 
+    weights = Weightings()
+
     # Initialise first step
-    first = Step(game)
+    first = Step(game, weights=weights)
 
     moves = []
     step = first # Start at trunk
@@ -248,7 +264,7 @@ def get_best_moves(game):
     print 'Moves:'
     pprint(moves)
 
-    pprint(best_cost_at_depth)
+    pprint(weights.best_cost_at_depth)
 
     return moves
 
