@@ -13,18 +13,21 @@
 
 import nose
 from nose.tools import assert_equals, assert_true
+from nose.plugins.attrib import attr
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 
 """Game scenario tests to verify correct execution of program modules."""
 
+@attr('skip')
 def test_scenario_1():
 
     pieces = [
-        TetrisPiece(5, 'J'),
-        TetrisPiece(4, 'L'),
-        TetrisPiece(2, 'O')
+        TetrisPiece(5, 'L'),
+        TetrisPiece(4, 'J'),
+        TetrisPiece(2, 'O'),
+        TetrisPiece(1, 'I'),
     ]
 
     # Initialise game with list of pieces
@@ -36,6 +39,7 @@ def test_scenario_1():
 ##    # Check game height is 3
 ##    assert_equals(game.height, 3)
 
+@attr('skip')
 def test_scenario_2():
 
     pieces = [
@@ -56,9 +60,30 @@ def test_scenario_2():
 ##    assert_equals(game.height, 3)
 
 
+def test_scenario_3():
+
+    pieces = [
+        TetrisPiece(3, 'T'),
+        TetrisPiece(6, 'S1'),
+        TetrisPiece(7, 'Z1'),
+        TetrisPiece(6, 'S2'),
+        TetrisPiece(7, 'Z2'),
+    ]
+
+    print pieces
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces, width=10)
+    game.status = "test_scenario_3"
+    game.solve()
+    print 'height:', game.height
+
+
+
 if __name__ == '__main__':
     nose.main(argv=[
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
+        '-a !skip', # Ignore tests with 'skip' attribute
         __name__
         ])

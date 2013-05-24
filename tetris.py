@@ -186,8 +186,6 @@ class TetrisGame(object):
         # Remove all empty pieces
         for piece in pieces_to_remove:
             self.pieces.remove(piece)
-            print 'Piece removed:', piece
-
 
     def count_gaps(self):
         # Count the gaps which cannot be filled by dropping a piece
@@ -362,12 +360,18 @@ class TetrisPiece(object):
     @property
     def width(self):
         """Calculate polygon width"""
+        if self.polygon.is_empty:
+            raise ValueError("Piece is empty. Why are you here?")
+
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(x_max - x_min)
 
     @property
     def height(self):
         """Calculate polygon height"""
+        if self.polygon.is_empty:
+            raise ValueError("Piece is empty. Why are you here?")
+
         x_min, y_min, x_max, y_max = self.polygon.bounds
         return int(y_max - y_min)
 
