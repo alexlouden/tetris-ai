@@ -72,8 +72,14 @@ def plot_piece(ax, piece):
     colour = piece.colour
     polygon = piece.polygon
 
-    patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
-    ax.add_patch(patch)
+    if polygon.type == 'Polygon':
+        patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
+        ax.add_patch(patch)
+
+    elif polygon.type == 'MultiPolygon':
+        for poly in polygon.geoms:
+            patch = PolygonPatch(poly, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
+            ax.add_patch(patch)
 
     if piece.id is not None:
         # Show piece ID

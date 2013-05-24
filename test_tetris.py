@@ -293,7 +293,6 @@ def test_check_full_rows_multiple():
 
     assert_equals(g.height, 0)
 
-
 def test_check_full_rows_multiple_2():
 
     g = TetrisGame(width=5)
@@ -320,6 +319,56 @@ def test_check_full_rows_multiple_3():
     plot_game(g, 'test_check_full_rows_multiple_3_1_after')
 
     assert_equals(g.height, 0)
+
+    # Check that calling it again doesn't cause problems
+    num_rows_removed = g.check_full_rows()
+    assert_equals(num_rows_removed, 0)
+
+def test_check_full_rows_piece_drop():
+    """ Check that a floating block will drop """
+
+    g = TetrisGame(width=4)
+
+    i = TetrisPiece(4, 'Z')
+    i.rotate(1)
+    g.drop(i, 0)
+
+    i = TetrisPiece(5, 'S')
+    i.rotate(3)
+    g.drop(i, 1)
+
+    plot_game(g, 'test_check_full_rows_piece_drop_0_before')
+    num_rows_removed = g.check_full_rows()
+    plot_game(g, 'test_check_full_rows_piece_drop_1_after')
+
+    assert_equals(num_rows_removed, 2)
+    assert_equals(g.height, 0)
+
+    # Check that calling it again doesn't cause problems
+    num_rows_removed = g.check_full_rows()
+    assert_equals(num_rows_removed, 0)
+
+
+def test_check_full_rows_plot():
+    """ Check that a S piece with the middle missing can be plotted """
+
+    g = TetrisGame(width=6)
+    i = TetrisPiece(1, 'I1')
+    i.rotate(1)
+    g.drop(i, 1)
+
+    i = TetrisPiece(1, 'I2')
+    i.rotate(1)
+    g.drop(i, 0)
+
+    g.drop(TetrisPiece(6, 'Test'), 4)
+
+    plot_game(g, 'test_check_full_rows_plot_0_before')
+    num_rows_removed = g.check_full_rows()
+    assert_equals(num_rows_removed, 1)
+    plot_game(g, 'test_check_full_rows_plot_1_after')
+
+    assert_equals(g.height, 2)
 
     # Check that calling it again doesn't cause problems
     num_rows_removed = g.check_full_rows()
@@ -475,5 +524,5 @@ if __name__ == '__main__':
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
         '-a !plots', # Ignore tests with 'plots' attribute
-
+        __name__
         ])

@@ -260,9 +260,10 @@ class TetrisGame(object):
         return centroid, area
 
     def validate_pieces(self, pieces):
-        s = {p.id for p in pieces}
-        if len(s) != len(pieces):
-            raise ValueError("Piece IDs are not unique")
+        if pieces:
+            s = {p.id for p in pieces}
+            if len(s) != len(pieces):
+                raise ValueError("Piece IDs are not unique")
 
 
 class TetrisPiece(object):
@@ -424,7 +425,7 @@ class TetrisPiece(object):
         self._bottom = self.polygon.bounds[1]
 
     def __str__(self):
-        return "<Piece {0.id}>".format(self)
+        return "<Piece {0.id} shape:{0.num}>".format(self)
 
     def __repr__(self):
         return str(self)
