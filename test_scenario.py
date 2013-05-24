@@ -69,7 +69,7 @@ def test_scenario_2():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
-
+@attr('skip')
 def test_scenario_3():
 
     pieces = [
