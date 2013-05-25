@@ -169,7 +169,7 @@ class Step(object):
 
             # Only make some moves
             if move.cost > weights.max_iteration_cost:
-                print 'Skipping due to max_iteration_cost', move.cost
+##                print 'Skipping due to max_iteration_cost', move.cost
                 continue
 
             if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
@@ -228,17 +228,17 @@ class Step(object):
         elif cost > best_cost:
             # Skip - return False
 
-            print 'Skipping, best encountered previously', cost, depth
+##            print 'Skipping, best encountered previously', cost, depth
             return False
 
         else:
             # Set new best cost
-            print 'New best', cost, depth
+##            print 'New best', cost, depth
             weights.best_cost_at_depth[depth] = cost
             return True
 
 
-def get_best_moves(game):
+def get_best_moves(game, lookahead_distance=3, step_distance=2):
     """ Main smarts """
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
@@ -247,11 +247,57 @@ def get_best_moves(game):
 
     weights = Weightings()
 
-    # Initialise first step
-    first = Step(game, weights=weights)
+    # Copy the game's queue
+    piece_queue = deepcopy(game.input_queue)
 
+    # List to remember the moves we make
     moves = []
-    step = first # Start at trunk
+    moves_made = 0
+
+    while moves_made < len(piece_queue):
+
+        # Set input queue to just first lookahead_distance pieces (from end)
+        start_index = - lookahead_distance - moves_made
+        end_index = - moves_made if moves_made > 0 else None
+        game.input_queue = deepcopy(piece_queue[start_index:end_index])
+
+        print "Input queue:", game.input_queue
+
+        # Can finish game now
+        if moves_made + len(game.input_queue) == len(piece_queue):
+            step_distance = len(game.input_queue)
+            print 'Finish him!'
+
+        # Step through pieces
+        step = Step(game, weights=weights)
+
+
+        # Make step_distance moves down tree in best direction
+        for i in range(step_distance):
+
+            if not step.children:
+                print 'End reached'
+                break
+
+            # Go to next step
+            step = step.children[0]
+
+            moves.append(step.move)
+            moves_made += 1
+
+            print 'Move:', step.move
+
+
+
+        # Use game state
+        game = step.game
+
+
+
+
+
+
+
 
     while step.children:
 

@@ -20,6 +20,7 @@ from plotting import plot_game
 
 """Game scenario tests to verify correct execution of program modules."""
 
+@attr('skip')
 def test_scenario_1():
 
     pieces = [
@@ -44,6 +45,7 @@ def test_scenario_1():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
+
 def test_scenario_2():
 
     pieces = [
@@ -66,8 +68,8 @@ def test_scenario_2():
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is less than 3
-    assert_less(game.height, 3)
+    # Check game height is equal to 1
+    assert_equals(game.height, 1)
 
 @attr('skip')
 def test_scenario_3():
