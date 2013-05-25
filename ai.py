@@ -203,7 +203,7 @@ class Step(object):
         # Moves to make
         for move in best_by_cost:
 
-            if move.cost + self.cumulative_cost > weights.best_endstep_cost:
+            if move.cost + self.cumulative_cost >= weights.best_endstep_cost:
 ##                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
 ##                print 'Skip depth: ', self.depth
                 continue
@@ -338,18 +338,14 @@ def get_best_moves(game):
             moves.append(step.move)
             moves_made += 1
 
-            print 'Move:', step.move
+##            print 'Move:', step.move
 
         # Use game state
         game = step.game
 
 
-    print 'Moves:'
-    pprint(moves)
-
-    pprint(weights.best_cost_at_depth)
-
-    pprint(weights.worst_cost_at_depth)
+##    print 'Moves:'
+##    pprint(moves)
 
     return moves
 
