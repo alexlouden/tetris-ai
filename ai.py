@@ -31,7 +31,7 @@ class Weightings(object):
     def __init__(self):
         self.area = 1       # Area of piece above previous game height
         self.centroid = 1   # Height of centroid above previous game height
-        self.height = 5     # Change in game height
+        self.height = 2     # Change in game height
         self.rows_removed = -10
         self.gaps = 5
         self.centroidy = 0.5
@@ -40,17 +40,28 @@ class Weightings(object):
         self.step_distance = 2
 
         self.starting_score = self.rows_removed * -4 # Ensure no negative scores
-##        self.max_iteration_cost = 60000 # TODO fix - use median/minimum etc?
 
         self.best_endstep_cost = self.bignum
         """ The best cost encountered at the leaves of a tree """
 
-    @staticmethod
-    def skip_move(costs, cost):
+        self.best_cost_at_depth  = {}
+        self.worst_cost_at_depth = {}
 
-##        return cost == min(costs)
+        self.maximum_percentage = 0.5
+        """ Percentage difference for passable cost in range from best to worst previously found costs """
+        self.minimum_diff = 10
+        """ Minimum difference between previously found minimum cost and passable cost """
 
-        return False
+    def skip_move(self, depth, cost):
+
+        best = self.best_cost_at_depth[depth]
+        worst = self.worst_cost_at_depth[depth]
+
+        max_cost = max((worst - best) * self.maximum_percentage + best,
+                       best + self.minimum_diff)
+
+        return not best <= cost <= max_cost
+
 
 class Stats(object):
     pass
@@ -174,11 +185,6 @@ class Step(object):
 
 ##        print 'Possible moves for piece {}:'.format(piece.id)
 
-##        # Potential minimum move cost
-##        min_move_cost = min(weights.starting_score - weights.rows_removed * self.piece.height,
-##                            weights.starting_score - weights.rows_removed * self.piece.width)
-
-
         # Determine possible moves
         possible_moves = self.get_possible_moves()
 
@@ -190,27 +196,19 @@ class Step(object):
         # Sort possible moves by cost (best first)
         best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
 
-##        all_costs = [m.cost for m in best_by_cost]
+        # Prune moves, based on their cost
+        best_by_cost = self.prune_moves(best_by_cost, weights)
 
         # Moves to make
         for move in best_by_cost:
-
-##            # Only make some moves
-##            if weights.skip_move(all_costs, move.cost):
-##                continue
 
             if move.cost + self.cumulative_cost > weights.best_endstep_cost:
                 print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
                 print 'Skip depth: ', self.depth
                 continue
 
-##            if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
-##                continue
-
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
-
-##            print 'Makin\' moves', depth, self.cumulative_cost, move.cost
 
             # Iterate down
             child = Step(new_game,
@@ -227,7 +225,7 @@ class Step(object):
 
         else:
             # Best cost encountered (but not explored)
-            self.best_cost = self.cumulative_cost + best_by_cost[0].cost
+            self.best_cost = self.cumulative_cost
 
     def __str__(self):
         if self.piece:
@@ -256,6 +254,31 @@ class Step(object):
                 possible_moves.append(m)
 
         return possible_moves
+
+    def prune_moves(self, moves, weights):
+
+        best_cost = moves[0].cost
+        worst_cost = moves[-1].cost
+
+        current_best = weights.best_cost_at_depth.get(self.depth)
+
+        print best_cost, worst_cost, current_best
+
+        if current_best is None:
+            # First time at depth
+            weights.best_cost_at_depth[self.depth] = best_cost
+        else:
+            # Update
+            weights.best_cost_at_depth[self.depth] = min(current_best, best_cost)
+##            print 'New best cost for depth', self.depth, current_best, '->' ,best_cost
+
+        try:
+            weights.worst_cost_at_depth[self.depth] = max(weights.worst_cost_at_depth[self.depth], worst_cost)
+        except KeyError:
+            weights.worst_cost_at_depth[self.depth] = worst_cost
+
+
+        return [move for move in moves if not weights.skip_move(self.depth, move.cost)]
 
 
 def get_best_moves(game):
