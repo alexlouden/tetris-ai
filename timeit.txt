@@ -1,0 +1,6 @@
+>>> timeit.timeit('r.intersection(r2).area','import shapely.geometry; r = shapely.geometry.box(0,0,1,1); r2 = shapely.geometry.box(0,0,1,1)', number=1000)
+0.23008318472416045
+>>> timeit.timeit('p.intersection(r)','import shapely.geometry; r = shapely.geometry.box(0,0,1,1); p = shapely.geometry.Point(1,1)', number=1000)
+0.1250129720104951
+>>> timeit.timeit('p.intersection(r)','import shapely.geometry; r = shapely.geometry.box(0,0,1,1); p = shapely.geometry.Point(1,1)', number=83000)
+10.054081335871295
