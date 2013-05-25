@@ -47,9 +47,10 @@ class Weightings(object):
         self.best_cost_at_depth  = {}
         self.worst_cost_at_depth = {}
 
-        self.maximum_percentage = 0.5
+        self.maximum_percentage = 0.1
         """ Percentage difference for passable cost in range from best to worst previously found costs """
-        self.minimum_diff = 10
+
+        self.minimum_diff = 4
         """ Minimum difference between previously found minimum cost and passable cost """
 
     def skip_move(self, depth, cost):
@@ -175,8 +176,8 @@ class Step(object):
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)
 
-            if weights.best_endstep_cost == cost:
-               print "Best new end node! ", cost
+##            if weights.best_endstep_cost == cost:
+##               print "Best new end node! ", cost
 
             return
 
@@ -203,8 +204,8 @@ class Step(object):
         for move in best_by_cost:
 
             if move.cost + self.cumulative_cost > weights.best_endstep_cost:
-                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
-                print 'Skip depth: ', self.depth
+##                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
+##                print 'Skip depth: ', self.depth
                 continue
 
             new_game = deepcopy(self.game)
@@ -262,7 +263,6 @@ class Step(object):
 
         current_best = weights.best_cost_at_depth.get(self.depth)
 
-        print best_cost, worst_cost, current_best
 
         if current_best is None:
             # First time at depth
@@ -277,6 +277,7 @@ class Step(object):
         except KeyError:
             weights.worst_cost_at_depth[self.depth] = worst_cost
 
+##        print 'prune:', self.depth, best_cost, worst_cost, current_best, weights.worst_cost_at_depth.get(self.depth)
 
         return [move for move in moves if not weights.skip_move(self.depth, move.cost)]
 
@@ -289,6 +290,9 @@ def get_best_moves(game):
     useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
 
     weights = Weightings()
+
+    print 'Using a lookahead of {} with a step of {}'.format(
+        weights.lookahead_distance, weights.step_distance)
 
     # Copy the game's queue
     piece_queue = deepcopy(game.input_queue)
@@ -304,16 +308,18 @@ def get_best_moves(game):
         end_index = - moves_made if moves_made > 0 else None
         game.input_queue = deepcopy(piece_queue[start_index:end_index])
 
-        print "Input queue:", game.input_queue
+##        print "Input queue:", game.input_queue
 
 ##        print 'Numbers:', moves_made, len(game.input_queue), len(piece_queue)
 
         # Can finish game now
         if moves_made + len(game.input_queue) == len(piece_queue):
             weights.step_distance = len(game.input_queue)
-            print 'Finish him!', weights.step_distance
+##            print 'Finish him!', weights.step_distance
 
         weights.best_endstep_cost = weights.bignum
+        weights.best_cost_at_depth = {}
+        weights.worst_cost_at_depth = {}
 
         # Step through pieces
         step = Step(game, depth=moves_made, weights=weights)
@@ -322,7 +328,7 @@ def get_best_moves(game):
         for i in range(weights.step_distance):
 
             if not step.best_child:
-                print 'End reached'
+##                print 'End reached'
                 print step
                 break
 
@@ -340,6 +346,10 @@ def get_best_moves(game):
 
     print 'Moves:'
     pprint(moves)
+
+    pprint(weights.best_cost_at_depth)
+
+    pprint(weights.worst_cost_at_depth)
 
     return moves
 
