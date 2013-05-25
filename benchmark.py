@@ -24,7 +24,31 @@ from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from ai import Weightings
 
-def main():
+
+def test_rows_score():
+
+    num_pieces = 20
+
+    Weightings.lookahead_distance = 4
+    Weightings.starting_score = 100
+
+    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
+    pprint(pieces)
+
+    # Try -1 to -10
+    for rr in range(-1, -11, -1):
+        Weightings.rows_removed = rr
+
+        game = TetrisGame(deepcopy(pieces), width=7)
+        game.status = "benchmark_rows_removed_{}".format(Weightings.rows_removed)
+        game.solve()
+
+        print Weightings.rows_removed, game.height
+
+
+def benchmark_time_vs_num_pieces():
+
+    Weightings.lookahead_distance = 4
 
     # 10 random sets of pieces
     for i in range(10):
@@ -56,4 +80,5 @@ def time_solve(pieces, num_pieces):
     return end_time - start_time
 
 if __name__ == '__main__':
-    main()
+    test_rows_score()
+

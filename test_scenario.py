@@ -20,7 +20,6 @@ from plotting import plot_game
 
 """Game scenario tests to verify correct execution of program modules."""
 
-@attr('skip')
 def test_scenario_1():
 
     pieces = [
@@ -68,10 +67,9 @@ def test_scenario_2():
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is equal to 1
-    assert_equals(game.height, 1)
+    # Check game height is less than 3
+    assert_less(game.height, 3)
 
-@attr('skip')
 def test_scenario_3():
 
     pieces = [
@@ -106,10 +104,17 @@ def test_scenario_3():
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is less than 20
-##    assert_less(game.height, 20)
+    # Check game height is less than 10
+    assert_less(game.height, 12)
+
+
 
 if __name__ == '__main__':
+
+    # Do time profile?
+##    import cProfile
+##    cProfile.run('test_scenario_2()')
+
     nose.main(argv=[
         '--verbosity=2',
         '--nocapture', # Don't capture stdout

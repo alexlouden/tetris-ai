@@ -28,30 +28,29 @@ class Weightings(object):
 
     bignum = sys.maxint
 
-    def __init__(self):
-        self.area = 1       # Area of piece above previous game height
-        self.centroid = 1   # Height of centroid above previous game height
-        self.height = 2     # Change in game height
-        self.rows_removed = -10
-        self.gaps = 5
-        self.centroidy = 0.5
+    area = 1       # Area of piece above previous game height
+    centroid = 1   # Height of centroid above previous game height
+    height = 2     # Change in game height
+    rows_removed = -10
+    gaps = 5
+    centroidy = 0.5
 
-        self.lookahead_distance = 3
-        self.step_distance = 2
+    lookahead_distance = 3
+    step_distance = 2
 
-        self.starting_score = self.rows_removed * -4 # Ensure no negative scores
+    starting_score = rows_removed * -4 # Ensure no negative scores
 
-        self.best_endstep_cost = self.bignum
-        """ The best cost encountered at the leaves of a tree """
+    best_endstep_cost = bignum
+    """ The best cost encountered at the leaves of a tree """
 
-        self.best_cost_at_depth  = {}
-        self.worst_cost_at_depth = {}
+    best_cost_at_depth  = {}
+    worst_cost_at_depth = {}
 
-        self.maximum_percentage = 0.1
-        """ Percentage difference for passable cost in range from best to worst previously found costs """
+    maximum_percentage = 0.1
+    """ Percentage difference for passable cost in range from best to worst previously found costs """
 
-        self.minimum_diff = 4
-        """ Minimum difference between previously found minimum cost and passable cost """
+    minimum_diff = 4
+    """ Minimum difference between previously found minimum cost and passable cost """
 
     def skip_move(self, depth, cost):
 
