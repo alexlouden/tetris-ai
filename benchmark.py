@@ -34,13 +34,14 @@ def main():
 
         piece_delays = []
 
-        for num_pieces in range(1, len(pieces)):
+        for num_pieces in range(1, len(pieces)+1):
             delay = time_solve(deepcopy(pieces[:num_pieces]), num_pieces)
             piece_delays.append((num_pieces, delay))
 
         print '-'*40
         print 'num_pieces time'
         pprint(piece_delays)
+        print '-'*40
 
 def time_solve(pieces, num_pieces):
 
