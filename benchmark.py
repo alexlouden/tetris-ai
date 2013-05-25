@@ -25,6 +25,27 @@ from plotting import plot_game
 from ai import Weightings
 
 
+def test_gaps_score():
+
+    num_pieces = 20
+
+    Weightings.lookahead_distance = 4
+    Weightings.starting_score = 100
+
+    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
+    pprint(pieces)
+
+    # Try 1 to 10
+    for g in range(1, 11):
+        Weightings.gaps = g
+
+        game = TetrisGame(deepcopy(pieces), width=7)
+        game.status = "benchmark_gaps_{}".format(Weightings.gaps)
+        game.solve()
+
+        print Weightings.rows_removed, game.height
+
+
 def test_rows_score():
 
     num_pieces = 20
@@ -80,5 +101,6 @@ def time_solve(pieces, num_pieces):
     return end_time - start_time
 
 if __name__ == '__main__':
+    test_gaps_score()
     test_rows_score()
 

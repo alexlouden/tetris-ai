@@ -290,8 +290,8 @@ def get_best_moves(game):
 
     weights = Weightings()
 
-    print 'Using a lookahead of {} with a step of {}'.format(
-        weights.lookahead_distance, weights.step_distance)
+##    print 'Using a lookahead of {} with a step of {}'.format(
+##        weights.lookahead_distance, weights.step_distance)
 
     # Copy the game's queue
     piece_queue = deepcopy(game.input_queue)
@@ -328,7 +328,7 @@ def get_best_moves(game):
 
             if not step.best_child:
 ##                print 'End reached'
-                print step
+##                print step
                 break
 
             # Go to next step
