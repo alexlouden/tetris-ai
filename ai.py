@@ -24,8 +24,11 @@ useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
 class Weightings(object):
+    """Hold weights associated with each aspect of the cost function."""
+
+    bignum = sys.maxint
+
     def __init__(self):
-        """Hold weights associated with each aspect of the cost function."""
         self.area = 1       # Area of piece above previous game height
         self.centroid = 1   # Height of centroid above previous game height
         self.height = 5     # Change in game height
@@ -33,14 +36,14 @@ class Weightings(object):
         self.gaps = 5
         self.centroidy = 0.5
 
-        self.lookahead_distance = 4
+        self.lookahead_distance = 3
         self.step_distance = 2
 
         self.starting_score = self.rows_removed * -4 # Ensure no negative scores
-        self.max_iteration_cost = 60000 # TODO fix - use median/minimum etc?
+##        self.max_iteration_cost = 60000 # TODO fix - use median/minimum etc?
 
-        self.best_cost_at_depth = {}
-        """ The best cost encountered at any tree depth """
+        self.best_endstep_cost = self.bignum
+        """ The best cost encountered at the leaves of a tree """
 
     @staticmethod
     def skip_move(costs, cost):
@@ -151,17 +154,30 @@ class Step(object):
         self.depth = depth
         self.cumulative_cost = cost
         self.move = move
+        self.best_child = None
 
-        # No more moves to make
+        # No more moves to make - this is end node
         if not self.game.input_queue:
             self.piece = None
-##            print "End node! ", cost
+            self.best_cost = self.cumulative_cost
+
+            # Set new best endstep cost if needed
+            weights.best_endstep_cost = min(weights.best_endstep_cost, cost)
+
+            if weights.best_endstep_cost == cost:
+               print "Best new end node! ", cost
+
             return
 
         # Get next piece
         self.piece = self.game.input_queue.pop()
 
 ##        print 'Possible moves for piece {}:'.format(piece.id)
+
+##        # Potential minimum move cost
+##        min_move_cost = min(weights.starting_score - weights.rows_removed * self.piece.height,
+##                            weights.starting_score - weights.rows_removed * self.piece.width)
+
 
         # Determine possible moves
         possible_moves = self.get_possible_moves()
@@ -174,21 +190,22 @@ class Step(object):
         # Sort possible moves by cost (best first)
         best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
 
-        all_costs = [m.cost for m in best_by_cost]
+##        all_costs = [m.cost for m in best_by_cost]
 
         # Moves to make
         for move in best_by_cost:
 
-            # Only make some moves
-            if weights.skip_move(all_costs, move.cost):
-                continue
-
-##            if move.cost > weights.max_iteration_cost:
-####                print 'Skipping due to max_iteration_cost', move.cost
+##            # Only make some moves
+##            if weights.skip_move(all_costs, move.cost):
 ##                continue
 
-            if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
+            if move.cost + self.cumulative_cost > weights.best_endstep_cost:
+                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
+                print 'Skip depth: ', self.depth
                 continue
+
+##            if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
+##                continue
 
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
@@ -200,7 +217,17 @@ class Step(object):
                 self.depth + 1,
                 self.cumulative_cost + move.cost,
                 move, weights=weights)
+
             self.children.append(child)
+
+        # Reference to the best child
+        if self.children:
+            self.best_child = min(self.children, key=attrgetter('best_cost'))
+            self.best_cost = self.best_child.best_cost
+
+        else:
+            # Best cost encountered (but not explored)
+            self.best_cost = self.cumulative_cost + best_by_cost[0].cost
 
     def __str__(self):
         if self.piece:
@@ -229,30 +256,6 @@ class Step(object):
                 possible_moves.append(m)
 
         return possible_moves
-
-    def is_best_cost(self, depth, cost, weights):
-
-        # Check best_score_at_depth
-        best_cost = weights.best_cost_at_depth.get(depth)
-
-        if best_cost is None:
-            # New best cost for this depth
-
-            weights.best_cost_at_depth[depth] = cost
-##            print 'First best_cost created', cost, depth
-            return True
-
-        elif cost > best_cost:
-            # Skip - return False
-
-##            print 'Skipping, best encountered previously', cost, depth
-            return False
-
-        else:
-            # Set new best cost
-##            print 'New best', cost, depth
-            weights.best_cost_at_depth[depth] = cost
-            return True
 
 
 def get_best_moves(game):
@@ -287,52 +290,33 @@ def get_best_moves(game):
             weights.step_distance = len(game.input_queue)
             print 'Finish him!', weights.step_distance
 
-            # Try this - last move prioritise height
-##            weights.height = 50
+        weights.best_endstep_cost = weights.bignum
 
         # Step through pieces
         step = Step(game, depth=moves_made, weights=weights)
 
-
         # Make step_distance moves down tree in best direction
         for i in range(weights.step_distance):
 
-            if not step.children:
+            if not step.best_child:
                 print 'End reached'
                 print step
                 break
 
             # Go to next step
-            step = step.children[0]
+            step = step.best_child
 
             moves.append(step.move)
             moves_made += 1
 
             print 'Move:', step.move
 
-
-
         # Use game state
         game = step.game
 
 
-
-
-
-
-
-##
-##    while step.children:
-##
-##        # Iterating down
-##        step = step.children[0]
-##
-##        moves.append(step.move)
-
     print 'Moves:'
     pprint(moves)
-
-    pprint(weights.best_cost_at_depth)
 
     return moves
 
