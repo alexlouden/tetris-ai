@@ -30,14 +30,24 @@ class Weightings(object):
         self.centroid = 1   # Height of centroid above previous game height
         self.height = 5     # Change in game height
         self.rows_removed = -10
-        self.gaps = 2
+        self.gaps = 5
         self.centroidy = 0.5
 
+        self.lookahead_distance = 4
+        self.step_distance = 2
+
         self.starting_score = self.rows_removed * -4 # Ensure no negative scores
-        self.max_iteration_cost = 65 # TODO fix - use median/minimum etc?
+        self.max_iteration_cost = 60000 # TODO fix - use median/minimum etc?
 
         self.best_cost_at_depth = {}
         """ The best cost encountered at any tree depth """
+
+    @staticmethod
+    def skip_move(costs, cost):
+
+##        return cost == min(costs)
+
+        return False
 
 class Stats(object):
     pass
@@ -145,7 +155,7 @@ class Step(object):
         # No more moves to make
         if not self.game.input_queue:
             self.piece = None
-            print "End node! ", cost
+##            print "End node! ", cost
             return
 
         # Get next piece
@@ -164,19 +174,26 @@ class Step(object):
         # Sort possible moves by cost (best first)
         best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
 
+        all_costs = [m.cost for m in best_by_cost]
+
         # Moves to make
         for move in best_by_cost:
 
             # Only make some moves
-            if move.cost > weights.max_iteration_cost:
-##                print 'Skipping due to max_iteration_cost', move.cost
+            if weights.skip_move(all_costs, move.cost):
                 continue
+
+##            if move.cost > weights.max_iteration_cost:
+####                print 'Skipping due to max_iteration_cost', move.cost
+##                continue
 
             if not self.is_best_cost(depth, move.cost + self.cumulative_cost, weights):
                 continue
 
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
+
+##            print 'Makin\' moves', depth, self.cumulative_cost, move.cost
 
             # Iterate down
             child = Step(new_game,
@@ -222,7 +239,7 @@ class Step(object):
             # New best cost for this depth
 
             weights.best_cost_at_depth[depth] = cost
-            print 'First best_cost created', cost, depth
+##            print 'First best_cost created', cost, depth
             return True
 
         elif cost > best_cost:
@@ -238,7 +255,7 @@ class Step(object):
             return True
 
 
-def get_best_moves(game, lookahead_distance=3, step_distance=2):
+def get_best_moves(game):
     """ Main smarts """
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
@@ -257,26 +274,32 @@ def get_best_moves(game, lookahead_distance=3, step_distance=2):
     while moves_made < len(piece_queue):
 
         # Set input queue to just first lookahead_distance pieces (from end)
-        start_index = - lookahead_distance - moves_made
+        start_index = - weights.lookahead_distance - moves_made
         end_index = - moves_made if moves_made > 0 else None
         game.input_queue = deepcopy(piece_queue[start_index:end_index])
 
         print "Input queue:", game.input_queue
 
+##        print 'Numbers:', moves_made, len(game.input_queue), len(piece_queue)
+
         # Can finish game now
         if moves_made + len(game.input_queue) == len(piece_queue):
-            step_distance = len(game.input_queue)
-            print 'Finish him!'
+            weights.step_distance = len(game.input_queue)
+            print 'Finish him!', weights.step_distance
+
+            # Try this - last move prioritise height
+##            weights.height = 50
 
         # Step through pieces
-        step = Step(game, weights=weights)
+        step = Step(game, depth=moves_made, weights=weights)
 
 
         # Make step_distance moves down tree in best direction
-        for i in range(step_distance):
+        for i in range(weights.step_distance):
 
             if not step.children:
                 print 'End reached'
+                print step
                 break
 
             # Go to next step
@@ -298,13 +321,13 @@ def get_best_moves(game, lookahead_distance=3, step_distance=2):
 
 
 
-
-    while step.children:
-
-        # Iterating down
-        step = step.children[0]
-
-        moves.append(step.move)
+##
+##    while step.children:
+##
+##        # Iterating down
+##        step = step.children[0]
+##
+##        moves.append(step.move)
 
     print 'Moves:'
     pprint(moves)
