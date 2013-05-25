@@ -196,7 +196,7 @@ def test_calculate_height():
 
     assert_equals(g.calculate_height(), 6)
 
-    plot_game(g, 'test_game_height')
+    plot_game(g, 'test/test_game_height')
 
 
 def test_drop():
@@ -205,7 +205,7 @@ def test_drop():
     g.drop(TetrisPiece(7), 0)
     g.drop(TetrisPiece(1), 0)
 
-    plot_game(g, 'test_drop')
+    plot_game(g, 'test/test_drop')
 
     assert_equals(g.height, 6)
 
@@ -214,7 +214,7 @@ def test_drop():
     g.drop(TetrisPiece(1), 0)
     g.drop(TetrisPiece(1), 1)
 
-    plot_game(g, 'test_drop_2')
+    plot_game(g, 'test/test_drop_2')
 
     assert_equals(g.height, 6)
 
@@ -243,7 +243,7 @@ def test_random_drop():
             # Ignore pieces off edge
             pass
 
-    plot_game(g, 'test_random_drop')
+    plot_game(g, 'test/test_random_drop')
 
 def test_is_row_full():
 
@@ -261,7 +261,7 @@ def test_is_row_full():
     # Row 1 is full
     assert_true(g.is_row_full(1))
 
-    plot_game(g, 'test_full_row_0_before')
+    plot_game(g, 'test/test_full_row_0_before')
 
     assert_equals(g.height, 5)
     num_rows_removed = g.check_full_rows()
@@ -269,7 +269,7 @@ def test_is_row_full():
 
     assert_equals(num_rows_removed, 1)
 
-    plot_game(g, 'test_full_row_1_after')
+    plot_game(g, 'test/test_full_row_1_after')
 
 
 def test_check_full_rows():
@@ -286,10 +286,10 @@ def test_check_full_rows_multiple():
     g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
     g.drop(TetrisPiece(1, 'I2', rotation=1), 0)
 
-    plot_game(g, 'test_check_full_rows_multiple_0_before')
+    plot_game(g, 'test/test_check_full_rows_multiple_0_before')
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 2)
-    plot_game(g, 'test_check_full_rows_multiple_1_after')
+    plot_game(g, 'test/test_check_full_rows_multiple_1_after')
 
     assert_equals(g.height, 0)
 
@@ -300,10 +300,10 @@ def test_check_full_rows_multiple_2():
     g.drop(TetrisPiece(2, 'O'), 1)
     g.drop(TetrisPiece(3, 'T'), 3)
 
-    plot_game(g, 'test_check_full_rows_multiple_2_0_before')
+    plot_game(g, 'test/test_check_full_rows_multiple_2_0_before')
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 1)
-    plot_game(g, 'test_check_full_rows_multiple_2_1_after')
+    plot_game(g, 'test/test_check_full_rows_multiple_2_1_after')
 
     assert_equals(g.height, 3)
 
@@ -313,10 +313,10 @@ def test_check_full_rows_multiple_3():
     g.drop(TetrisPiece(2), 0)
     g.drop(TetrisPiece(2), 2)
 
-    plot_game(g, 'test_check_full_rows_multiple_3_0_before')
+    plot_game(g, 'test/test_check_full_rows_multiple_3_0_before')
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 2)
-    plot_game(g, 'test_check_full_rows_multiple_3_1_after')
+    plot_game(g, 'test/test_check_full_rows_multiple_3_1_after')
 
     assert_equals(g.height, 0)
 
@@ -325,7 +325,7 @@ def test_check_full_rows_multiple_3():
     assert_equals(num_rows_removed, 0)
 
 def test_check_full_rows_piece_drop():
-    """ Check that a floating block will drop """
+    """ Check that a floating block does not drop """
 
     g = TetrisGame(width=4)
 
@@ -337,12 +337,12 @@ def test_check_full_rows_piece_drop():
     i.rotate(3)
     g.drop(i, 1)
 
-    plot_game(g, 'test_check_full_rows_piece_drop_0_before')
+    plot_game(g, 'test/test_check_full_rows_piece_drop_0_before')
     num_rows_removed = g.check_full_rows()
-    plot_game(g, 'test_check_full_rows_piece_drop_1_after')
+    plot_game(g, 'test/test_check_full_rows_piece_drop_1_after')
 
-    assert_equals(num_rows_removed, 2)
-    assert_equals(g.height, 0)
+    assert_equals(num_rows_removed, 1)
+    assert_equals(g.height, 2)
 
     # Check that calling it again doesn't cause problems
     num_rows_removed = g.check_full_rows()
@@ -363,10 +363,10 @@ def test_check_full_rows_plot():
 
     g.drop(TetrisPiece(6, 'Test'), 4)
 
-    plot_game(g, 'test_check_full_rows_plot_0_before')
+    plot_game(g, 'test/test_check_full_rows_plot_0_before')
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 1)
-    plot_game(g, 'test_check_full_rows_plot_1_after')
+    plot_game(g, 'test/test_check_full_rows_plot_1_after')
 
     assert_equals(g.height, 2)
 
@@ -389,7 +389,7 @@ def test_count_gaps():
 
     g.drop(TetrisPiece(1, rotation=1), 0)
 
-    plot_game(g, 'test_count_gaps')
+    plot_game(g, 'test/test_count_gaps')
 
     num_gaps = g.count_gaps()
     assert_equals(num_gaps, 2)
@@ -406,11 +406,11 @@ def test_count_gaps_2():
     num_gaps = g.count_gaps()
     assert_equals(num_gaps, 1)
 
-    plot_game(g, 'test_count_gaps_2_1')
+    plot_game(g, 'test/test_count_gaps_2_1')
 
     # Drop a T on it's side
     g.drop(TetrisPiece(3, 'T2', 3), 1)
-    plot_game(g, 'test_count_gaps_2_2')
+    plot_game(g, 'test/test_count_gaps_2_2')
 
     num_gaps = g.count_gaps()
     assert_equals(num_gaps, 7)
@@ -455,7 +455,7 @@ def test_random_drop_gap_count():
         g.height = g.calculate_height()
 
     print count_tried, count
-    plot_game(g, 'test_random_drop_nogaps')
+    plot_game(g, 'test/test_random_drop_nogaps')
 
 
 def test_count_blocks_above_height():
@@ -497,7 +497,7 @@ def test_count_blocks_above_height_2():
     assert_equals(centroid, 1)
     assert_equals(area, 2)
 
-    plot_game(g, 'test_count_blocks_above_height_2')
+    plot_game(g, 'test/test_count_blocks_above_height_2')
 
 
 def test_count_blocks_above_height_3():
@@ -514,7 +514,7 @@ def test_count_blocks_above_height_3():
     assert_equals(centroid, 0.5)
     assert_equals(area, 3)
 
-    plot_game(g, 'test_count_blocks_above_height_3')
+    plot_game(g, 'test/test_count_blocks_above_height_3')
 
 
 if __name__ == '__main__':
