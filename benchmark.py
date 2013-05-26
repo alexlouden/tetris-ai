@@ -25,7 +25,6 @@ from plotting import plot_game
 from ai import Weightings
 
 
-
 def test_rows_score_log():
 
     num_pieces = 15
@@ -41,7 +40,7 @@ def test_rows_score_log():
         Weightings.rows_removed = rr
 
         game = TetrisGame(deepcopy(pieces), width=7)
-        game.status = "benchmark_rows_removed_log_{}".format(Weightings.rows_removed)
+        game.status = "benchmark/rows_removed_log_{}".format(Weightings.rows_removed)
         game.solve()
 
         print Weightings.rows_removed, game.height
@@ -62,7 +61,7 @@ def test_gaps_score():
         Weightings.gaps = g
 
         game = TetrisGame(deepcopy(pieces), width=7)
-        game.status = "benchmark_gaps_{}".format(Weightings.gaps)
+        game.status = "benchmark/gaps_{}".format(Weightings.gaps)
         game.solve()
 
         print Weightings.gaps, game.height
@@ -83,7 +82,7 @@ def test_rows_score():
         Weightings.rows_removed = rr
 
         game = TetrisGame(deepcopy(pieces), width=7)
-        game.status = "benchmark_rows_removed_{}".format(Weightings.rows_removed)
+        game.status = "benchmark/rows_removed_{}".format(Weightings.rows_removed)
         game.solve()
 
         print Weightings.rows_removed, game.height
@@ -93,21 +92,19 @@ def benchmark_time_vs_num_pieces():
 
     Weightings.lookahead_distance = 4
 
+    piece_delays = []
+
     # 10 random sets of pieces
     for i in range(10):
 
-        pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, 7)]
-        pprint(pieces)
+        # 50 random pieces from 1-7
+        pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, 50)]
 
-        piece_delays = []
-
-        for num_pieces in range(1, len(pieces)+1):
-            delay = time_solve(deepcopy(pieces[:num_pieces]), num_pieces)
-            piece_delays.append((num_pieces, delay))
+        delay = time_solve(pieces, i)
 
         print '-'*40
         print 'num_pieces time'
-        pprint(piece_delays)
+        print i, delay
         print '-'*40
 
 def time_solve(pieces, num_pieces):
@@ -116,12 +113,11 @@ def time_solve(pieces, num_pieces):
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=7)
-    game.status = "benchmark_num_pieces_{}".format(num_pieces)
+    game.status = "benchmark_piece_{}".format(num_pieces)
     game.solve()
 
     end_time = time()
     return end_time - start_time
 
 if __name__ == '__main__':
-    test_rows_score_log()
-
+    benchmark_time_vs_num_pieces()

@@ -49,13 +49,13 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.4
+    maximum_percentage = 0.3
     """ Percentage difference for passable cost in range from best to worst previously found costs """
 
     minimum_diff = 5
     """ Minimum difference between previously found minimum cost and passable cost """
 
-    max_num_branches = 3
+    max_num_branches = 2
 
     def skip_move(self, depth, cost):
 
@@ -193,10 +193,10 @@ class Step(object):
             self.piece = None
             self.best_cost = self.cumulative_cost
 
-            if weights.best_endstep_cost > cost:
-               print "Best new end node! ", cost, weights.best_endstep_cost
-
-               plot_game(self.game, self.game.status + '_depth_{}_cost_{:.2f}'.format(self.depth, cost))
+##            if weights.best_endstep_cost > cost:
+##               print "Best new end node! ", cost, weights.best_endstep_cost
+##
+##               plot_game(self.game, self.game.status + '_depth_{}_cost_{:.2f}'.format(self.depth, cost))
 
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)

@@ -337,6 +337,7 @@ def test_diagonal_shapes():
     }
 
     pieces = [ TetrisPiece(i, i) for i in sorted(Pieces.piece_shapes.keys()) ]
+    shuffle(pieces)
 
     # Initialise empty game
     game = TetrisGame(width=13)
@@ -355,11 +356,11 @@ def test_diagonal_shapes():
 
     pprint(pieces)
 
-    game = TetrisGame(pieces, width=11)
+    game = TetrisGame(pieces, width=5)
     game.status = "test_diagonal_shapes_shuffle"
     game.solve()
 
-
+@attr('skip')
 def test_scenario_10():
     """ Tessellating Houses """
 
