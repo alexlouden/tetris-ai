@@ -361,15 +361,15 @@ def test_diagonal_shapes():
 
 
 def test_scenario_10():
-    """ Houses """
+    """ Tessellating Houses """
 
     Pieces.piece_shapes = {
-        1: [(0,0), (1,0), (1,1), (1,2), (0,1)],
+        1: [(0,0), (2,0), (2,1), (1,2), (0,1)],
     }
 
     pieces = [TetrisPiece(1, id) for id in range(10)]
 
-    game = TetrisGame(pieces, width=8)
+    game = TetrisGame(pieces, width=6)
     game.status = "test_scenario_10"
     game.solve()
 
