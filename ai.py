@@ -46,11 +46,18 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.5
+    maximum_percentage = 0.2
     """ Percentage difference for passable cost in range from best to worst previously found costs """
 
-    minimum_diff = 4
+    minimum_diff = 20
     """ Minimum difference between previously found minimum cost and passable cost """
+
+    max_num_branches_for_depth = {
+        0: 2,
+        1: 2,
+        2: 2,
+        3: 2
+    }
 
     def skip_move(self, depth, cost):
 
@@ -60,7 +67,7 @@ class Weightings(object):
         max_cost = max((worst - best) * self.maximum_percentage + best,
                        best + self.minimum_diff)
 
-        print 'best, cost, max_cost, worst', best, cost, max_cost, worst
+##        print 'best, cost, max_cost, worst', best, cost, max_cost, worst
 
         return not best <= cost <= max_cost
 
@@ -142,9 +149,6 @@ class Move(object):
         self.stats.centroidy    = temp_game.pieces[-1].polygon.centroid.y
 
 
-        if rows_removed == 2:
-            print 'Yay!'
-
 ##        # Remove piece (TODO: tidy up)
 ##        self.game.pieces.pop()
 ##        self.game.update_merged_pieces()
@@ -186,11 +190,11 @@ class Step(object):
             self.piece = None
             self.best_cost = self.cumulative_cost
 
+            if weights.best_endstep_cost > cost:
+               print "Best new end node! ", cost, weights.best_endstep_cost
+
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)
-
-##            if weights.best_endstep_cost == cost:
-##               print "Best new end node! ", cost
 
             return
 
@@ -213,8 +217,9 @@ class Step(object):
         # Prune moves, based on their cost
         best_by_cost = self.prune_moves(best_by_cost, weights)
 
-        # Moves to make
-        for move in best_by_cost:
+        # Moves to make (up to a maximum number)
+        branch_limit = weights.max_num_branches_for_depth.get(self.depth)
+        for move in best_by_cost[:branch_limit]:
 
             if move.cost + self.cumulative_cost >= weights.best_endstep_cost:
 ##                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost
@@ -224,9 +229,6 @@ class Step(object):
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
             new_game.check_full_rows()
-
-            if self.cumulative_cost + move.cost < 105 and self.depth == 2:
-                print 'Best state!'
 
             # Iterate down
             child = Step(new_game,
