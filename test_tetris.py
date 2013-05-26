@@ -44,7 +44,7 @@ def test_plot_shapes():
         game = TetrisGame(pieces, 4)
         game.pieces = pieces
 
-        plot_game(game, 'test_shape_{}'.format(shape_num))
+        plot_game(game, 'test/plot_shape_{}'.format(shape_num))
 
 @attr('plots')
 def test_plot_all_shapes():
@@ -59,7 +59,7 @@ def test_plot_all_shapes():
         piece.left = left
         left += piece.width
 
-    plot_game(game, 'test_all_shapes')
+    plot_game(game, 'test/plot_all_shapes')
 
 def test_shape_width_and_heights():
 
