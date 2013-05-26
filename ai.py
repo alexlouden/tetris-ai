@@ -12,7 +12,7 @@
 #-------------------------------------------------------------------------------
 
 from copy import deepcopy
-from pprint import pprint
+from pprint import pprint, pformat
 from operator import attrgetter
 from collections import defaultdict
 import sys
@@ -46,7 +46,7 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.1
+    maximum_percentage = 0.5
     """ Percentage difference for passable cost in range from best to worst previously found costs """
 
     minimum_diff = 4
@@ -60,11 +60,18 @@ class Weightings(object):
         max_cost = max((worst - best) * self.maximum_percentage + best,
                        best + self.minimum_diff)
 
+        print 'best, cost, max_cost, worst', best, cost, max_cost, worst
+
         return not best <= cost <= max_cost
 
 
 class Stats(object):
-    pass
+
+    def __str__(self):
+        return pformat(self.__dict__)
+
+    def __repr__(self):
+        return str(self)
 
 class Move(object):
     """Hold a possible move to be made.
@@ -111,13 +118,16 @@ class Move(object):
         previous_height = self.game.height
         previous_num_gaps = self.game.count_gaps()
 
-        # Try dropping (copy of) piece
-        self.game.drop(deepcopy(self.piece), self.left)
+        # Make temporary copy of the game
+        temp_game = deepcopy(self.game)
 
-        rows_removed = self.game.check_full_rows()
-        centroid, area = self.game.calculate_blocks_above_height(previous_height)
-        num_gaps = self.game.count_gaps()
-        height = self.game.height
+        # Try dropping (copy of) piece
+        temp_game.drop(deepcopy(self.piece), self.left)
+
+        rows_removed   = temp_game.check_full_rows()
+        centroid, area = temp_game.calculate_blocks_above_height(previous_height)
+        num_gaps       = temp_game.count_gaps()
+        height         = temp_game.height
 
 ##        name = 'scenario\\game_move_{0.piece.id}_{0.piece.rotation}_{0.left}'.format(self)
 ##        self.game.status = name
@@ -129,12 +139,16 @@ class Move(object):
         self.stats.area         = area
         self.stats.gaps         = num_gaps - previous_num_gaps
         self.stats.height       = height - previous_height
-        self.stats.centroidy    = self.piece.polygon.centroid.y
+        self.stats.centroidy    = temp_game.pieces[-1].polygon.centroid.y
 
-        # Remove piece (TODO: tidy up)
-        self.game.pieces.pop()
-        self.game.update_merged_pieces()
-        self.game.height = self.game.calculate_height()
+
+        if rows_removed == 2:
+            print 'Yay!'
+
+##        # Remove piece (TODO: tidy up)
+##        self.game.pieces.pop()
+##        self.game.update_merged_pieces()
+##        self.game.height = self.game.calculate_height()
 
 ##        print str(self)
 ##        print self.stats.__dict__
@@ -209,6 +223,10 @@ class Step(object):
 
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
+            new_game.check_full_rows()
+
+            if self.cumulative_cost + move.cost < 105 and self.depth == 2:
+                print 'Best state!'
 
             # Iterate down
             child = Step(new_game,
@@ -225,7 +243,7 @@ class Step(object):
 
         else:
             # Best cost encountered (but not explored)
-            self.best_cost = self.cumulative_cost
+            self.best_cost = weights.bignum
 
     def __str__(self):
         if self.piece:
