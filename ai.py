@@ -17,7 +17,7 @@ from operator import attrgetter
 from collections import defaultdict
 import sys
 
-from shapeops import num_useful_rotations
+from shapeops import num_useful_rotations, Pieces
 from plotting import plot_game
 
 useful_rotations = {}
@@ -307,7 +307,8 @@ def get_best_moves(game):
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
     global useful_rotations # Global to have shared amongst all Steps
-    useful_rotations = {i: num_useful_rotations(i) for i in range(1, 8)}
+    max_piece_num = max(Pieces.piece_shapes.keys())
+    useful_rotations = {i: num_useful_rotations(i) for i in range(1, max_piece_num + 1)}
 
     weights = Weightings()
 
