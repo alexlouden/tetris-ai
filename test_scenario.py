@@ -18,10 +18,11 @@ from pprint import pprint
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
+from shapeops import Pieces
 
 """Game scenario tests to verify correct execution of program modules."""
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_1():
 
     pieces = [
@@ -46,7 +47,7 @@ def test_scenario_1():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_2():
 
     pieces = [
@@ -72,7 +73,7 @@ def test_scenario_2():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_3():
 
     pieces = [
@@ -110,7 +111,7 @@ def test_scenario_3():
     # Check game height is less than 10
     assert_less(game.height, 12)
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_4():
 
     pieces = [
@@ -140,7 +141,7 @@ def test_scenario_4():
     # Check game height is less than 3
     assert_less(game.height, 5)
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_5():
 
     pieces = [
@@ -175,6 +176,7 @@ def test_scenario_5():
     # Check game height is zero
     assert_equals(game.height, 0)
 
+@attr('skip')
 def test_scenario_6():
 
     pieces = [
@@ -195,33 +197,9 @@ def test_scenario_6():
     game.drop(j, 2)
 
     game.status = "test_scenario_6"
-
-    print '-'*80
-    print game.status
-
     game.solve()
 
     pprint(game.moves)
-
-    # Check positioning of piece 1 - square
-
-    print game.moves[-1].game.pieces
-
-##    self.game.pieces[-1].bottom
-##1
-##[Dbg]>>> self.game.pieces[-1].left
-##1
-##[Dbg]>>> self.game.pieces[-1].polygon
-##<shapely.geometry.polygon.Polygon object at 0x03249C70>
-##[Dbg]>>> self.game.pieces[-1].polygon.bounds
-##(1.0, 1.0, 3.0, 3.0)
-##[Dbg]>>> self.game.pieces[3].polygon.bounds
-##Traceback (most recent call last):
-##  File "<interactive input>", line 1, in <module>
-##IndexError: list index out of range
-##[Dbg]>>> self.game.pieces[2].polygon.bounds
-##(1.0, 1.0, 3.0, 3.0)
-
 
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
@@ -229,8 +207,123 @@ def test_scenario_6():
     # Check game height is equal to 1
     assert_equals(game.height, 1)
 
-    for move in game.moves:
-        print move.stats
+##    for move in game.moves:
+##        print move.stats
+
+    # Check that the two Is are on the right:
+    assert_equals(game.pieces[0].left, 4)
+    assert_equals(game.pieces[1].left, 5)
+    assert_equals(game.pieces[1].polygon.bounds, (5, 0, 6, 1))
+
+
+@attr('skip')
+def test_scenario_7():
+
+    pieces = [
+        TetrisPiece(3, 'T'),
+        TetrisPiece(7, 'Z1'),
+        TetrisPiece(7, 'Z2'),
+        TetrisPiece(7, 'Z3'),
+        TetrisPiece(7, 'Z4'),
+        TetrisPiece(7, 'Z5'),
+        TetrisPiece(7, 'Z6'),
+        TetrisPiece(6, 'S'),
+    ]
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces, width=14)
+    game.status = "test_scenario_7"
+    game.solve()
+
+    pprint(game.moves)
+
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
+
+    # Check game height is less than 3
+    assert_less(game.height, 3)
+
+@attr('skip')
+def test_scenario_8():
+
+    # Plus shape
+    Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
+    Pieces.piece_colours[8] = '#AAAAAA'
+
+    Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
+    Pieces.piece_colours[9] = '#9000ff'
+
+    pieces = [ TetrisPiece(i, i) for i in range(1, 10) ]
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces, width=11)
+    game.status = "test_scenario_8"
+    game.solve()
+
+    pprint(game.moves)
+
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
+
+    # Check game height is less than 3
+    assert_less(game.height, 6)
+
+
+def test_scenario_9():
+
+    # Plus shape
+    Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
+    Pieces.piece_colours[8] = '#AAAAAA'
+
+    Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
+    Pieces.piece_colours[9] = '#9000ff'
+
+    pieces = [
+        TetrisPiece(8, 1),
+        TetrisPiece(9, 2),
+        TetrisPiece(8, 3),
+        TetrisPiece(9, 4),
+        TetrisPiece(8, 5),
+        TetrisPiece(9, 6),
+        TetrisPiece(8, 7),
+        TetrisPiece(9, 8),
+    ]
+
+    # Initialise game with list of pieces
+    game = TetrisGame(pieces, width=8)
+    game.status = "test_scenario_9"
+    game.solve()
+
+    pprint(game.moves)
+
+    # Check that there were moves for each piece
+    assert_equals(len(game.moves), len(pieces))
+
+    # Check game height is less than 3
+    assert_less(game.height, 6)
+
+
+
+def test_scenario_10():
+    pass
+
+def test_scenario_11():
+    pass
+
+def test_scenario_12():
+    pass
+
+def test_scenario_13():
+    pass
+
+def test_scenario_14():
+    pass
+
+def test_scenario_15():
+    pass
+
+
+
 
 if __name__ == '__main__':
 
