@@ -307,8 +307,7 @@ def get_best_moves(game):
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
     global useful_rotations # Global to have shared amongst all Steps
-    max_piece_num = max(Pieces.piece_shapes.keys())
-    useful_rotations = {i: num_useful_rotations(i) for i in range(1, max_piece_num + 1)}
+    useful_rotations = {i: num_useful_rotations(i) for i in Pieces.piece_shapes.keys()}
 
     weights = Weightings()
 
