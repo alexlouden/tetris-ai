@@ -48,9 +48,8 @@ class TetrisGame(object):
         # Game width
         self.width = width
 
-        # Number of buffer positions
-        self.max_buffer_size = max_buffer_size
-        self.buffer = []
+        # Initial number of gaps
+        self.num_gaps = 0
 
         # Active game height (aim is to minimise this)
         self.height = 0

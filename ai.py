@@ -24,7 +24,10 @@ useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
 class Weightings(object):
-    """Hold weights associated with each aspect of the cost function."""
+    """Hold weights associated with each aspect of the cost function.
+
+    Also used to hold information that's used throughout the solving process.
+    """
 
     bignum = sys.maxint
 
@@ -118,7 +121,7 @@ class Move(object):
         previous maximum game height."""
 
         previous_height = self.game.height
-        previous_num_gaps = self.game.count_gaps()
+        previous_num_gaps = self.game.num_gaps
 
         # Make temporary copy of the game
         temp_game = deepcopy(self.game)
@@ -230,6 +233,7 @@ class Step(object):
             new_game = deepcopy(self.game)
             new_game.drop(move.piece, move.left)
             new_game.check_full_rows()
+            new_game.num_gaps = new_game.count_gaps()
 
             # Iterate down
             child = Step(new_game,
@@ -329,7 +333,6 @@ def get_best_moves(game):
         game.input_queue = deepcopy(piece_queue[start_index:end_index])
 
 ##        print "Input queue:", game.input_queue
-
 ##        print 'Numbers:', moves_made, len(game.input_queue), len(piece_queue)
 
         # Can finish game now

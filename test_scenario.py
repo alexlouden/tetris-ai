@@ -22,7 +22,15 @@ from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from shapeops import Pieces
 
-"""Game scenario tests to verify correct execution of program modules."""
+"""
+Game scenario tests to verify correct execution of program modules.
+Also used to ensure that the AI module doesn't regress, by including a
+minimum game height at the end of each scenario.
+
+Have included some scenarios with diagonal edges, to demonstrate the program's
+full capabilities.
+
+"""
 
 @attr('skip')
 def test_scenario_1():
@@ -314,6 +322,7 @@ def test_scenario_9():
     assert_equals(game.height, 10)
 
 
+@attr('skip')
 def test_diagonal_shapes():
     """ Crazy diagonal shapes """
 
@@ -346,12 +355,27 @@ def test_diagonal_shapes():
 
     pprint(pieces)
 
-    game = TetrisGame(pieces, width=13)
+    game = TetrisGame(pieces, width=11)
     game.status = "test_diagonal_shapes_shuffle"
     game.solve()
 
-def test_scenario_11():
-    pass
+
+def test_scenario_10():
+    """ Houses """
+
+    Pieces.piece_shapes = {
+        1: [(0,0), (1,0), (1,1), (1,2), (0,1)],
+    }
+
+    pieces = [TetrisPiece(1, id) for id in range(10)]
+
+    game = TetrisGame(pieces, width=8)
+    game.status = "test_scenario_10"
+    game.solve()
+
+    pprint(game.moves)
+    print game.height
+
 
 def test_scenario_12():
     pass
