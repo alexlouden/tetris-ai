@@ -18,7 +18,7 @@ from fileops import read_input_file, write_output_file
 
 from shapeops import get_shape_polygon, get_piece_colour
 from shapeops import merge, move, rotate, combine_split
-from shapeops import get_row_box, get_single_box, get_height_box
+from shapeops import get_row_box, get_single_box, get_height_box, get_box
 
 from plotting import plot_game
 from ai import get_best_moves
@@ -206,11 +206,11 @@ class TetrisGame(object):
 
         x_min, y_min, x_max, y_max = self.merged_pieces.bounds
 
+
         gap_count = 0
 
         # Left to right
         for left in xrange(int(x_min), int(x_max)):
-            intersected = False
 
             # Top to bottom
             for bottom in xrange(int(y_max)-1, int(y_min)-1, -1):
@@ -219,15 +219,13 @@ class TetrisGame(object):
                 # If the square contains a piece
                 area_of_intersection = box.intersection(self.merged_pieces).area
 
-                # print area_of_intersection, left, bottom, intersected
-
                 if area_of_intersection != 0:
-                    intersected = True
-                else:
-                    # If this isn't the first intersection we've seen
-                    # (therefore we're underneath a piece)
-                    if intersected:
-                        gap_count += 1 - area_of_intersection
+
+                    # Draw box from height down to zero, get single intersection area
+                    box = get_box(left, 0, left + 1, bottom + 1)
+                    gap_count += box.area - box.intersection(self.merged_pieces).area
+
+                    break
 
         return gap_count
 
@@ -408,6 +406,7 @@ class TetrisPiece(object):
         if shape.type == 'MultiPolygon':
             # Combine multiple geoms into one
             shape = combine_split(shape)
+
         elif shape.type == 'Polygon':
             # If remaining polygon is above row
             if shape.centroid.y >= row.centroid.y:

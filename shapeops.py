@@ -95,6 +95,9 @@ def get_row_box(width, bottom):
 def get_single_box(left, bottom):
     return box(left, bottom, left + 1, bottom + 1)
 
+def get_box(*args):
+    return box(*args)
+
 def get_height_box(width, height):
     return box(0, 0, width, height)
 
