@@ -28,15 +28,15 @@ class Weightings(object):
 
     bignum = sys.maxint
 
-    area = 1       # Area of piece above previous game height
+    area = 3       # Area of piece above previous game height
     centroid = 1   # Height of centroid above previous game height
-    height = 2     # Change in game height
+    height = 8     # Change in game height
     rows_removed = -10
     gaps = 5
-    centroidy = 0.5
+    centroidy = 3
 
     lookahead_distance = 3
-    step_distance = 2
+    step_distance = 1
 
     starting_score = rows_removed * -4 # Ensure no negative scores
 
@@ -46,18 +46,13 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.2
+    maximum_percentage = 0.4
     """ Percentage difference for passable cost in range from best to worst previously found costs """
 
-    minimum_diff = 20
+    minimum_diff = 5
     """ Minimum difference between previously found minimum cost and passable cost """
 
-    max_num_branches_for_depth = {
-        0: 2,
-        1: 2,
-        2: 2,
-        3: 2
-    }
+    max_num_branches = 3
 
     def skip_move(self, depth, cost):
 
@@ -146,8 +141,13 @@ class Move(object):
         self.stats.area         = area
         self.stats.gaps         = num_gaps - previous_num_gaps
         self.stats.height       = height - previous_height
-        self.stats.centroidy    = temp_game.pieces[-1].polygon.centroid.y
 
+        # Centroid y-position of previously placed piece
+        if temp_game.pieces:
+            self.stats.centroidy    = temp_game.pieces[-1].polygon.centroid.y
+        else:
+            # Piece has been removed
+            self.stats.centroidy = 0
 
 ##        # Remove piece (TODO: tidy up)
 ##        self.game.pieces.pop()
@@ -193,6 +193,8 @@ class Step(object):
             if weights.best_endstep_cost > cost:
                print "Best new end node! ", cost, weights.best_endstep_cost
 
+               plot_game(self.game, self.game.status + '_depth_{}_cost_{:.2f}'.format(self.depth, cost))
+
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)
 
@@ -218,8 +220,7 @@ class Step(object):
         best_by_cost = self.prune_moves(best_by_cost, weights)
 
         # Moves to make (up to a maximum number)
-        branch_limit = weights.max_num_branches_for_depth.get(self.depth)
-        for move in best_by_cost[:branch_limit]:
+        for move in best_by_cost[:weights.max_num_branches]:
 
             if move.cost + self.cumulative_cost >= weights.best_endstep_cost:
 ##                print 'Skipping due to best_endstep_cost', move.cost + self.cumulative_cost

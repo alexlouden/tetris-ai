@@ -21,7 +21,7 @@ from plotting import plot_game
 
 """Game scenario tests to verify correct execution of program modules."""
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_1():
 
     pieces = [
@@ -46,7 +46,7 @@ def test_scenario_1():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_2():
 
     pieces = [
@@ -72,7 +72,7 @@ def test_scenario_2():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_3():
 
     pieces = [
@@ -110,7 +110,7 @@ def test_scenario_3():
     # Check game height is less than 10
     assert_less(game.height, 12)
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_4():
 
     pieces = [
@@ -140,7 +140,7 @@ def test_scenario_4():
     # Check game height is less than 3
     assert_less(game.height, 5)
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_5():
 
     pieces = [
@@ -222,14 +222,15 @@ def test_scenario_6():
 ##[Dbg]>>> self.game.pieces[2].polygon.bounds
 ##(1.0, 1.0, 3.0, 3.0)
 
-    for move in game.moves:
-        print move.stats
 
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is less than 3
-    assert_less(game.height, 5)
+    # Check game height is equal to 1
+    assert_equals(game.height, 1)
+
+    for move in game.moves:
+        print move.stats
 
 if __name__ == '__main__':
 
