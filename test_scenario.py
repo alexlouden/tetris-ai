@@ -15,6 +15,8 @@ import nose
 from nose.tools import assert_equals, assert_true, assert_less
 from nose.plugins.attrib import attr
 from pprint import pprint
+from random import shuffle
+from copy import deepcopy
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
@@ -47,6 +49,7 @@ def test_scenario_1():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
+
 @attr('skip')
 def test_scenario_2():
 
@@ -72,6 +75,7 @@ def test_scenario_2():
 
     # Check game height is less than 3
     assert_less(game.height, 3)
+
 
 @attr('skip')
 def test_scenario_3():
@@ -111,6 +115,7 @@ def test_scenario_3():
     # Check game height is less than 10
     assert_less(game.height, 12)
 
+
 @attr('skip')
 def test_scenario_4():
 
@@ -140,6 +145,7 @@ def test_scenario_4():
 
     # Check game height is less than 3
     assert_less(game.height, 5)
+
 
 @attr('skip')
 def test_scenario_5():
@@ -175,6 +181,7 @@ def test_scenario_5():
 
     # Check game height is zero
     assert_equals(game.height, 0)
+
 
 @attr('skip')
 def test_scenario_6():
@@ -243,6 +250,7 @@ def test_scenario_7():
     # Check game height is less than 3
     assert_less(game.height, 3)
 
+
 @attr('skip')
 def test_scenario_8():
 
@@ -250,6 +258,7 @@ def test_scenario_8():
     Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
     Pieces.piece_colours[8] = '#AAAAAA'
 
+    # Space ship shape
     Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
     Pieces.piece_colours[9] = '#9000ff'
 
@@ -269,12 +278,14 @@ def test_scenario_8():
     assert_less(game.height, 6)
 
 
+@attr('skip')
 def test_scenario_9():
 
     # Plus shape
     Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
     Pieces.piece_colours[8] = '#AAAAAA'
 
+    # Space ship shape
     Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
     Pieces.piece_colours[9] = '#9000ff'
 
@@ -290,7 +301,7 @@ def test_scenario_9():
     ]
 
     # Initialise game with list of pieces
-    game = TetrisGame(pieces, width=8)
+    game = TetrisGame(pieces, width=7)
     game.status = "test_scenario_9"
     game.solve()
 
@@ -299,13 +310,45 @@ def test_scenario_9():
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is less than 3
-    assert_less(game.height, 6)
+    # Check game height is equal to 10
+    assert_equals(game.height, 10)
 
 
+def test_diagonal_shapes():
+    """ Crazy diagonal shapes """
 
-def test_scenario_10():
-    pass
+    Pieces.piece_shapes = {
+        1: [(0,1), (1,0), (1,3), (0,4), (0,1)],
+        2: [(0,1), (1,0), (2,1), (1,2), (0,1)],
+        3: [(1,0), (0,1), (0,2), (1,3), (1,2), (2,2), (2,1), (1,1), (1,0)],
+        4: [(0,0), (0,3), (1,3), (2,2), (1,2), (1,1)],
+        5: [(0,2), (1,3), (2,2), (2,0), (1,0), (1,2), (0,2)],
+        6: [(0,1), (0,3), (1,2), (2,2), (2,0), (1,1), (0,1)],
+        7: [(0,1), (0,2), (1,2), (1,3), (2,2), (2,1), (1,1), (1,0), (0,1)],
+    }
+
+    pieces = [ TetrisPiece(i, i) for i in sorted(Pieces.piece_shapes.keys()) ]
+
+    # Initialise empty game
+    game = TetrisGame(width=13)
+
+    left = 0
+    for piece in pieces:
+        game.drop(piece, left)
+        left += piece.width
+
+    game.status = "test_diagonal_shapes"
+    plot_game(game, 'test/plot_diagonal_shapes')
+
+
+    # Random 3 buckets
+    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*3)]
+
+    pprint(pieces)
+
+    game = TetrisGame(pieces, width=13)
+    game.status = "test_diagonal_shapes_shuffle"
+    game.solve()
 
 def test_scenario_11():
     pass
