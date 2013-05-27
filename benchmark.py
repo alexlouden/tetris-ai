@@ -25,28 +25,8 @@ from plotting import plot_game
 from ai import Weightings
 
 
-def test_rows_score_log():
-
-    num_pieces = 15
-
-    Weightings.lookahead_distance = 3
-    Weightings.starting_score = 1000
-
-    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
-    pprint(pieces)
-
-    # Try -1 to -10
-    for rr in [-1, -10, -100]:
-        Weightings.rows_removed = rr
-
-        game = TetrisGame(deepcopy(pieces), width=7)
-        game.status = "benchmark/rows_removed_log_{}".format(Weightings.rows_removed)
-        game.solve()
-
-        print Weightings.rows_removed, game.height
-
-
 def test_gaps_score():
+    """ Vary gaps parameters and record game.height """
 
     num_pieces = 20
 
@@ -68,13 +48,15 @@ def test_gaps_score():
 
 
 def test_rows_score():
+    """ Vary rows_removed parameters and record game.height """
 
     num_pieces = 20
 
-    Weightings.lookahead_distance = 4
+    Weightings.lookahead_distance = 3
+    Weightings.max_num_branches = 3
     Weightings.starting_score = 100
 
-    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
+    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces+1)]
     pprint(pieces)
 
     # Try -1 to -10
@@ -88,36 +70,43 @@ def test_rows_score():
         print Weightings.rows_removed, game.height
 
 
-def benchmark_time_vs_num_pieces():
+def benchmark_time_vs_height():
 
-    Weightings.lookahead_distance = 4
+    num_pieces = 10
+    num_sets = 50
 
-    piece_delays = []
+    print 'i branches lookahead delay height'
 
-    # 10 random sets of pieces
-    for i in range(10):
+    # A random sets of pieces
+    for i in range(num_sets):
 
         # 50 random pieces from 1-7
-        pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, 50)]
+        pieces = [ TetrisPiece(randint(1, 7), piece_id) for piece_id in range(0, num_pieces)]
 
-        delay = time_solve(pieces, i)
+        for branches in [3, 2, 1]:
+            Weightings.max_num_branches = branches
 
-        print '-'*40
-        print 'num_pieces time'
-        print i, delay
-        print '-'*40
+            for lookahead in [3, 2, 1]:
+                Weightings.lookahead_distance = lookahead
 
-def time_solve(pieces, num_pieces):
+                delay, height, game = time_solve(deepcopy(pieces))
+                plot_game(game, 'benchmark/set_{}_b{}_l{}'.format(i, branches, lookahead))
+
+                print i, branches, lookahead, delay, height
+
+
+def time_solve(pieces, name):
 
     start_time = time()
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=7)
-    game.status = "benchmark_piece_{}".format(num_pieces)
+    game.status = name
     game.solve()
 
     end_time = time()
-    return end_time - start_time
+    delay = end_time - start_time
+    return delay, game.height, game
 
 if __name__ == '__main__':
-    benchmark_time_vs_num_pieces()
+    benchmark_time_vs_height()
