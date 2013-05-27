@@ -54,8 +54,8 @@ def test_scenario_1():
     # Check that there were moves for each piece
     assert_equals(len(game.moves), len(pieces))
 
-    # Check game height is less than 3
-    assert_less(game.height, 3)
+    # Check game height is equal to 1
+    assert_equals(game.height, 1)
 
 
 @attr('skip')
@@ -378,30 +378,15 @@ def test_scenario_10():
     print game.height
 
 
-def test_scenario_12():
-    pass
-
-def test_scenario_13():
-    pass
-
-def test_scenario_14():
-    pass
-
-def test_scenario_15():
-    pass
-
-
-
-
 if __name__ == '__main__':
 
-    # Do time profile?
+##    # Do time profile?
 ##    import cProfile
-##    cProfile.run('test_scenario_2()')
+##    cProfile.run('test_scenario_3()')
 
-    nose.main(argv=[
+    nose.main(argv=['',
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
-        '-a !skip', # Ignore tests with 'skip' attribute
+##        '-a !skip', # Ignore tests with 'skip' attribute
         __name__
         ])

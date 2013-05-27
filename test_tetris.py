@@ -23,17 +23,32 @@ from fileops import read_input_file
 from shapeops import num_useful_rotations, merge
 
 def test_read_input_file():
+    """ Test parsing the given input file matches the expected list """
     actual = read_input_file('exampleinput.txt')
     expected = [1, 2, 3, 4, 5, 2, 7, 1, 6, 1, 4, 3, 2, 1, 5]
 
     assert_equals(actual, expected)
 
-def test_write_output_file():
-    pass
+def test_get_output():
+    """ Test TetrisGame.get_output() """
+    game = TetrisGame()
+    out = game.get_output()
+    assert_equals(out, '')
+
+    game.drop(TetrisPiece(1), 2)
+    out = game.get_output()
+    assert_equals(out, '1 0 2')
+
+    p = TetrisPiece(2)
+    p.rotate(3)
+    game.drop(p, 4)
+    out = game.get_output()
+    assert_equals(out, '1 0 2\n2 3 4')
+
 
 @attr('plots')
 def test_plot_shapes():
-
+    """ Test each shape can be plotted (manually verify) """
     # Plot each shape number
     for shape_num in range(1, 8):
 
@@ -48,6 +63,8 @@ def test_plot_shapes():
 
 @attr('plots')
 def test_plot_all_shapes():
+    """ Test all shapes can be plotted on the same figure (manually verify) """
+
     pieces = [TetrisPiece(i, i) for i in range(1, 8)]
 
     # Game with only one piece (width of 13 fits all 7 standard shapes)
@@ -62,6 +79,7 @@ def test_plot_all_shapes():
     plot_game(game, 'test/plot_all_shapes')
 
 def test_shape_width_and_heights():
+    """ Test shape width and heights match expected """
 
     # Shapes 2-7 have width of 2
     expected_widths = {i: 2 for i in range(2,8)}
@@ -83,6 +101,7 @@ def test_shape_width_and_heights():
         assert_equals(piece.height, expected_heights[piece.num])
 
 def test_move():
+    """ Test moving shapes, polygon coordinates and boundaries """
 
     p = TetrisPiece(1)
 
@@ -111,7 +130,7 @@ def test_move():
     assert_equals(p.polygon.bounds, (4, 2, 5, 6))
 
 def test_rotate():
-
+    """ Test rotating shapes, polygon coordinates and boundaries """
     # Create a I piece, rotate it 4 times and check bounds
     p = TetrisPiece(1)
     assert_equals(p.rotation, 0)
@@ -135,11 +154,13 @@ def test_rotate():
 
 @raises(ValueError)
 def test_invalid_rotation():
+    """ Test that shapes can't be rotated to invalid rotations """
     # Try to rotate 90 degrees (but rotate only accepts 0,1,2,3)
     p = TetrisPiece(1)
     p.rotate(90)
 
 def test_num_useful_rotations():
+    """ Test the number of useful rotations function for each shape """
 
     expected_useful_rotations = {
         1: [0, 1],
@@ -155,6 +176,7 @@ def test_num_useful_rotations():
         assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
 
 def test_merge_pieces():
+    """ Test merging pieces together """
 
     # Two I shapes next to each other
     p1 = TetrisPiece(1)
@@ -172,6 +194,7 @@ def test_merge_pieces():
     assert_true(p1.polygon.touches(p2.polygon))
 
 def test_calculate_height():
+    """ Test calculating the game height """
 
     # Create game with an I and a square with one gap
     p1 = TetrisPiece(2)
@@ -200,6 +223,7 @@ def test_calculate_height():
 
 
 def test_drop():
+    """ Test dropping a piece (manually verify image) """
 
     g = TetrisGame(width=5)
     g.drop(TetrisPiece(7), 0)
@@ -220,6 +244,7 @@ def test_drop():
 
 @raises(ValueError)
 def test_drop_out_of_bounds():
+    """ Test dropping a piece out of bounds throws an error """
 
     g = TetrisGame(width=3)
     p = TetrisPiece(1)
@@ -229,6 +254,7 @@ def test_drop_out_of_bounds():
 
 @attr('plots')
 def test_random_drop():
+    """ Test dropping random pieces (manually verify) """
     # Just for fun
 
     g = TetrisGame(width=10)
@@ -246,6 +272,7 @@ def test_random_drop():
     plot_game(g, 'test/test_random_drop')
 
 def test_is_row_full():
+    """ Test that full rows have blocks removed """
 
     g = TetrisGame(width=5)
 
@@ -273,6 +300,7 @@ def test_is_row_full():
 
 
 def test_check_full_rows():
+    """ Test that a single full rows can be removed """
 
     g = TetrisGame(width=4)
     g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
@@ -281,6 +309,7 @@ def test_check_full_rows():
     assert_equals(g.height, 0)
 
 def test_check_full_rows_multiple():
+    """ Test that multiple full rows are removed """
 
     g = TetrisGame(width=4)
     g.drop(TetrisPiece(1, 'I1', rotation=1), 0)
@@ -294,6 +323,7 @@ def test_check_full_rows_multiple():
     assert_equals(g.height, 0)
 
 def test_check_full_rows_multiple_2():
+    """ Test that full row count works """
 
     g = TetrisGame(width=5)
     g.drop(TetrisPiece(1, 'I'), 0)
@@ -308,6 +338,7 @@ def test_check_full_rows_multiple_2():
     assert_equals(g.height, 3)
 
 def test_check_full_rows_multiple_3():
+    """ Test that multiple full row counts works """
 
     g = TetrisGame(width=4)
     g.drop(TetrisPiece(2), 0)
@@ -375,7 +406,7 @@ def test_check_full_rows_plot():
     assert_equals(num_rows_removed, 0)
 
 def test_count_gaps():
-
+    """ Test the count_gaps() function with two squares and an I """
     g = TetrisGame(width=5)
 
     num_gaps = g.count_gaps()
@@ -395,6 +426,7 @@ def test_count_gaps():
     assert_equals(num_gaps, 2)
 
 def test_count_gaps_2():
+    """ Test the count_gaps() function with two T pieces """
 
     g = TetrisGame(width=5)
 
@@ -418,6 +450,7 @@ def test_count_gaps_2():
 
 @attr('plots')
 def test_random_drop_gap_count():
+    """ Randomly drop pieces until a height of 20 with no gaps """
     # Just for fun
 
     g = TetrisGame(width=10)
@@ -459,6 +492,7 @@ def test_random_drop_gap_count():
 
 
 def test_count_blocks_above_height():
+    """ Count the number of blocks (area/centroid) above a given row height 1 """
 
     g = TetrisGame(width=5)
     g.drop(TetrisPiece(2, 'O'), 1)
@@ -480,6 +514,7 @@ def test_count_blocks_above_height():
 
 
 def test_count_blocks_above_height_2():
+    """ Count the number of blocks (area/centroid) above a given row height 2 """
 
     # L on it's bottom
     g = TetrisGame(width=7)
@@ -501,6 +536,7 @@ def test_count_blocks_above_height_2():
 
 
 def test_count_blocks_above_height_3():
+    """ Count the number of blocks (area/centroid) above a given row height 3 """
 
     # L on it's face
     g = TetrisGame(width=7)
@@ -518,11 +554,11 @@ def test_count_blocks_above_height_3():
 
 
 if __name__ == '__main__':
-    nose.main(argv=[
-        '--with-id',
-        '--failed', # Repeat only previously failed tests
+    nose.main(argv=['',
         '--verbosity=2',
-        '--nocapture', # Don't capture stdout
-        '-a !plots', # Ignore tests with 'plots' attribute
+##        '--with-id',
+##        '--failed', # Repeat only previously failed tests
+##        '--nocapture', # Don't capture stdout
+##        '-a !plots', # Ignore tests with 'plots' attribute
         __name__
         ])

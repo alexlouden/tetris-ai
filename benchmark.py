@@ -89,8 +89,9 @@ def benchmark_time_vs_height():
             for lookahead in [3, 2, 1]:
                 Weightings.lookahead_distance = lookahead
 
-                delay, height, game = time_solve(deepcopy(pieces))
-                plot_game(game, 'benchmark/set_{}_b{}_l{}'.format(i, branches, lookahead))
+                name = 'benchmark/set_{}_b{}_l{}'.format(i, branches, lookahead)
+                delay, height, game = time_solve(deepcopy(pieces), name)
+                plot_game(game, name)
 
                 print i, branches, lookahead, delay, height
 
