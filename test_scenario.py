@@ -41,10 +41,10 @@ def test_scenario_1():
         TetrisPiece(2, 'O'),
         TetrisPiece(1, 'I'),
     ]
-
+##
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
-    game.status = "test_scenario_1"
+    game.status = "scenario/scenario_1"
 
     print '-'*80
     print game.status
@@ -71,7 +71,7 @@ def test_scenario_2():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
-    game.status = "test_scenario_2"
+    game.status = "scenario/scenario_2"
 
     print '-'*80
     print game.status
@@ -110,7 +110,7 @@ def test_scenario_3():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=10)
-    game.status = "test_scenario_3"
+    game.status = "scenario/scenario_3"
 
     print '-'*80
     print game.status
@@ -139,7 +139,7 @@ def test_scenario_4():
     game.drop(TetrisPiece(4, 'J'), 0)
     game.drop(TetrisPiece(7, 'Z'), 3)
 
-    game.status = "test_scenario_4"
+    game.status = "scenario/scenario_4"
 
     print '-'*80
     print game.status
@@ -175,7 +175,7 @@ def test_scenario_5():
     j.rotate(2)
     game.drop(j, 2)
 
-    game.status = "test_scenario_5"
+    game.status = "scenario/scenario_5"
 
     print '-'*80
     print game.status
@@ -191,7 +191,7 @@ def test_scenario_5():
     assert_equals(game.height, 0)
 
 
-@attr('skip')
+##@attr('skip')
 def test_scenario_6():
 
     pieces = [
@@ -211,7 +211,7 @@ def test_scenario_6():
     j.rotate(2)
     game.drop(j, 2)
 
-    game.status = "test_scenario_6"
+    game.status = "scenario/scenario_6"
     game.solve()
 
     pprint(game.moves)
@@ -247,7 +247,7 @@ def test_scenario_7():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=14)
-    game.status = "test_scenario_7"
+    game.status = "scenario/scenario_7"
     game.solve()
 
     pprint(game.moves)
@@ -274,7 +274,7 @@ def test_scenario_8():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=11)
-    game.status = "test_scenario_8"
+    game.status = "scenario/scenario_8"
     game.solve()
 
     pprint(game.moves)
@@ -310,7 +310,7 @@ def test_scenario_9():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=7)
-    game.status = "test_scenario_9"
+    game.status = "scenario/scenario_9"
     game.solve()
 
     pprint(game.moves)
@@ -322,7 +322,7 @@ def test_scenario_9():
     assert_equals(game.height, 10)
 
 
-@attr('skip')
+##@attr('skip')
 def test_diagonal_shapes():
     """ Crazy diagonal shapes """
 
@@ -347,17 +347,18 @@ def test_diagonal_shapes():
         game.drop(piece, left)
         left += piece.width
 
-    game.status = "test_diagonal_shapes"
+    game.status = "scenario/diagonal_shapes"
     plot_game(game, 'test/plot_diagonal_shapes')
 
 
-    # Random 3 buckets
-    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*3)]
+    # Random 4 buckets
+    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*4)]
+    shuffle(pieces)
 
     pprint(pieces)
 
-    game = TetrisGame(pieces, width=5)
-    game.status = "test_diagonal_shapes_shuffle"
+    game = TetrisGame(pieces, width=7)
+    game.status = "scenario/diagonal_shapes_shuffle"
     game.solve()
 
 @attr('skip')
@@ -371,7 +372,7 @@ def test_scenario_10():
     pieces = [TetrisPiece(1, id) for id in range(10)]
 
     game = TetrisGame(pieces, width=6)
-    game.status = "test_scenario_10"
+    game.status = "scenario/scenario_10"
     game.solve()
 
     pprint(game.moves)
@@ -387,6 +388,6 @@ if __name__ == '__main__':
     nose.main(argv=['',
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
-##        '-a !skip', # Ignore tests with 'skip' attribute
+        '-a !skip', # Ignore tests with 'skip' attribute
         __name__
         ])

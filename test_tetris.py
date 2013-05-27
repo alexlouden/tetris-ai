@@ -559,6 +559,6 @@ if __name__ == '__main__':
 ##        '--with-id',
 ##        '--failed', # Repeat only previously failed tests
 ##        '--nocapture', # Don't capture stdout
-##        '-a !plots', # Ignore tests with 'plots' attribute
+        '-a !plots', # Ignore tests with 'plots' attribute
         __name__
         ])
