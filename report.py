@@ -12,13 +12,7 @@
 #-------------------------------------------------------------------------------
 
 import os
-from time import clock, time
-from random import randint
-from copy import deepcopy
 from pprint import pprint
-
-# Choose higher resolution time counter
-time = clock if os.name == 'nt' else time
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
@@ -68,7 +62,44 @@ def LJO_loop():
     game.status = "report/LJO_loop"
     game.solve()
 
+def plot_cost():
+    """ Show simple T -- on side with gap under it,  and on its back - no gap. """
+
+    game = TetrisGame(width=4)
+    game.drop(TetrisPiece(3), 0)
+
+    from plotting import plot_piece, plot_board, pyplot
+
+    fig = pyplot.gcf()
+    fig.set_size_inches(6, 4)
+
+    # Plot T on side
+    ax = fig.add_subplot(121)
+    plot_board(ax, game, 5)
+    for piece in game.pieces:
+        plot_piece(ax, piece)
+        ax.plot(piece.polygon.centroid.x, piece.polygon.centroid.y, 'x')
+    ax.set_title("T shape")
+
+    # Show gap under T
+    import matplotlib.patches as patches
+    ax.add_patch(patches.Rectangle((1.1,0.1), 0.8, 0.8, color='r', alpha=0.4))
+    ax.text(1.5, 0.5, 'Gap',
+        horizontalalignment='center',
+        verticalalignment='center')
+
+    # Rotate T
+    game.pieces[0].rotate(1)
+    ax = fig.add_subplot(122)
+    plot_board(ax, game, 5)
+    for piece in game.pieces:
+        plot_piece(ax, piece)
+        ax.plot(piece.polygon.centroid.x, piece.polygon.centroid.y, 'x')
+    ax.set_title("Rotated T shape")
+
+##    pyplot.show()
+    pyplot.savefig('report/T_gap.png', dpi=100)
 
 
 if __name__ == '__main__':
-    STZ_loop()
+    plot_cost()
