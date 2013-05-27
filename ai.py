@@ -81,8 +81,6 @@ class Weightings(object):
         max_cost = max((worst - best) * self.maximum_percentage + best,
                        best + self.minimum_diff)
 
-##        print 'best, cost, max_cost, worst', best, cost, max_cost, worst
-
         return not best <= cost <= max_cost
 
 
@@ -150,10 +148,6 @@ class Move(object):
         num_gaps       = temp_game.count_gaps()
         height         = temp_game.height
 
-##        name = 'scenario\\game_move_{0.piece.id}_{0.piece.rotation}_{0.left}'.format(self)
-##        self.game.status = name
-##        plot_game(self.game, name)
-
         # Store stats
         self.stats.rows_removed = rows_removed
         self.stats.centroid     = centroid
@@ -167,14 +161,6 @@ class Move(object):
         else:
             # Piece has been removed
             self.stats.centroidy = 0
-
-##        # Remove piece (TODO: tidy up)
-##        self.game.pieces.pop()
-##        self.game.update_merged_pieces()
-##        self.game.height = self.game.calculate_height()
-
-##        print str(self)
-##        print self.stats.__dict__
 
     def calculate_cost(self, weights):
         """ Return cost of move given move stats and weightings """
@@ -209,10 +195,10 @@ class Step(object):
             self.piece = None
             self.best_cost = self.cumulative_cost
 
-##            if weights.best_endstep_cost > cost:
+            if weights.best_endstep_cost > cost:
 ##               print "Best new end node! ", cost, weights.best_endstep_cost
-##
-##               plot_game(self.game, self.game.status + '_depth_{}_cost_{:.2f}'.format(self.depth, cost))
+
+               plot_game(self.game, '{0.game.status}_depth_{0.depth}_cost_{1:.2f}'.format(self, cost))
 
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)

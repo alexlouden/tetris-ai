@@ -65,8 +65,8 @@ class TetrisGame(object):
 
         Will move pieces from input_queue to pieces one by one.
         """
-        print 'Starting to solve'
-        print 'Number of pieces in input_queue:', len(self.input_queue)
+##        print 'Starting to solve'
+##        print 'Number of pieces in input_queue:', len(self.input_queue)
 
         index = 0
 
@@ -95,12 +95,12 @@ class TetrisGame(object):
             self.drop(piece, left=piece_left)
 
             # Plot before removing rows
-            plot_game(self, 'game/{}_step_{}'.format(self.status, index))
+            plot_game(self, '{}_step_{}'.format(self.status, index))
 
             # Plot after removing rows (if needed)
             rows_removed = self.check_full_rows()
             if rows_removed > 0:
-                plot_game(self, 'game/{}_step_{}b'.format(self.status, index))
+                plot_game(self, '{}_step_{}b'.format(self.status, index))
 
             index += 1
 

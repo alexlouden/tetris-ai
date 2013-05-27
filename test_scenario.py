@@ -352,12 +352,12 @@ def test_diagonal_shapes():
 
 
     # Random 4 buckets
-    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*4)]
+    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*3)]
     shuffle(pieces)
 
     pprint(pieces)
 
-    game = TetrisGame(pieces, width=7)
+    game = TetrisGame(pieces, width=5)
     game.status = "scenario/diagonal_shapes_shuffle"
     game.solve()
 
@@ -381,13 +381,13 @@ def test_scenario_10():
 
 if __name__ == '__main__':
 
-##    # Do time profile?
+##    # Do time profile
 ##    import cProfile
 ##    cProfile.run('test_scenario_3()')
 
     nose.main(argv=['',
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
-        '-a !skip', # Ignore tests with 'skip' attribute
+##        '-a !skip', # Ignore tests with 'skip' attribute
         __name__
         ])
