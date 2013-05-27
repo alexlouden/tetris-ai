@@ -26,7 +26,7 @@ useful_rotations = {}
 class Weightings(object):
     """Hold weights associated with each aspect of the cost function.
 
-    Also used to hold information that's used throughout the solving process.
+    Also used to hold information used throughout the solving process.
     """
 
     bignum = sys.maxint
@@ -50,14 +50,30 @@ class Weightings(object):
     worst_cost_at_depth = {}
 
     maximum_percentage = 0.3
-    """ Percentage difference for passable cost in range from best to worst previously found costs """
+    """ Minimum percentage at which to continue exploring this branch,
+    as a percentage of the best encountered cost to the worst encountered cost.
+
+    A lower percentage results in faster solving at the cost of potentially
+    worst performance.
+    """
 
     minimum_diff = 5
     """ Minimum difference between previously found minimum cost and passable cost """
 
-    max_num_branches = 2
+    max_num_branches = 3
+    """ The maximum number of branches at each step """
 
     def skip_move(self, depth, cost):
+        """ Whether to skip exploring the subsequent moves for a given cost
+        and depth.
+
+        This is based on the previously found best and worst cost
+        for the given depth.
+
+        A move is skipped if its score is greater than the maximum of:
+            - min_percentage from best cost to worst cost
+            - best cost + minimum_diff
+        """
 
         best = self.best_cost_at_depth[depth]
         worst = self.worst_cost_at_depth[depth]
