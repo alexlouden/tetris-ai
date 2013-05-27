@@ -49,7 +49,7 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.3
+    maximum_percentage = 0.4
     """ Minimum percentage at which to continue exploring this branch,
     as a percentage of the best encountered cost to the worst encountered cost.
 
