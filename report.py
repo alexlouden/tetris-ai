@@ -33,6 +33,12 @@ def STZ_loop():
         TetrisPiece(6, 4),
         TetrisPiece(7, 5),
         TetrisPiece(3, 6),
+        TetrisPiece(3, 7),
+        TetrisPiece(7, 8),
+        TetrisPiece(6, 9),
+        TetrisPiece(7, 10),
+        TetrisPiece(6, 11),
+        TetrisPiece(3, 13),
     ]
 
     Weightings.height=-1
@@ -40,7 +46,7 @@ def STZ_loop():
     Weightings.rows_removed=10
 
     game = TetrisGame(pieces, width=5)
-    game.status = "report/STZ_loop_{}"
+    game.status = "report/STZ_loop"
     game.solve()
 
 def LJO_loop():
@@ -59,10 +65,10 @@ def LJO_loop():
     Weightings.rows_removed=17
 
     game = TetrisGame(pieces, width=5)
-    game.status = "report/LJO_loop_{}"
+    game.status = "report/LJO_loop"
     game.solve()
 
 
 
 if __name__ == '__main__':
-    LJO_loop()
+    STZ_loop()
