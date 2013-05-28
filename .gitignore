@@ -43,3 +43,4 @@ nosetests.xml
 .idea/tetris-ai.iml
 
 .idea/.name
+output.txt

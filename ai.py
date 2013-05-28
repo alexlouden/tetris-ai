@@ -316,6 +316,11 @@ class Step(object):
 def get_best_moves(game, num_worker_threads=None):
     """ Main smarts """
 
+    from shapely import speedups
+    if speedups.available:
+##        print 'Using C compiler for performance enhancements!'
+        speedups.enable()
+
     # Pre-calculate which rotations are useful for each piece number (1-7)
     global useful_rotations # Global to have shared amongst all Steps
     useful_rotations = {i: num_useful_rotations(i) for i in Pieces.piece_shapes.keys()}

@@ -497,6 +497,8 @@ def parse_commandline_args():
 
     args = parser.parse_args()
 
+    print args
+
     solve_from_input_file(args.input, args.output, args.stats, args.threads)
 
 if __name__ == '__main__':
