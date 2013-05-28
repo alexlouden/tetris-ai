@@ -87,6 +87,15 @@ class Weightings(object):
 
         return not best <= cost <= max_cost
 
+    def __str__(self):
+        return """
+area          {0.area:.2f}
+centroid      {0.centroid:.2f}
+height        {0.height:.2f}
+rows_removed  {0.rows_removed:.2f}
+gaps          {0.gaps:.2f}
+centroidy     {0.centroidy:.2f}
+""".format(self)
 
 class Stats(object):
 

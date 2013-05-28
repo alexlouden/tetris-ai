@@ -28,7 +28,7 @@ from shapeops import merge, move, rotate, combine_split
 from shapeops import get_row_box, get_single_box, get_height_box, get_box
 
 from plotting import plot_game
-from ai import get_best_moves
+from ai import get_best_moves, Weightings
 
 
 class TetrisGame(object):
@@ -457,12 +457,17 @@ def solve_from_input_file(input_filename, output_filename=None,
 
     print 'Solving complete!'
     print 'Time taken: {:.2f}s'.format(time() - start_time)
+    print 'Final game height:', game.height
 
     if print_stats:
         print '-'*40
+        print 'Cost function weightings:'
+        print '-'*40
+        print Weightings()
+
+        print '-'*40
         print 'Detailed statistics:'
         print '-'*40
-        print 'Game height:', game.height
         print 'Moves:'
         for move in game.moves:
             print move
@@ -496,8 +501,6 @@ def parse_commandline_args():
         program will automatically detect the number of CPU cores.""")
 
     args = parser.parse_args()
-
-    print args
 
     solve_from_input_file(args.input, args.output, args.stats, args.threads)
 
