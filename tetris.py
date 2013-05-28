@@ -143,7 +143,7 @@ class TetrisGame(object):
         self.height = self.calculate_height()
 
     def get_output(self):
-        return "\n".join(["{0.num} {0.rotation} {0.left:.0f}".format(p) for p in self.pieces])
+        return "\n".join(["{0.num} {0.rotation} {0.left:.0f}".format(m.piece) for m in self.moves])
 
     def update_merged_pieces(self):
         self.merged_pieces = merge(self.pieces)
