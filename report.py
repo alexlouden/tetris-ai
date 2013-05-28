@@ -15,6 +15,7 @@ from pprint import pprint
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_piece, plot_board, pyplot
+import matplotlib.patches as patches
 from ai import Weightings
 
 """
@@ -95,7 +96,6 @@ def plot_cost():
     ax.set_title("T shape")
 
     # Show gap under T
-    import matplotlib.patches as patches
     ax.add_patch(patches.Rectangle((1.1,0.1), 0.8, 0.8, color='r', alpha=0.4))
     ax.text(1.5, 0.5, 'Gap',
         horizontalalignment='center',
@@ -115,4 +115,4 @@ def plot_cost():
 
 
 if __name__ == '__main__':
-    STZ_loop()
+    plot_cost()
