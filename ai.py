@@ -26,7 +26,7 @@ useful_rotations = {}
 class Weightings(object):
     """Hold weights associated with each aspect of the cost function.
 
-    Also used to hold information that's used throughout the solving process.
+    Also used to hold information used throughout the solving process.
     """
 
     bignum = sys.maxint
@@ -49,23 +49,37 @@ class Weightings(object):
     best_cost_at_depth  = {}
     worst_cost_at_depth = {}
 
-    maximum_percentage = 0.3
-    """ Percentage difference for passable cost in range from best to worst previously found costs """
+    maximum_percentage = 0.4
+    """ Minimum percentage at which to continue exploring this branch,
+    as a percentage of the best encountered cost to the worst encountered cost.
+
+    A lower percentage results in faster solving at the cost of potentially
+    worst performance.
+    """
 
     minimum_diff = 5
     """ Minimum difference between previously found minimum cost and passable cost """
 
-    max_num_branches = 2
+    max_num_branches = 3
+    """ The maximum number of branches at each step """
 
     def skip_move(self, depth, cost):
+        """ Whether to skip exploring the subsequent moves for a given cost
+        and depth.
+
+        This is based on the previously found best and worst cost
+        for the given depth.
+
+        A move is skipped if its score is greater than the maximum of:
+            - min_percentage from best cost to worst cost
+            - best cost + minimum_diff
+        """
 
         best = self.best_cost_at_depth[depth]
         worst = self.worst_cost_at_depth[depth]
 
         max_cost = max((worst - best) * self.maximum_percentage + best,
                        best + self.minimum_diff)
-
-##        print 'best, cost, max_cost, worst', best, cost, max_cost, worst
 
         return not best <= cost <= max_cost
 
@@ -134,10 +148,6 @@ class Move(object):
         num_gaps       = temp_game.count_gaps()
         height         = temp_game.height
 
-##        name = 'scenario\\game_move_{0.piece.id}_{0.piece.rotation}_{0.left}'.format(self)
-##        self.game.status = name
-##        plot_game(self.game, name)
-
         # Store stats
         self.stats.rows_removed = rows_removed
         self.stats.centroid     = centroid
@@ -151,14 +161,6 @@ class Move(object):
         else:
             # Piece has been removed
             self.stats.centroidy = 0
-
-##        # Remove piece (TODO: tidy up)
-##        self.game.pieces.pop()
-##        self.game.update_merged_pieces()
-##        self.game.height = self.game.calculate_height()
-
-##        print str(self)
-##        print self.stats.__dict__
 
     def calculate_cost(self, weights):
         """ Return cost of move given move stats and weightings """
@@ -193,10 +195,10 @@ class Step(object):
             self.piece = None
             self.best_cost = self.cumulative_cost
 
-##            if weights.best_endstep_cost > cost:
+            if weights.best_endstep_cost > cost:
 ##               print "Best new end node! ", cost, weights.best_endstep_cost
-##
-##               plot_game(self.game, self.game.status + '_depth_{}_cost_{:.2f}'.format(self.depth, cost))
+
+               plot_game(self.game, '{0.game.status}_depth_{0.depth}_cost_{1:.2f}'.format(self, cost))
 
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)
