@@ -4,10 +4,10 @@
 #
 # Version:     Python 2.7
 #
-# Author:      Alex Louden
+# Author:      Alex Louden, Ruvan Muthu-Krishna
 #
 # Created:     28/04/2013
-# Copyright:   (c) Alex Louden 2013
+# Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 

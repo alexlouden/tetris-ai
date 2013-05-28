@@ -4,10 +4,10 @@
 #
 # Version:     Python 2.7
 #
-# Author:      Alex Louden
+# Author:      Alex Louden, Ruvan Muthu-Krishna
 #
 # Created:     28/04/2013
-# Copyright:   (c) Alex Louden 2013
+# Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
 #-------------------------------------------------------------------------------
 
@@ -115,7 +115,7 @@ def test_scenario_3():
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=10)
-    game.status = "scenario/scenario_3"
+    game.status = "scenario/scenario_3_threaded"
 
     print '-'*80
     print game.status
@@ -198,7 +198,7 @@ def test_scenario_5():
     assert_equals(game.height, 0)
 
 
-##@attr('skip')
+@attr('skip')
 def test_scenario_6():
 
     # Set the queue pieces
@@ -333,7 +333,7 @@ def test_scenario_9():
     assert_equals(game.height, 10)
 
 
-##@attr('skip')
+@attr('skip')
 def test_diagonal_shapes():
     """ Crazy diagonal shapes """
 
@@ -401,6 +401,6 @@ if __name__ == '__main__':
     nose.main(argv=['',
         '--verbosity=2',
         '--nocapture', # Don't capture stdout
-##        '-a !skip', # Ignore tests with 'skip' attribute
+        '-a !skip', # Ignore tests with 'skip' attribute
         __name__
         ])
