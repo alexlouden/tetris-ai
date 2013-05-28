@@ -71,6 +71,27 @@ Unit tests to verify correct execution of program functions.
 Holds TetrisGame and TetrisPiece classes which are used to build a Tetris game. TetrisGame stores Tetris game variables and functions needed to play a Tetris game.
 
 
+Usage
+-----
+
+    $ python tetris.py -h
+    usage: tetris.py [-h] [--stats] [--threads THREADS] input [output]
+
+    Tetris-AI
+
+    positional arguments:
+      input              the input filename containing Tetris piece IDs
+      output             the output filename to write moves to. if this argument
+                         is missing, the program prints the moves to stdout.
+
+    optional arguments:
+      -h, --help         show this help message and exit
+      --stats            Show detailed statistics on game end state, moves and
+                         costs.
+      --threads THREADS  Number of threads to spawn. If argument missing, program
+                         will automatically detect the number of CPU cores.
+
+
 Problem Definition
 ------------------
 Tetris-AI aims to provide an AI solution to the classic game of Tetris. During play tetriminoes are dropped into a grid,
