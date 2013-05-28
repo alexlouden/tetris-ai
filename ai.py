@@ -216,7 +216,7 @@ class Step(object):
         possible_moves = self.get_possible_moves()
 
         # Split processing across multiple CPUs
-        num_worker_threads = multiprocessing.cpu_count() * 2
+        num_worker_threads = multiprocessing.cpu_count()
 
         # Thread for calculating costs of moves
         def worker():
