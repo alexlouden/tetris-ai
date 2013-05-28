@@ -181,6 +181,7 @@ class Move(object):
 
         self.cost = cost
 
+
 class Step(object):
 
     def __init__(self, game, depth=0, cost=0, move=None, weights=None):
@@ -215,30 +216,12 @@ class Step(object):
         # Determine possible moves
         possible_moves = self.get_possible_moves()
 
-        # Split processing across multiple CPUs
-        num_worker_threads = multiprocessing.cpu_count() * 2
-
-        # Thread for calculating costs of moves
-        def worker():
-            while True:
-                pm = q.get()
-                pm.try_dropping()
-                pm.calculate_cost(weights)
-                q.task_done()
-
-        # Queue to hold possible moves
-        q = Queue()
-        for i in range(num_worker_threads):
-            t = Thread(target=worker)
-            t.daemon = True
-            t.start()
-
         # Put moves onto queue to be calculated
         for pm in possible_moves:
-            q.put(pm)
+            weights.q.put(pm)
 
         # Wait for threads to finish
-        q.join()
+        weights.q.join()
 
         # Sort possible moves by cost (best first)
         best_by_cost = sorted(possible_moves, key=attrgetter('cost'))
@@ -348,6 +331,25 @@ def get_best_moves(game):
     # List to remember the moves we make
     moves = []
     moves_made = 0
+
+    # Split processing across multiple CPUs
+    num_worker_threads = multiprocessing.cpu_count()
+    print 'Spawning {} threads'.format(num_worker_threads)
+
+    weights.q = Queue()  # Queue to hold possible moves
+
+    # Thread for calculating costs of moves
+    def worker():
+        while True:
+            pm = weights.q.get()
+            pm.try_dropping()
+            pm.calculate_cost(weights)
+            weights.q.task_done()
+
+    for i in range(num_worker_threads):
+        t = Thread(target=worker)
+        t.daemon = True
+        t.start()
 
     while moves_made < len(piece_queue):
 
