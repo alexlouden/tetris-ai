@@ -1,17 +1,24 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
+# Name:        Shape Operations
+# Purpose:     Functions to perform shape operations on pieces and the game
 #
-# Author:      Alex
+# Version:     Python 2.7
+#
+# Author:      Alex Louden
 #
 # Created:     28/04/2013
-# Copyright:   (c) Alex 2013
-# Licence:     <your licence>
+# Copyright:   (c) Alex Louden 2013
+# Licence:     MIT
 #-------------------------------------------------------------------------------
 
 from shapely.geometry import Polygon, Point, box
 from shapely.affinity import translate, rotate as polygon_rotate
 from shapely.ops import cascaded_union
+
+"""
+Houses all code for the shape operations used by tetris.py
+
+"""
 
 class Pieces(object):
 
@@ -25,7 +32,6 @@ class Pieces(object):
         6: [(0,1), (0,3), (1,3), (1,2), (2,2), (2,0), (1,0), (1,1), (0,1)],
         7: [(0,0), (0,2), (1,2), (1,3), (2,3), (2,1), (1,1), (1,0), (0,0)],
     }
-
 
     # Hex colours for plotting
     piece_colours = {
@@ -44,9 +50,11 @@ def get_shape_polygon(num):
 def get_piece_colour(num):
     return Pieces.piece_colours[num]
 
-# Whether shape ID is valid - has both colour and shape
-# Used in parsing input file
+#
 def valid_shape_id(num):
+    """ Check whether shape ID is valid - has both colour and shape
+        Used in parsing input file
+    """
     return num in Pieces.piece_colours and num in Pieces.piece_shapes
 
 def num_useful_rotations(num):

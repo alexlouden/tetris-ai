@@ -24,6 +24,13 @@ from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from ai import Weightings
 
+"""
+Benchmark tests are used to tune the cost function by varying the cost of one
+weight while holding the others stationary. By doing so and comparing intermediate
+and final results, we're able to see which value for our varied cost works best.
+
+To run a benchmark test, add it's function name below the "if __name__ == '__main__':" line.
+"""
 
 def test_gaps_score():
     """ Vary gaps parameters and record game.height """
@@ -71,7 +78,7 @@ def test_rows_score():
 
 
 def benchmark_time_vs_height():
-
+    """ Vary max_num_branches and lookahead_distance to compare which combination works best """
     num_pieces = 10
     num_sets = 50
 
@@ -97,6 +104,7 @@ def benchmark_time_vs_height():
 
 
 def time_solve(pieces, name):
+    """ Return AI execution time """
 
     start_time = time()
 

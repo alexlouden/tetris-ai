@@ -1,12 +1,14 @@
 #-------------------------------------------------------------------------------
-# Name:        module1
-# Purpose:
+# Name:        Plotting Functions
+# Purpose:     Functions to plot the game and pieces
 #
-# Author:      Alex
+# Version:     Python 2.7
+#
+# Author:      Alex Louden
 #
 # Created:     28/04/2013
-# Copyright:   (c) Alex 2013
-# Licence:     <your licence>
+# Copyright:   (c) Alex Louden 2013
+# Licence:     MIT
 #-------------------------------------------------------------------------------
 
 from matplotlib import pyplot
