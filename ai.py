@@ -313,7 +313,7 @@ class Step(object):
         return [move for move in moves if not weights.skip_move(self.depth, move.cost)]
 
 
-def get_best_moves(game):
+def get_best_moves(game, num_worker_threads=None):
     """ Main smarts """
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
@@ -333,8 +333,11 @@ def get_best_moves(game):
     moves_made = 0
 
     # Split processing across multiple CPUs
-    num_worker_threads = multiprocessing.cpu_count()
-    print 'Spawning {} threads'.format(num_worker_threads)
+    if num_worker_threads is None:
+        num_worker_threads = multiprocessing.cpu_count()
+
+    print 'Spawning {} thread{}'.format(num_worker_threads,
+        's' if num_worker_threads > 1 else '')
 
     weights.q = Queue()  # Queue to hold possible moves
 
@@ -386,6 +389,8 @@ def get_best_moves(game):
 
             moves.append(step.move)
             moves_made += 1
+
+            print 'Move {} of {} complete'.format(moves_made, len(piece_queue))
 
 ##            print 'Move:', step.move
 

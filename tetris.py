@@ -11,8 +11,15 @@
 # Copyright:   (c) Alex Louden 2013
 # Licence:     MIT
 #-------------------------------------------------------------------------------
+#!/usr/bin/env python
 
 from copy import deepcopy
+import argparse
+from pprint import pprint
+import os
+from time import clock, time
+# Choose higher resolution time counter
+time = clock if os.name == 'nt' else time
 
 from fileops import read_input_file, write_output_file
 
@@ -60,7 +67,7 @@ class TetrisGame(object):
         # Merge all pieces together into one polygon
         self.update_merged_pieces()
 
-    def solve(self):
+    def solve(self, num_threads=None):
         """Attempt to solve the game.
 
         Will move pieces from input_queue to pieces one by one.
@@ -77,7 +84,7 @@ class TetrisGame(object):
         pieces = {p.id:p for p in self.input_queue}
 
         # Run the main artificial intelligence function
-        moves = get_best_moves(gamecopy)
+        moves = get_best_moves(gamecopy, num_threads)
 
         # Store moves
         self.moves = moves
@@ -428,9 +435,13 @@ class TetrisPiece(object):
     def __repr__(self):
         return str(self)
 
-def main():
+def solve_from_input_file(input_filename, output_filename=None,
+        print_stats=False, num_threads=None):
+
+    start_time = time()
+
     # Parse input file
-    piece_numbers = read_input_file('exampleinput.txt')
+    piece_numbers = read_input_file(input_filename)
 
     # Convert numbers to Tetris piece objects
     pieces = [TetrisPiece(n, i) for i, n in enumerate(piece_numbers)]
@@ -438,15 +449,56 @@ def main():
     # Initialise game with list of pieces
     game = TetrisGame(pieces)
 
-    # Solve game
-    game.solve()
-##
-    print 'Game height:', game.height
+    print '{} pieces loaded'.format(len(piece_numbers))
+    print 'This will take approximately {} seconds. Sorry!'.format(len(piece_numbers)*5)
 
-    print game.get_output()
-##
-##    # Write output of game moves
-##    write_output_file('output.txt', game.get_output())
+    # Solve game
+    game.solve(num_threads)
+
+    print 'Solving complete!'
+    print 'Time taken: {:.2f}s'.format(time() - start_time)
+
+    if print_stats:
+        print '-'*40
+        print 'Detailed statistics:'
+        print '-'*40
+        print 'Game height:', game.height
+        print 'Moves:'
+        for move in game.moves:
+            print move
+            pprint(move.stats)
+
+    if output_filename:
+        # Write output of game moves
+        write_output_file(output_filename, game.get_output())
+    else:
+        print '-'*40
+        print 'Game output:'
+        print '-'*40
+        print game.get_output()
+
+
+def parse_commandline_args():
+    parser = argparse.ArgumentParser(description='Tetris-AI')
+
+    parser.add_argument('input', type=str,
+        help='the input filename containing Tetris piece IDs')
+
+    parser.add_argument('output', type=str, nargs='?', default=None,
+        help="""the output filename to write moves to.
+        if this argument is missing, the program prints the moves to stdout.""")
+
+    parser.add_argument('--stats', dest='stats', action="store_true",
+        help='Show detailed statistics on game end state, moves and costs.')
+
+    parser.add_argument('--threads', dest='threads', type=int, default=None,
+        help="""Number of threads to spawn. If argument missing,
+        program will automatically detect the number of CPU cores.""")
+
+    args = parser.parse_args()
+
+    solve_from_input_file(args.input, args.output, args.stats, args.threads)
 
 if __name__ == '__main__':
-    main()
+    parse_commandline_args()
+

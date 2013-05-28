@@ -38,7 +38,7 @@ def read_input_file(filename):
 def write_output_file(filename, output):
 
     # Open output file in write mode
-    with open(filename, 'w') as f:
+    with open(filename, 'wb') as f:
         f.write(output)
 
 
