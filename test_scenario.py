@@ -30,18 +30,21 @@ minimum game height at the end of each scenario.
 Have included some scenarios with diagonal edges, to demonstrate the program's
 full capabilities.
 
+To skip a scenario add "@attr('skip')" above its definition
+
 """
 
 @attr('skip')
 def test_scenario_1():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(5, 'L'),
         TetrisPiece(4, 'J'),
         TetrisPiece(2, 'O'),
         TetrisPiece(1, 'I'),
     ]
-##
+
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=6)
     game.status = "scenario/scenario_1"
@@ -61,6 +64,7 @@ def test_scenario_1():
 @attr('skip')
 def test_scenario_2():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(1, 'I'),
         TetrisPiece(3, 'T'),
@@ -88,6 +92,7 @@ def test_scenario_2():
 @attr('skip')
 def test_scenario_3():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(3, 'T1'),
         TetrisPiece(6, 'S1'),
@@ -127,6 +132,7 @@ def test_scenario_3():
 @attr('skip')
 def test_scenario_4():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(1, 'I1'),
         TetrisPiece(4, 'J'),
@@ -158,6 +164,7 @@ def test_scenario_4():
 @attr('skip')
 def test_scenario_5():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(2, '[]'),
         TetrisPiece(1, 'I1'),
@@ -194,6 +201,7 @@ def test_scenario_5():
 ##@attr('skip')
 def test_scenario_6():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(2, '[]'),
         TetrisPiece(1, 'I1'),
@@ -234,6 +242,7 @@ def test_scenario_6():
 @attr('skip')
 def test_scenario_7():
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(3, 'T'),
         TetrisPiece(7, 'Z1'),
@@ -270,6 +279,7 @@ def test_scenario_8():
     Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
     Pieces.piece_colours[9] = '#9000ff'
 
+    # Set the queue pieces
     pieces = [ TetrisPiece(i, i) for i in range(1, 10) ]
 
     # Initialise game with list of pieces
@@ -297,6 +307,7 @@ def test_scenario_9():
     Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
     Pieces.piece_colours[9] = '#9000ff'
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(8, 1),
         TetrisPiece(9, 2),
@@ -326,6 +337,7 @@ def test_scenario_9():
 def test_diagonal_shapes():
     """ Crazy diagonal shapes """
 
+    # Set the queue pieces
     Pieces.piece_shapes = {
         1: [(0,1), (1,0), (1,3), (0,4), (0,1)],
         2: [(0,1), (1,0), (2,1), (1,2), (0,1)],
@@ -365,6 +377,7 @@ def test_diagonal_shapes():
 def test_scenario_10():
     """ Tessellating Houses """
 
+    # Set the queue pieces
     Pieces.piece_shapes = {
         1: [(0,0), (2,0), (2,1), (1,2), (0,1)],
     }

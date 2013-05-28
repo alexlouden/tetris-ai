@@ -22,6 +22,14 @@ from plotting import plot_game
 from fileops import read_input_file
 from shapeops import num_useful_rotations, merge
 
+"""
+Unit tests to verify correct execution of program modules and to check
+for regression throughout development.
+
+To skip a test add "@attr('plots')" above its definition
+
+"""
+
 def test_read_input_file():
     """ Test parsing the given input file matches the expected list """
     actual = read_input_file('exampleinput.txt')

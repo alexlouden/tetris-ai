@@ -24,8 +24,17 @@ from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
 from ai import Weightings
 
-def STZ_loop():
+"""
+Report.py houses all cases to generate data and graphs used in the report.
 
+To run a report test, add it's function name below the "if __name__ == '__main__':" line.
+
+"""
+
+def STZ_loop():
+    """ Show an example of the STZ loop """
+
+    # Set the queue pieces
     pieces = [
         TetrisPiece(3, 1),
         TetrisPiece(6, 2),
@@ -41,16 +50,20 @@ def STZ_loop():
         TetrisPiece(3, 13),
     ]
 
+    # Set weights needed to create scenario
     Weightings.height=-1
     Weightings.gaps=10
     Weightings.rows_removed=10
 
+    # Initialise game with list of pieces
     game = TetrisGame(pieces, width=5)
     game.status = "report/STZ_loop"
     game.solve()
 
 def LJO_loop():
+    """ Show an example of the LJO loop """
 
+    # Set the queue pieces
     pieces = [
         TetrisPiece(5, 1),
         TetrisPiece(4, 2),
@@ -60,10 +73,12 @@ def LJO_loop():
         TetrisPiece(2, 6),
     ]
 
+    # Set weights needed to create scenario
     Weightings.height=-3
     Weightings.gaps=10
     Weightings.rows_removed=17
 
+    # Initialise game with list of pieces
     game = TetrisGame(pieces, width=5)
     game.status = "report/LJO_loop"
     game.solve()
