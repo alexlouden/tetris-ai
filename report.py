@@ -68,7 +68,23 @@ def LJO_loop():
     game.status = "report/LJO_loop"
     game.solve()
 
+def test_rows_score():
+
+    num_pieces = 20
+
+    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
+    pprint(pieces)
+
+    # Try -1 to -10
+    for rr in (1, 5, 10):
+        Weightings.rows_removed = rr
+
+        game = TetrisGame(deepcopy(pieces), width=7)
+        game.status = "report/rows_removed_{}".format(Weightings.rows_removed)
+        game.solve()
+
+        print Weightings.rows_removed, game.height
 
 
 if __name__ == '__main__':
-    STZ_loop()
+    test_rows_score()
