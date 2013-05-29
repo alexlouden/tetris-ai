@@ -207,10 +207,10 @@ class Step(object):
             self.piece = None
             self.best_cost = self.cumulative_cost
 
-            if weights.best_endstep_cost > cost:
-##               print "Best new end node! ", cost, weights.best_endstep_cost
-
-               plot_game(self.game, '{0.game.status}_depth_{0.depth}_cost_{1:.2f}'.format(self, cost))
+#             if weights.best_endstep_cost > cost:
+# ##               print "Best new end node! ", cost, weights.best_endstep_cost
+#
+#                plot_game(self.game, '{0.game.status}_depth_{0.depth}_cost_{1:.2f}'.format(self, cost))
 
             # Set new best endstep cost if needed
             weights.best_endstep_cost = min(weights.best_endstep_cost, cost)

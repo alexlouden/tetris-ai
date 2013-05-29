@@ -11,6 +11,9 @@ tetris-ai
   <tr>
     <td>Ruvan Muthu-Krishna</td><td>20507884</td>
   </tr>
+  <tr>
+    <td>For queries please contact alex(at)louden.com</td>
+  </tr>
 </table>
 
 Dependencies

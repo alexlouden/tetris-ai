@@ -34,7 +34,7 @@ To skip a scenario add "@attr('skip')" above its definition
 
 """
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_1():
 
     # Set the queue pieces
@@ -61,7 +61,7 @@ def test_scenario_1():
     assert_equals(game.height, 1)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_2():
 
     # Set the queue pieces
@@ -89,7 +89,7 @@ def test_scenario_2():
     assert_less(game.height, 3)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_3():
 
     # Set the queue pieces
@@ -129,7 +129,7 @@ def test_scenario_3():
     assert_less(game.height, 12)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_4():
 
     # Set the queue pieces
@@ -161,7 +161,7 @@ def test_scenario_4():
     assert_less(game.height, 5)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_5():
 
     # Set the queue pieces
@@ -198,7 +198,7 @@ def test_scenario_5():
     assert_equals(game.height, 0)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_6():
 
     # Set the queue pieces
@@ -239,7 +239,7 @@ def test_scenario_6():
     assert_equals(game.pieces[1].polygon.bounds, (5, 0, 6, 1))
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_7():
 
     # Set the queue pieces
@@ -268,7 +268,7 @@ def test_scenario_7():
     assert_less(game.height, 3)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_8():
 
     # Plus shape
@@ -296,7 +296,7 @@ def test_scenario_8():
     assert_less(game.height, 6)
 
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_9():
 
     # Plus shape
@@ -333,7 +333,7 @@ def test_scenario_9():
     assert_equals(game.height, 10)
 
 
-@attr('skip')
+# @attr('skip')
 def test_diagonal_shapes():
     """ Crazy diagonal shapes """
 
@@ -373,7 +373,7 @@ def test_diagonal_shapes():
     game.status = "scenario/diagonal_shapes_shuffle"
     game.solve()
 
-@attr('skip')
+# @attr('skip')
 def test_scenario_10():
     """ Tessellating Houses """
 
