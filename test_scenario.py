@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris Scenario Tests
 # Purpose:     Scenario tests for tetris AI module
 #
@@ -9,14 +9,12 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 import nose
 from nose.tools import assert_equals, assert_true, assert_less
-from nose.plugins.attrib import attr
 from pprint import pprint
 from random import shuffle
-from copy import deepcopy
 
 from tetris import TetrisGame, TetrisPiece
 from plotting import plot_game
@@ -35,6 +33,8 @@ To skip a scenario add "@attr('skip')" above its definition
 """
 
 # @attr('skip')
+
+
 def test_scenario_1():
 
     # Set the queue pieces
@@ -49,7 +49,7 @@ def test_scenario_1():
     game = TetrisGame(pieces, width=6)
     game.status = "scenario/scenario_1"
 
-    print '-'*80
+    print '-' * 80
     print game.status
 
     game.solve()
@@ -77,7 +77,7 @@ def test_scenario_2():
     game = TetrisGame(pieces, width=6)
     game.status = "scenario/scenario_2"
 
-    print '-'*80
+    print '-' * 80
     print game.status
 
     game.solve()
@@ -117,7 +117,7 @@ def test_scenario_3():
     game = TetrisGame(pieces, width=10)
     game.status = "scenario/scenario_3_threaded"
 
-    print '-'*80
+    print '-' * 80
     print game.status
 
     game.solve()
@@ -147,7 +147,7 @@ def test_scenario_4():
 
     game.status = "scenario/scenario_4"
 
-    print '-'*80
+    print '-' * 80
     print game.status
 
     game.solve()
@@ -184,7 +184,7 @@ def test_scenario_5():
 
     game.status = "scenario/scenario_5"
 
-    print '-'*80
+    print '-' * 80
     print game.status
 
     game.solve()
@@ -272,15 +272,17 @@ def test_scenario_7():
 def test_scenario_8():
 
     # Plus shape
-    Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
+    Pieces.piece_shapes[8] = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (
+        2, 2), (3, 2), (3, 1), (2, 1), (2, 0), (1, 0), (1, 1), (0, 1)]
     Pieces.piece_colours[8] = '#AAAAAA'
 
     # Space ship shape
-    Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
+    Pieces.piece_shapes[9] = [(0, 1), (0, 2), (1, 3), (2, 3), (
+        3, 2), (2, 2), (2, 1), (3, 1), (2, 0), (1, 0), (0, 1)]
     Pieces.piece_colours[9] = '#9000ff'
 
     # Set the queue pieces
-    pieces = [ TetrisPiece(i, i) for i in range(1, 10) ]
+    pieces = [TetrisPiece(i, i) for i in range(1, 10)]
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=11)
@@ -300,11 +302,13 @@ def test_scenario_8():
 def test_scenario_9():
 
     # Plus shape
-    Pieces.piece_shapes[8] = [(0,1), (0,2), (1,2), (1,3), (2,3), (2,2), (3,2), (3,1), (2,1), (2,0), (1,0), (1,1), (0,1)]
+    Pieces.piece_shapes[8] = [(0, 1), (0, 2), (1, 2), (1, 3), (2, 3), (
+        2, 2), (3, 2), (3, 1), (2, 1), (2, 0), (1, 0), (1, 1), (0, 1)]
     Pieces.piece_colours[8] = '#AAAAAA'
 
     # Space ship shape
-    Pieces.piece_shapes[9] = [(0,1), (0,2), (1,3), (2,3), (3,2), (2,2), (2,1), (3,1), (2,0), (1,0), (0,1)]
+    Pieces.piece_shapes[9] = [(0, 1), (0, 2), (1, 3), (2, 3), (
+        3, 2), (2, 2), (2, 1), (3, 1), (2, 0), (1, 0), (0, 1)]
     Pieces.piece_colours[9] = '#9000ff'
 
     # Set the queue pieces
@@ -339,16 +343,16 @@ def test_diagonal_shapes():
 
     # Set the queue pieces
     Pieces.piece_shapes = {
-        1: [(0,1), (1,0), (1,3), (0,4), (0,1)],
-        2: [(0,1), (1,0), (2,1), (1,2), (0,1)],
-        3: [(1,0), (0,1), (0,2), (1,3), (1,2), (2,2), (2,1), (1,1), (1,0)],
-        4: [(0,0), (0,3), (1,3), (2,2), (1,2), (1,1)],
-        5: [(0,2), (1,3), (2,2), (2,0), (1,0), (1,2), (0,2)],
-        6: [(0,1), (0,3), (1,2), (2,2), (2,0), (1,1), (0,1)],
-        7: [(0,1), (0,2), (1,2), (1,3), (2,2), (2,1), (1,1), (1,0), (0,1)],
+        1: [(0, 1), (1, 0), (1, 3), (0, 4), (0, 1)],
+        2: [(0, 1), (1, 0), (2, 1), (1, 2), (0, 1)],
+        3: [(1, 0), (0, 1), (0, 2), (1, 3), (1, 2), (2, 2), (2, 1), (1, 1), (1, 0)],
+        4: [(0, 0), (0, 3), (1, 3), (2, 2), (1, 2), (1, 1)],
+        5: [(0, 2), (1, 3), (2, 2), (2, 0), (1, 0), (1, 2), (0, 2)],
+        6: [(0, 1), (0, 3), (1, 2), (2, 2), (2, 0), (1, 1), (0, 1)],
+        7: [(0, 1), (0, 2), (1, 2), (1, 3), (2, 2), (2, 1), (1, 1), (1, 0), (0, 1)],
     }
 
-    pieces = [ TetrisPiece(i, i) for i in sorted(Pieces.piece_shapes.keys()) ]
+    pieces = [TetrisPiece(i, i) for i in sorted(Pieces.piece_shapes.keys())]
     shuffle(pieces)
 
     # Initialise empty game
@@ -362,9 +366,9 @@ def test_diagonal_shapes():
     game.status = "scenario/diagonal_shapes"
     plot_game(game, 'test/plot_diagonal_shapes')
 
-
     # Random 4 buckets
-    pieces = [TetrisPiece(shapenum, id) for id, shapenum in enumerate(Pieces.piece_shapes.keys()*3)]
+    pieces = [TetrisPiece(shapenum, id)
+              for id, shapenum in enumerate(Pieces.piece_shapes.keys() * 3)]
     shuffle(pieces)
 
     pprint(pieces)
@@ -374,12 +378,14 @@ def test_diagonal_shapes():
     game.solve()
 
 # @attr('skip')
+
+
 def test_scenario_10():
     """ Tessellating Houses """
 
     # Set the queue pieces
     Pieces.piece_shapes = {
-        1: [(0,0), (2,0), (2,1), (1,2), (0,1)],
+        1: [(0, 0), (2, 0), (2, 1), (1, 2), (0, 1)],
     }
 
     pieces = [TetrisPiece(1, id) for id in range(10)]
@@ -398,9 +404,10 @@ if __name__ == '__main__':
 ##    import cProfile
 ##    cProfile.run('test_scenario_3()')
 
-    nose.main(argv=['',
+    nose.main(argv=[
+        '',
         '--verbosity=2',
-        '--nocapture', # Don't capture stdout
-        '-a !skip', # Ignore tests with 'skip' attribute
+        '--nocapture',  # Don't capture stdout
+        '-a !skip',  # Ignore tests with 'skip' attribute
         __name__
-        ])
+    ])

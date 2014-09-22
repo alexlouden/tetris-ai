@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris File Operations
 # Purpose:     Functions to read and write to disk
 #
@@ -9,9 +9,10 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from shapeops import valid_shape_id
+
 
 def read_input_file(filename):
     """Read input file and populate a list of recognised pieces."""
@@ -35,10 +36,9 @@ def read_input_file(filename):
 
     return numbers
 
+
 def write_output_file(filename, output):
 
     # Open output file in write mode
     with open(filename, 'wb') as f:
         f.write(output)
-
-

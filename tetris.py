@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris AI
 # Purpose:     Holds TetrisGame and TetrisPiece classes
 #              which are used to build a Tetris game
@@ -10,7 +10,7 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 #!/usr/bin/env python
 
 from copy import deepcopy
@@ -32,6 +32,7 @@ from ai import get_best_moves, Weightings
 
 
 class TetrisGame(object):
+
     """Store Tetris game variables and functions needed to play a Tetris game.
     Once game is setup, invoke ai.py to play the game.
 
@@ -41,6 +42,7 @@ class TetrisGame(object):
     max_buffer_size -- maximum number of TetrisPieces able to be held in a temporary buffer
 
     """
+
     def __init__(self, pieces=None, width=11, max_buffer_size=1):
         """Initialise the game board"""
 
@@ -81,7 +83,7 @@ class TetrisGame(object):
         gamecopy = deepcopy(self)
 
         # Dictionary of pieces by ID
-        pieces = {p.id:p for p in self.input_queue}
+        pieces = {p.id: p for p in self.input_queue}
 
         # Run the main artificial intelligence function
         moves = get_best_moves(gamecopy, num_threads)
@@ -213,29 +215,30 @@ class TetrisGame(object):
 
         x_min, y_min, x_max, y_max = self.merged_pieces.bounds
 
-
         gap_count = 0
 
         # Left to right
         for left in xrange(int(x_min), int(x_max)):
 
             # Top to bottom
-            for bottom in xrange(int(y_max)-1, int(y_min)-1, -1):
+            for bottom in xrange(int(y_max) - 1, int(y_min) - 1, -1):
                 box = get_single_box(left, bottom)
 
                 # If the square contains a piece
-                area_of_intersection = box.intersection(self.merged_pieces).area
+                area_of_intersection = box.intersection(
+                    self.merged_pieces).area
 
                 if area_of_intersection != 0:
 
-                    # Draw box from height down to zero, get single intersection area
+                    # Draw box from height down to zero, get single
+                    # intersection area
                     box = get_box(left, 0, left + 1, bottom + 1)
-                    gap_count += box.area - box.intersection(self.merged_pieces).area
+                    gap_count += box.area - \
+                        box.intersection(self.merged_pieces).area
 
                     break
 
         return gap_count
-
 
     def calculate_blocks_above_height(self, height):
         """ Returns a tuple of centroid, and area of blocks above height """
@@ -271,7 +274,9 @@ class TetrisGame(object):
 
 
 class TetrisPiece(object):
-    """Hold rotation, position and geometrical structure of a TetrisPiece. Provide functions to rotate, move, split and verify intersection of TetrisPiece.
+
+    """Hold rotation, position and geometrical structure of a TetrisPiece.
+    Provide functions to rotate, move, split and verify intersection of TetrisPiece.
 
     Keyword arguments:
     num -- defines the type of tetrimino TetrisPiece represents
@@ -279,6 +284,7 @@ class TetrisPiece(object):
     rotation -- rotational position
 
     """
+
     def __init__(self, num, id=None, rotation=0):
         """Initialise a piece"""
         self.num = num
@@ -349,7 +355,7 @@ class TetrisPiece(object):
             raise ValueError("Invalid angle id, must be one of 0, 1, 2 or 3")
 
         # Difference in angle
-        angle_diff = angle_id*90 - self._rotation*90
+        angle_diff = angle_id * 90 - self._rotation * 90
 
         # Rotate polygon
         self.polygon = rotate(self.polygon, angle_diff)
@@ -403,9 +409,9 @@ class TetrisPiece(object):
         When shapes intersect the row, they are merged down.
 
         E.g.
-              [ ]
-        [x][x][x]  -->        [ ]
-        [ ]             [ ]
+        |      [ ]|       |         |
+        |[x][x][x]|  -->  |      [ ]|
+        |[ ]      |       |[ ]      |
 
         """
         shape = self.polygon.difference(row)
@@ -435,8 +441,9 @@ class TetrisPiece(object):
     def __repr__(self):
         return str(self)
 
+
 def solve_from_input_file(input_filename, output_filename=None,
-        print_stats=False, num_threads=None):
+                          print_stats=False, num_threads=None):
 
     start_time = time()
 
@@ -450,7 +457,7 @@ def solve_from_input_file(input_filename, output_filename=None,
     game = TetrisGame(pieces)
 
     print '{} pieces loaded'.format(len(piece_numbers))
-    print 'This will take approximately {} seconds. Sorry!'.format(len(piece_numbers)*5)
+    print 'This will take approximately {} seconds. Sorry!'.format(len(piece_numbers) * 5)
 
     # Solve game
     game.solve(num_threads)
@@ -460,14 +467,14 @@ def solve_from_input_file(input_filename, output_filename=None,
     print 'Final game height:', game.height
 
     if print_stats:
-        print '-'*40
+        print '-' * 40
         print 'Cost function weightings:'
-        print '-'*40
+        print '-' * 40
         print Weightings()
 
-        print '-'*40
+        print '-' * 40
         print 'Detailed statistics:'
-        print '-'*40
+        print '-' * 40
         print 'Moves:'
         for move in game.moves:
             print move
@@ -477,9 +484,9 @@ def solve_from_input_file(input_filename, output_filename=None,
         # Write output of game moves
         write_output_file(output_filename, game.get_output())
     else:
-        print '-'*40
+        print '-' * 40
         print 'Game output:'
-        print '-'*40
+        print '-' * 40
         print game.get_output()
 
 
@@ -487,17 +494,17 @@ def parse_commandline_args():
     parser = argparse.ArgumentParser(description='Tetris-AI')
 
     parser.add_argument('input', type=str,
-        help='the input filename containing Tetris piece IDs')
+                        help='the input filename containing Tetris piece IDs')
 
     parser.add_argument('output', type=str, nargs='?', default=None,
-        help="""the output filename to write moves to.
+                        help="""the output filename to write moves to.
         if this argument is missing, the program prints the moves to stdout.""")
 
     parser.add_argument('--stats', dest='stats', action="store_true",
-        help='Show detailed statistics on game end state, moves and costs.')
+                        help='Show detailed statistics on game end state, moves and costs.')
 
     parser.add_argument('--threads', dest='threads', type=int, default=None,
-        help="""Number of threads to spawn. If argument missing,
+                        help="""Number of threads to spawn. If argument missing,
         program will automatically detect the number of CPU cores.""")
 
     args = parser.parse_args()
@@ -506,4 +513,3 @@ def parse_commandline_args():
 
 if __name__ == '__main__':
     parse_commandline_args()
-

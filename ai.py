@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris AI
 # Purpose:     Artificial intelligence for Tetris
 #
@@ -9,12 +9,11 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from copy import deepcopy
-from pprint import pprint, pformat
+from pprint import pformat
 from operator import attrgetter
-from collections import defaultdict
 import sys
 
 import multiprocessing
@@ -22,12 +21,13 @@ from threading import Thread
 from Queue import Queue
 
 from shapeops import num_useful_rotations, Pieces
-from plotting import plot_game
 
 useful_rotations = {}
 """ Associate rotations with piece IDs - calculated once """
 
+
 class Weightings(object):
+
     """Hold weights associated with each aspect of the cost function.
 
     Also used to hold information used throughout the solving process.
@@ -45,12 +45,12 @@ class Weightings(object):
     lookahead_distance = 3
     step_distance = 1
 
-    starting_score = rows_removed * -4 # Ensure no negative scores
+    starting_score = rows_removed * -4  # Ensure no negative scores
 
     best_endstep_cost = bignum
     """ The best cost encountered at the leaves of a tree """
 
-    best_cost_at_depth  = {}
+    best_cost_at_depth = {}
     worst_cost_at_depth = {}
 
     maximum_percentage = 0.4
@@ -97,6 +97,7 @@ gaps          {0.gaps:.2f}
 centroidy     {0.centroidy:.2f}
 """.format(self)
 
+
 class Stats(object):
 
     def __str__(self):
@@ -105,7 +106,9 @@ class Stats(object):
     def __repr__(self):
         return str(self)
 
+
 class Move(object):
+
     """Hold a possible move to be made.
 
     Keyword arguments:
@@ -115,6 +118,7 @@ class Move(object):
     left -- where to drop the piece
 
     """
+
     def __init__(self, game, piece, rotation, left):
         self.game = game
 
@@ -156,21 +160,22 @@ class Move(object):
         # Try dropping (copy of) piece
         temp_game.drop(deepcopy(self.piece), self.left)
 
-        rows_removed   = temp_game.check_full_rows()
-        centroid, area = temp_game.calculate_blocks_above_height(previous_height)
-        num_gaps       = temp_game.count_gaps()
-        height         = temp_game.height
+        rows_removed = temp_game.check_full_rows()
+        centroid, area = temp_game.calculate_blocks_above_height(
+            previous_height)
+        num_gaps = temp_game.count_gaps()
+        height = temp_game.height
 
         # Store stats
         self.stats.rows_removed = rows_removed
-        self.stats.centroid     = centroid
-        self.stats.area         = area
-        self.stats.gaps         = num_gaps - previous_num_gaps
-        self.stats.height       = height - previous_height
+        self.stats.centroid = centroid
+        self.stats.area = area
+        self.stats.gaps = num_gaps - previous_num_gaps
+        self.stats.height = height - previous_height
 
         # Centroid y-position of previously placed piece
         if temp_game.pieces:
-            self.stats.centroidy    = temp_game.pieces[-1].polygon.centroid.y
+            self.stats.centroidy = temp_game.pieces[-1].polygon.centroid.y
         else:
             # Piece has been removed
             self.stats.centroidy = 0
@@ -179,12 +184,12 @@ class Move(object):
         """ Return cost of move given move stats and weightings """
         cost = 0
 
-        cost += weights.area         * self.stats.area
-        cost += weights.centroid     * self.stats.centroid
+        cost += weights.area * self.stats.area
+        cost += weights.centroid * self.stats.centroid
         cost += weights.rows_removed * self.stats.rows_removed
-        cost += weights.gaps         * self.stats.gaps
-        cost += weights.height       * self.stats.height
-        cost += weights.centroidy    * self.stats.centroidy
+        cost += weights.gaps * self.stats.gaps
+        cost += weights.height * self.stats.height
+        cost += weights.centroidy * self.stats.centroidy
 
         cost += weights.starting_score
 
@@ -253,9 +258,9 @@ class Step(object):
 
             # Iterate down
             child = Step(new_game,
-                self.depth + 1,
-                self.cumulative_cost + move.cost,
-                move, weights=weights)
+                         self.depth + 1,
+                         self.cumulative_cost + move.cost,
+                         move, weights=weights)
 
             self.children.append(child)
 
@@ -303,21 +308,24 @@ class Step(object):
 
         current_best = weights.best_cost_at_depth.get(self.depth)
 
-
         if current_best is None:
             # First time at depth
             weights.best_cost_at_depth[self.depth] = best_cost
         else:
             # Update
-            weights.best_cost_at_depth[self.depth] = min(current_best, best_cost)
-##            print 'New best cost for depth', self.depth, current_best, '->' ,best_cost
+            weights.best_cost_at_depth[
+                self.depth] = min(current_best, best_cost)
+# print 'New best cost for depth', self.depth, current_best, '->'
+# ,best_cost
 
         try:
-            weights.worst_cost_at_depth[self.depth] = max(weights.worst_cost_at_depth[self.depth], worst_cost)
+            weights.worst_cost_at_depth[self.depth] = max(
+                weights.worst_cost_at_depth[self.depth], worst_cost)
         except KeyError:
             weights.worst_cost_at_depth[self.depth] = worst_cost
 
-##        print 'prune:', self.depth, best_cost, worst_cost, current_best, weights.worst_cost_at_depth.get(self.depth)
+# print 'prune:', self.depth, best_cost, worst_cost, current_best,
+# weights.worst_cost_at_depth.get(self.depth)
 
         return [move for move in moves if not weights.skip_move(self.depth, move.cost)]
 
@@ -331,8 +339,9 @@ def get_best_moves(game, num_worker_threads=None):
         speedups.enable()
 
     # Pre-calculate which rotations are useful for each piece number (1-7)
-    global useful_rotations # Global to have shared amongst all Steps
-    useful_rotations = {i: num_useful_rotations(i) for i in Pieces.piece_shapes.keys()}
+    global useful_rotations  # Global to have shared amongst all Steps
+    useful_rotations = {i: num_useful_rotations(i)
+                        for i in Pieces.piece_shapes.keys()}
 
     weights = Weightings()
 
@@ -351,7 +360,7 @@ def get_best_moves(game, num_worker_threads=None):
         num_worker_threads = multiprocessing.cpu_count()
 
     print 'Spawning {} thread{}'.format(num_worker_threads,
-        's' if num_worker_threads > 1 else '')
+                                        's' if num_worker_threads > 1 else '')
 
     weights.q = Queue()  # Queue to hold possible moves
 
@@ -411,17 +420,6 @@ def get_best_moves(game, num_worker_threads=None):
         # Use game state
         game = step.game
 
-
 ##    print 'Moves:'
 ##    pprint(moves)
-
     return moves
-
-
-
-
-
-
-
-
-

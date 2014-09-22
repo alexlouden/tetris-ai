@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris Unit Tests
 # Purpose:     Unit tests for tetris AI module
 #
@@ -9,7 +9,7 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from random import randint, choice
 
@@ -30,12 +30,14 @@ To skip a test add "@attr('plots')" above its definition
 
 """
 
+
 def test_read_input_file():
     """ Test parsing the given input file matches the expected list """
     actual = read_input_file('exampleinput.txt')
     expected = [1, 2, 3, 4, 5, 2, 7, 1, 6, 1, 4, 3, 2, 1, 5]
 
     assert_equals(actual, expected)
+
 
 def test_get_output():
     """ Test TetrisGame.get_output() """
@@ -69,6 +71,7 @@ def test_plot_shapes():
 
         plot_game(game, 'test/plot_shape_{}'.format(shape_num))
 
+
 @attr('plots')
 def test_plot_all_shapes():
     """ Test all shapes can be plotted on the same figure (manually verify) """
@@ -86,16 +89,17 @@ def test_plot_all_shapes():
 
     plot_game(game, 'test/plot_all_shapes')
 
+
 def test_shape_width_and_heights():
     """ Test shape width and heights match expected """
 
     # Shapes 2-7 have width of 2
-    expected_widths = {i: 2 for i in range(2,8)}
+    expected_widths = {i: 2 for i in range(2, 8)}
     # Shape 1 has 1 width
     expected_widths[1] = 1
 
     # Shapes 3-7 have height of 3
-    expected_heights = {i: 3 for i in range(3,8)}
+    expected_heights = {i: 3 for i in range(3, 8)}
     # Shape 1 has 4 height
     expected_heights[1] = 4
     # Shape 2 has 2 height
@@ -107,6 +111,7 @@ def test_shape_width_and_heights():
     for piece in pieces:
         assert_equals(piece.width, expected_widths[piece.num])
         assert_equals(piece.height, expected_heights[piece.num])
+
 
 def test_move():
     """ Test moving shapes, polygon coordinates and boundaries """
@@ -137,6 +142,7 @@ def test_move():
     assert_equals(p.bottom, 2)
     assert_equals(p.polygon.bounds, (4, 2, 5, 6))
 
+
 def test_rotate():
     """ Test rotating shapes, polygon coordinates and boundaries """
     # Create a I piece, rotate it 4 times and check bounds
@@ -160,12 +166,14 @@ def test_rotate():
     assert_equals(p.rotation, 0)
     assert_equals(p.polygon.bounds, (0, 0, 1, 4))
 
+
 @raises(ValueError)
 def test_invalid_rotation():
     """ Test that shapes can't be rotated to invalid rotations """
     # Try to rotate 90 degrees (but rotate only accepts 0,1,2,3)
     p = TetrisPiece(1)
     p.rotate(90)
+
 
 def test_num_useful_rotations():
     """ Test the number of useful rotations function for each shape """
@@ -182,6 +190,7 @@ def test_num_useful_rotations():
 
     for i in range(1, 8):
         assert_equals(num_useful_rotations(i), expected_useful_rotations[i])
+
 
 def test_merge_pieces():
     """ Test merging pieces together """
@@ -200,6 +209,7 @@ def test_merge_pieces():
     assert_true(merged.intersects(p1.polygon))
     assert_true(merged.intersects(p2.polygon))
     assert_true(p1.polygon.touches(p2.polygon))
+
 
 def test_calculate_height():
     """ Test calculating the game height """
@@ -250,6 +260,7 @@ def test_drop():
 
     assert_equals(g.height, 6)
 
+
 @raises(ValueError)
 def test_drop_out_of_bounds():
     """ Test dropping a piece out of bounds throws an error """
@@ -278,6 +289,7 @@ def test_random_drop():
             pass
 
     plot_game(g, 'test/test_random_drop')
+
 
 def test_is_row_full():
     """ Test that full rows have blocks removed """
@@ -316,6 +328,7 @@ def test_check_full_rows():
 
     assert_equals(g.height, 0)
 
+
 def test_check_full_rows_multiple():
     """ Test that multiple full rows are removed """
 
@@ -329,6 +342,7 @@ def test_check_full_rows_multiple():
     plot_game(g, 'test/test_check_full_rows_multiple_1_after')
 
     assert_equals(g.height, 0)
+
 
 def test_check_full_rows_multiple_2():
     """ Test that full row count works """
@@ -344,6 +358,7 @@ def test_check_full_rows_multiple_2():
     plot_game(g, 'test/test_check_full_rows_multiple_2_1_after')
 
     assert_equals(g.height, 3)
+
 
 def test_check_full_rows_multiple_3():
     """ Test that multiple full row counts works """
@@ -362,6 +377,7 @@ def test_check_full_rows_multiple_3():
     # Check that calling it again doesn't cause problems
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 0)
+
 
 def test_check_full_rows_piece_drop():
     """ Check that a floating block does not drop """
@@ -413,6 +429,7 @@ def test_check_full_rows_plot():
     num_rows_removed = g.check_full_rows()
     assert_equals(num_rows_removed, 0)
 
+
 def test_count_gaps():
     """ Test the count_gaps() function with two squares and an I """
     g = TetrisGame(width=5)
@@ -432,6 +449,7 @@ def test_count_gaps():
 
     num_gaps = g.count_gaps()
     assert_equals(num_gaps, 2)
+
 
 def test_count_gaps_2():
     """ Test the count_gaps() function with two T pieces """
@@ -528,7 +546,7 @@ def test_count_blocks_above_height_2():
     g = TetrisGame(width=7)
 
     stats = g.calculate_blocks_above_height(0)
-    assert_equals(stats, (0,0))
+    assert_equals(stats, (0, 0))
 
     g.drop(TetrisPiece(5, 'L', 2), 1)
 
@@ -563,10 +581,10 @@ def test_count_blocks_above_height_3():
 
 if __name__ == '__main__':
     nose.main(argv=['',
-        '--verbosity=2',
-##        '--with-id',
-##        '--failed', # Repeat only previously failed tests
-##        '--nocapture', # Don't capture stdout
-        '-a !plots', # Ignore tests with 'plots' attribute
-        __name__
-        ])
+                    '--verbosity=2',
+                    ##        '--with-id',
+                    ##        '--failed', # Repeat only previously failed tests
+                    ##        '--nocapture', # Don't capture stdout
+                    '-a !plots', # Ignore tests with 'plots' attribute
+                    __name__
+                    ])

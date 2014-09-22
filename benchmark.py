@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Tetris Benchmarking
 # Purpose:     Benchmarking functions
 #
@@ -9,7 +9,7 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 import os
 from time import clock, time
@@ -32,6 +32,7 @@ and final results, we're able to see which value for our varied cost works best.
 To run a benchmark test, add it's function name below the "if __name__ == '__main__':" line.
 """
 
+
 def test_gaps_score():
     """ Vary gaps parameters and record game.height """
 
@@ -40,7 +41,7 @@ def test_gaps_score():
     Weightings.lookahead_distance = 4
     Weightings.starting_score = 100
 
-    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
+    pieces = [TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces)]
     pprint(pieces)
 
     # Try 1 to 10
@@ -63,7 +64,7 @@ def test_rows_score():
     Weightings.max_num_branches = 3
     Weightings.starting_score = 100
 
-    pieces = [ TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces+1)]
+    pieces = [TetrisPiece(randint(1, 7), i) for i in range(0, num_pieces + 1)]
     pprint(pieces)
 
     # Try -1 to -10
@@ -71,7 +72,8 @@ def test_rows_score():
         Weightings.rows_removed = rr
 
         game = TetrisGame(deepcopy(pieces), width=7)
-        game.status = "benchmark/rows_removed_{}".format(Weightings.rows_removed)
+        game.status = "benchmark/rows_removed_{}".format(
+            Weightings.rows_removed)
         game.solve()
 
         print Weightings.rows_removed, game.height
@@ -88,7 +90,8 @@ def benchmark_time_vs_height():
     for i in range(num_sets):
 
         # 50 random pieces from 1-7
-        pieces = [ TetrisPiece(randint(1, 7), piece_id) for piece_id in range(0, num_pieces)]
+        pieces = [TetrisPiece(randint(1, 7), piece_id)
+                  for piece_id in range(0, num_pieces)]
 
         for branches in [3, 2, 1]:
             Weightings.max_num_branches = branches
@@ -96,7 +99,8 @@ def benchmark_time_vs_height():
             for lookahead in [3, 2, 1]:
                 Weightings.lookahead_distance = lookahead
 
-                name = 'benchmark/set_{}_b{}_l{}'.format(i, branches, lookahead)
+                name = 'benchmark/set_{}_b{}_l{}'.format(
+                    i, branches, lookahead)
                 delay, height, game = time_solve(deepcopy(pieces), name)
                 plot_game(game, name)
 

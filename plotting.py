@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Plotting Functions
 # Purpose:     Functions to plot the game and pieces
 #
@@ -9,16 +9,15 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from matplotlib import pyplot
-from shapely.geometry import Polygon
-from shapely.affinity import translate
 from descartes.patch import PolygonPatch
 
 shape_edge_colour = '#000000'
 shape_alpha = 0.8
 id_font_size = 10
+
 
 def plot_game(game, filename=None):
     """Plots the tetris game.
@@ -31,7 +30,7 @@ def plot_game(game, filename=None):
     # Create figure and resize
     pyplot.clf()
     fig = pyplot.gcf()
-    fig.set_size_inches(8, board_height*0.5+1)
+    fig.set_size_inches(8, board_height * 0.5 + 1)
 
     ax = fig.add_subplot(111)
 
@@ -54,6 +53,7 @@ def plot_game(game, filename=None):
 
         pyplot.savefig(filename, dpi=120)
 
+
 def plot_board(ax, game, height):
     """Helper - Plots the game board"""
 
@@ -68,6 +68,7 @@ def plot_board(ax, game, height):
     ax.set_yticks(range(*yrange) + [yrange[-1]])
     ax.set_aspect(1)
 
+
 def plot_piece(ax, piece):
     """Helper - Plots a single game piece"""
 
@@ -75,12 +76,14 @@ def plot_piece(ax, piece):
     polygon = piece.polygon
 
     if polygon.type == 'Polygon':
-        patch = PolygonPatch(polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
+        patch = PolygonPatch(
+            polygon, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
         ax.add_patch(patch)
 
     elif polygon.type == 'MultiPolygon':
         for poly in polygon.geoms:
-            patch = PolygonPatch(poly, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
+            patch = PolygonPatch(
+                poly, facecolor=colour, edgecolor=shape_edge_colour, alpha=shape_alpha, zorder=2)
             ax.add_patch(patch)
 
     if piece.id is not None:
@@ -88,7 +91,6 @@ def plot_piece(ax, piece):
         centroid = piece.polygon.centroid
         s = str(piece.id)
         ax.text(centroid.x, centroid.y, s,
-            horizontalalignment='center',
-            verticalalignment='center',
-            size=id_font_size)
-
+                horizontalalignment='center',
+                verticalalignment='center',
+                size=id_font_size)

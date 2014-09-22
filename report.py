@@ -1,4 +1,4 @@
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 # Name:        Report.py
 # Purpose:     Hold all scenarios needed for the report
 #
@@ -9,7 +9,7 @@
 # Created:     28/04/2013
 # Copyright:   (c) Alex Louden & Ruvan Muthu-Krishna 2013
 # Licence:     MIT
-#-------------------------------------------------------------------------------
+#-------------------------------------------------------------------------
 
 from pprint import pprint
 
@@ -24,6 +24,7 @@ Report.py houses all cases to generate data and graphs used in the report.
 To run a report test, add it's function name below the "if __name__ == '__main__':" line.
 
 """
+
 
 def STZ_loop():
     """ Show an example of the STZ loop """
@@ -45,14 +46,15 @@ def STZ_loop():
     ]
 
     # Set weights needed to create scenario
-    Weightings.height=-1
-    Weightings.gaps=10
-    Weightings.rows_removed=10
+    Weightings.height = -1
+    Weightings.gaps = 10
+    Weightings.rows_removed = 10
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=5)
     game.status = "report/STZ_loop"
     game.solve()
+
 
 def LJO_loop():
     """ Show an example of the LJO loop """
@@ -68,9 +70,9 @@ def LJO_loop():
     ]
 
     # Set weights needed to create scenario
-    Weightings.height=-3
-    Weightings.gaps=10
-    Weightings.rows_removed=17
+    Weightings.height = -3
+    Weightings.gaps = 10
+    Weightings.rows_removed = 17
 
     # Initialise game with list of pieces
     game = TetrisGame(pieces, width=5)
@@ -96,10 +98,10 @@ def plot_cost():
     ax.set_title("T shape")
 
     # Show gap under T
-    ax.add_patch(patches.Rectangle((1.1,0.1), 0.8, 0.8, color='r', alpha=0.4))
+    ax.add_patch(patches.Rectangle((1.1, 0.1), 0.8, 0.8, color='r', alpha=0.4))
     ax.text(1.5, 0.5, 'Gap',
-        horizontalalignment='center',
-        verticalalignment='center')
+            horizontalalignment='center',
+            verticalalignment='center')
 
     # Rotate T
     game.pieces[0].rotate(1)
